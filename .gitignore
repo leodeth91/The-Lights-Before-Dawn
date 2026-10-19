@@ -1,0 +1,29 @@
+# Unity reconstruye estas carpetas al abrir el proyecto.
+/[Ll]ibrary/
+/[Tt]emp/
+/[Oo]bj/
+/[Ll]ogs/
+/[Uu]ser[Ss]ettings/
+
+# Copias locales y ejecutables exportados.
+/[Bb]ackups/
+/[Bb]uild/
+/[Bb]uilds/
+
+# Archivos generados por los editores de codigo.
+/.vs/
+/.idea/
+/.vscode/
+*.csproj
+*.sln
+*.slnx
+*.unityproj
+*.suo
+*.user
+*.userprefs
+
+# Archivos temporales.
+*.tmp
+*.log
+
+# No se excluyen Assets, Packages, ProjectSettings ni los archivos .meta.

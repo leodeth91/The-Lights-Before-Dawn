@@ -1,0 +1,7 @@
+Modelo: Kid-character-fully-rigged
+Autor: Guilherme Navarro
+Fuente: https://sketchfab.com/3d-models/kid-character-fully-rigged-984867aa0e8b4aad84063874dd5179cc
+Licencia indicada en el archivo GLB: Creative Commons Attribution 4.0 International (CC BY 4.0).
+Licencia: https://creativecommons.org/licenses/by/4.0/
+Adaptaciones para este proyecto: importación con Unity glTFast, escala y ubicación visual.
+El modelo original y sus texturas pertenecen a su autor. Las animaciones del juego aún no están configuradas.
