@@ -228,6 +228,10 @@ public sealed class StoryRuntimeSmokeTest : MonoBehaviour
     private IEnumerator CheckThresholdClose(HouseFlowController house, PlayerInteractor player, RoomConnection connection)
     {
         DoorSocket source = connection.SourceSocket;
+        Transform support = source.transform.Find("PisoUmbral");
+        Check(support != null && support.GetComponent<BoxCollider>() != null
+            && Mathf.Abs(support.GetComponent<BoxCollider>().bounds.max.y - source.Position.y) < .02f,
+            "Falta el suelo de apoyo a ras del piso bajo el marco");
         MovePlayer(player, house, source.Room, source.Position - source.Outward * .02f);
         yield return new WaitForFixedUpdate();
         foreach (RoomModule room in new[] { connection.SourceRoom, connection.TargetRoom })
@@ -235,21 +239,33 @@ public sealed class StoryRuntimeSmokeTest : MonoBehaviour
                 sensor.ReconcileOccupants();
         Check(source.IsThresholdOccupied || connection.TargetSocket.IsThresholdOccupied,
             "La prueba no registró al Player dentro del umbral");
-        Check(house.RequestClose(source, player.gameObject), "El cierre pendiente no se aceptó");
+        Check(house.RequestClose(source, player.gameObject), "El cierre inmediato no se aceptó");
         yield return new WaitForSeconds(.6f);
         Check(source.Door.State == DoorState.Closed && house.ConnectionFor(source) == connection
             && connection.SourceRoom.gameObject.activeSelf && connection.TargetRoom.gameObject.activeSelf,
-            "Cerrar desde el umbral se retrasó o quitó el suelo bajo el Player");
+            "La puerta no cerró enseguida o liberó habitaciones con el Player en el umbral");
+        Check(Vector3.Dot(player.transform.position - source.Position, source.Outward) < -.1f,
+            "El cierre no desplazó al Player hacia el interior");
 
-        // Simula entrar durante una animación que ya comenzó: aun cerrada, no debe retirar el suelo.
-        source.Door.BeginOpen(player.gameObject);
-        yield return new WaitForSeconds(.6f);
-        source.Door.BeginClose(player.gameObject);
-        yield return new WaitForSeconds(.6f);
-        Check(house.ConnectionFor(source) == connection
-            && connection.SourceRoom.gameObject.activeSelf && connection.TargetRoom.gameObject.activeSelf,
-            "El final de la animación liberó una habitación con el umbral ocupado");
         MovePlayer(player, house, source.Room, source.ClearApproachPoint);
+        yield return new WaitForFixedUpdate();
+        foreach (RoomModule room in new[] { connection.SourceRoom, connection.TargetRoom })
+            foreach (DoorThresholdSensor sensor in room.GetComponentsInChildren<DoorThresholdSensor>())
+                sensor.ReconcileOccupants();
+        Check(house.RequestOpen(source, player.gameObject), "No pudo reabrir la puerta para probar la carrera");
+        yield return new WaitForSeconds(.6f);
+        Check(house.RequestClose(source, player.gameObject), "No aceptó la segunda orden de cierre");
+        yield return null;
+        // Entrar cuando la hoja ya se mueve no debe cancelar la huida ni liberar
+        // la habitación mientras la cápsula siga en el marco.
+        MovePlayer(player, house, source.Room, source.Position - source.Outward * .02f);
+        yield return new WaitForFixedUpdate();
+        yield return new WaitForSeconds(.8f);
+        Check(source.Door.State == DoorState.Closed && house.ConnectionFor(source) == connection
+            && connection.SourceRoom.gameObject.activeSelf && connection.TargetRoom.gameObject.activeSelf,
+            "La hoja no cerró o liberó el paso ocupado durante Closing");
+        MovePlayer(player, house, source.Room, source.ClearApproachPoint);
+        yield return new WaitForFixedUpdate();
         // Reabre el mismo paso antes de continuar la prueba narrativa.
         Check(house.RequestOpen(source, player.gameObject), "No pudo reabrir el paso conservado");
         yield return new WaitForSeconds(.6f);

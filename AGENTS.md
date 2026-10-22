@@ -26,7 +26,7 @@
 - No editar el mismo archivo desde varios agentes ni hacer refactorizaciones ajenas al pedido.
 
 ## Flujo de trabajo
-- El agente principal coordina y edita. Usar `unity_mapper` para rastrear dependencias, `unity_reviewer` para regresiones, `game_mechanics_researcher` para inspiración técnica y `unity_playtester` para pruebas disponibles; no convocarlos por rutina.
+- El agente principal coordina y edita. Usar `unity_mapper` para dependencias, `unity_reviewer` para regresiones, `game_mechanics_researcher` para inspiración, `unity_playtester` para pruebas y `blender_modeler` para assets 3D; no convocarlos por rutina.
 - Máximo dos subagentes simultáneos; asignar objetivo y alcance concretos, pedir evidencia breve y evitar trabajo duplicado para cuidar el uso.
 - Antes de cambios de escena/prefab: Unity fuera de Play, escena guardada y copia recuperable si el cambio es amplio.
 - Tras cada cambio: revisar diferencias, compilar o ejecutar pruebas pertinentes y, si hay acceso al editor, probar en Play; informar por separado lo verificado y lo pendiente.

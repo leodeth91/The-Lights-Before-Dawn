@@ -35,6 +35,7 @@ public sealed class HouseFlowController : MonoBehaviour
     private readonly List<RoomOccupant> occupants = new List<RoomOccupant>();
     private readonly Dictionary<RoomModule, Pose> parking = new Dictionary<RoomModule, Pose>();
     private readonly HashSet<RoomConnection> closeWhenClear = new HashSet<RoomConnection>();
+    private readonly HashSet<RoomConnection> immediatePlayerCloses = new HashSet<RoomConnection>();
     private readonly Dictionary<RoomConnection, GameObject> closeRequestedBy
         = new Dictionary<RoomConnection, GameObject>();
     private sealed class DoorRequest
@@ -93,6 +94,7 @@ public sealed class HouseFlowController : MonoBehaviour
             foreach (DoorSocket socket in room.Sockets)
             {
                 if (!socketById.TryAdd(socket.SocketId, socket)) Debug.LogError("Duplicate socket: " + socket.SocketId);
+                if (useRoomPortals) socket.EnsureThresholdFloor();
                 if (socket.Door != null) socket.Door.Closed += HandleDoorClosed;
             }
         }
@@ -245,6 +247,7 @@ public sealed class HouseFlowController : MonoBehaviour
             if (existing.SourceSocket.Door.State == DoorState.Closed
                 || existing.SourceSocket.Door.State == DoorState.Closing)
             {
+                immediatePlayerCloses.Remove(existing);
                 closeWhenClear.Remove(existing);
                 closeRequestedBy.Remove(existing);
                 existing.AutoCloseAt = NextAutoClose();
@@ -276,7 +279,9 @@ public sealed class HouseFlowController : MonoBehaviour
     {
         RoomConnection connection = ConnectionFor(socket);
         if (connection == null) return false;
-        // Acepta la orden aunque otro personaje siga cruzando. Update la completa cuando sea seguro.
+        // La orden manual del jugador no espera a que su cápsula abandone el marco.
+        // El apoyo físico y un pequeño desplazamiento interior evitan dejarlo en el vacío.
+        if (actor != null && actor.CompareTag("Player")) immediatePlayerCloses.Add(connection);
         CloseAfterPassage(connection, actor);
         TryClose(connection, actor);
         return true;
@@ -306,16 +311,12 @@ public sealed class HouseFlowController : MonoBehaviour
         if (connection == null || !connections.Contains(connection)) return false;
         PruneLeases(connection.PassageUsers);
         if (connection.PassageUsers.Count > 0) return false;
-        // Cerrar la hoja no es lo mismo que retirar una habitación.
-        // Quien juega puede pedir cerrar desde el marco; la liberación del suelo
-        // sigue esperando a TODOS los ocupantes mediante ThresholdClear.
-        RoomOccupant requester = actor != null ? actor.GetComponent<RoomOccupant>() : null;
-        GameObject ignored = requester != null && !requester.UsesNormalDoors ? actor : null;
-        if (connection.SourceSocket.IsThresholdOccupiedByOtherThan(ignored)
-            || connection.TargetSocket.IsThresholdOccupiedByOtherThan(ignored)) return false;
+        bool immediate = immediatePlayerCloses.Contains(connection);
+        if (!immediate && !ThresholdClear(connection)) return false;
         DoorInteractable door = connection.SourceSocket.Door;
         if (door.State == DoorState.Open)
         {
+            if (immediate) NudgePlayerInside(connection);
             bool closing = door.BeginClose(actor);
             if (closing && useRoomPortals && connection.TargetSocket.Door != door
                 && connection.TargetSocket.Door.State == DoorState.Open)
@@ -326,9 +327,46 @@ public sealed class HouseFlowController : MonoBehaviour
     }
     private bool ThresholdClear(RoomConnection connection)
     {
-        // Nadie se ignora, tampoco quien pidió cerrar: ambos suelos deben mantenerse durante el cruce.
+        // La consulta física cubre entradas por teletransporte o movimiento entre
+        // FixedUpdates que todavía no hayan generado OnTriggerEnter.
+        connection.SourceSocket.RefreshThresholdOccupancy();
+        connection.TargetSocket.RefreshThresholdOccupancy();
         return !connection.SourceSocket.IsThresholdOccupied
             && !connection.TargetSocket.IsThresholdOccupied;
+    }
+
+    private void NudgePlayerInside(RoomConnection connection)
+    {
+        if (player == null) return;
+        connection.SourceSocket.RefreshThresholdOccupancy();
+        connection.TargetSocket.RefreshThresholdOccupancy();
+        GameObject actor = player.gameObject;
+        DoorSocket socket = null;
+        RoomOccupant occupant = player.GetComponent<RoomOccupant>();
+        if (occupant != null && occupant.Room == connection.SourceRoom
+            && connection.SourceSocket.IsActorInThreshold(actor)) socket = connection.SourceSocket;
+        else if (occupant != null && occupant.Room == connection.TargetRoom
+            && connection.TargetSocket.IsActorInThreshold(actor)) socket = connection.TargetSocket;
+        if (socket == null) return;
+
+        CharacterController controller = player.GetComponent<CharacterController>();
+        float radius = controller != null ? controller.radius : .25f;
+        float outward = Vector3.Dot(player.position - socket.Position, socket.Outward);
+        float displacement = Mathf.Clamp(outward + radius + .10f, 0f, .55f);
+        if (displacement <= 0f) return;
+        Vector3 inward = -socket.Outward * displacement;
+        if (controller != null && controller.enabled) controller.Move(inward);
+        else player.position += inward;
+        Physics.SyncTransforms();
+    }
+
+    private void ReopenForThresholdOccupant(RoomConnection connection)
+    {
+        GameObject actor = connection.SourceSocket.ThresholdActor ?? connection.TargetSocket.ThresholdActor;
+        connection.SourceSocket.Door.BeginOpen(actor);
+        if (connection.TargetSocket.Door != connection.SourceSocket.Door)
+            connection.TargetSocket.Door.BeginOpen(actor);
+        CloseAfterPassage(connection, actor);
     }
     private float NextAutoClose() => Time.time + UnityEngine.Random.Range(
         Mathf.Max(1f, automaticCloseDelay.x), Mathf.Max(automaticCloseDelay.x, automaticCloseDelay.y));
@@ -537,6 +575,13 @@ public sealed class HouseFlowController : MonoBehaviour
     {
         RoomConnection connection = connections.Find(c => c.SourceSocket.Door == door);
         if (connection == null) return;
+        if (immediatePlayerCloses.Remove(connection))
+            NudgePlayerInside(connection);
+        else if (!ThresholdClear(connection))
+        {
+            ReopenForThresholdOccupant(connection);
+            return;
+        }
         if (useRoomPortals)
         {
             connection.RerollAt = Time.time + closedDoorGrace;
@@ -559,6 +604,7 @@ public sealed class HouseFlowController : MonoBehaviour
         connection.PassageUsers.Clear();
         connection.Pursuers.Clear();
         closeWhenClear.Remove(connection);
+        immediatePlayerCloses.Remove(connection);
         closeRequestedBy.Remove(connection);
         connection.SourceSocket.Disconnect(); connection.TargetSocket.Disconnect();
         if (connection.SourceGate != null) Destroy(connection.SourceGate);
@@ -585,6 +631,13 @@ public sealed class HouseFlowController : MonoBehaviour
         {
             PruneLeases(connection.PassageUsers);
             PruneLeases(connection.Pursuers);
+            if ((connection.SourceSocket.Door.State == DoorState.Closing
+                || connection.TargetSocket.Door.State == DoorState.Closing)
+                && !immediatePlayerCloses.Contains(connection) && !ThresholdClear(connection))
+                ReopenForThresholdOccupant(connection);
+            if (immediatePlayerCloses.Contains(connection)
+                && connection.SourceSocket.Door.State == DoorState.Closing)
+                NudgePlayerInside(connection);
             if (connection.SourceSocket.Door.State == DoorState.Closed
                 && connection.PassageUsers.Count == 0
                 && (useRoomPortals ? Time.time >= connection.RerollAt

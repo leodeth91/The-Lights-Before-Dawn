@@ -35,13 +35,17 @@ public sealed class HousePortalTraveller : MonoBehaviour
             if (connection.SourceSocket.Door.State == DoorState.Closed) continue;
             PortalTrialGate gate = null;
             RoomModule destination = null;
+            // El centro del CharacterController está en los pies: esperar a que
+            // alcance el plano deja medio cuerpo detrás de la pantalla del portal.
+            // Cruzar cuando llega el borde delantero conserva la silueta completa.
+            float crossingLead = character != null ? Mathf.Max(.25f, character.radius + .05f) : 0f;
             if ((occupant == null || occupant.Room == connection.SourceRoom)
                 && connection.SourceGate != null
-                && connection.SourceGate.WasCrossed(previousPosition, current))
+                && Crossed(connection.SourceGate, previousPosition, current, crossingLead))
             { gate = connection.SourceGate; destination = connection.TargetRoom; }
             else if ((occupant == null || occupant.Room == connection.TargetRoom)
                 && connection.TargetGate != null
-                && connection.TargetGate.WasCrossed(previousPosition, current))
+                && Crossed(connection.TargetGate, previousPosition, current, crossingLead))
             { gate = connection.TargetGate; destination = connection.SourceRoom; }
             if (gate == null || destination == null) continue;
 
@@ -72,5 +76,13 @@ public sealed class HousePortalTraveller : MonoBehaviour
             return;
         }
         previousPosition = current;
+    }
+
+    private static bool Crossed(PortalTrialGate gate, Vector3 before, Vector3 after, float lead)
+    {
+        if (lead <= 0f) return gate.WasCrossed(before, after);
+        Vector3 forwardOffset = gate.transform.forward * lead;
+        return gate.WasCrossed(before + forwardOffset, after + forwardOffset)
+            || gate.WasCrossed(before, after);
     }
 }

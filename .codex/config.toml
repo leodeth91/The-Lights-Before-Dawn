@@ -3,3 +3,7 @@
 max_concurrent_threads_per_session = 2
 default_subagent_model = "gpt-6-luna"
 default_subagent_reasoning_effort = "medium"
+
+[agents.blender_modeler]
+description = "Modela y prepara assets 3D en Blender para Unity y personajes en T-pose para Mixamo."
+config_file = "agents/blender_modeler.toml"

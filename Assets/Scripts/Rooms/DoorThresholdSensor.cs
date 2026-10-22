@@ -64,6 +64,21 @@ public sealed class DoorThresholdSensor : MonoBehaviour
         }
     }
 
+    public GameObject FirstActor
+    {
+        get
+        {
+            EnsureCurrent();
+            foreach (Collider occupant in occupants)
+            {
+                Transform root = ResolveRelevantRoot(occupant);
+                if (root != null && root.GetComponent<RoomOccupant>() != null)
+                    return root.gameObject;
+            }
+            return null;
+        }
+    }
+
     public bool IsOccupiedByOtherThan(GameObject ignoredObject)
     {
         EnsureCurrent();
@@ -76,6 +91,15 @@ public sealed class DoorThresholdSensor : MonoBehaviour
             }
         }
 
+        return false;
+    }
+
+    public bool ContainsActor(GameObject actor)
+    {
+        if (actor == null) return false;
+        EnsureCurrent();
+        foreach (Collider occupant in occupants)
+            if (ResolveRelevantRoot(occupant) == actor.transform) return true;
         return false;
     }
 

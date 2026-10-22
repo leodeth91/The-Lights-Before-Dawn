@@ -34,6 +34,34 @@ public sealed class DoorSocket : MonoBehaviour
         }
     }
     public bool IsThresholdOccupied => thresholdSensor != null && thresholdSensor.IsOccupied;
+    public GameObject ThresholdActor => thresholdSensor != null ? thresholdSensor.FirstActor : null;
+    public void RefreshThresholdOccupancy()
+    {
+        if (thresholdSensor != null) thresholdSensor.ReconcileOccupants();
+    }
+    public bool IsActorInThreshold(GameObject actor)
+    {
+        return thresholdSensor != null && thresholdSensor.ContainsActor(actor);
+    }
+    public void EnsureThresholdFloor()
+    {
+        if (transform.Find("PisoUmbral") != null) return;
+
+        // El piso del módulo termina en el plano del portal. Este apoyo cubre ambos
+        // lados del plano sin formar un escalón ni depender de la habitación vecina.
+        GameObject support = GameObject.CreatePrimitive(PrimitiveType.Cube);
+        support.name = "PisoUmbral";
+        support.transform.SetParent(transform, false);
+        BoxCollider sensorVolume = thresholdSensor != null ? thresholdSensor.GetComponent<BoxCollider>() : null;
+        float width = sensorVolume != null ? Mathf.Max(.95f, sensorVolume.size.x) : 1.1f;
+        support.transform.localPosition = new Vector3(0f, -.06f, .05f);
+        support.transform.localScale = new Vector3(width, .12f, .8f);
+        Renderer floor = null;
+        if (room != null)
+            foreach (Renderer candidate in room.GetComponentsInChildren<Renderer>(true))
+                if (candidate.name == "Piso") { floor = candidate; break; }
+        if (floor != null) support.GetComponent<Renderer>().sharedMaterial = floor.sharedMaterial;
+    }
     public DoorSocket ConnectedSocket { get; private set; }
 
     public void Configure(string id, HouseFloor socketFloor, DoorSocketKind socketKind,

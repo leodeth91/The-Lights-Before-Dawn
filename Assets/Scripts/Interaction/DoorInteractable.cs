@@ -22,8 +22,18 @@ public sealed class DoorInteractable : MonoBehaviour, IInteractable, IOpenable
     public bool IsOpen => State == DoorState.Open;
     public DoorState State => domainEntity != null ? domainEntity.State : DoorState.Closed;
     public DoorSocket Socket => socket;
-    public Renderer LeafRenderer => doorLeafCollider != null
-        ? doorLeafCollider.GetComponent<Renderer>() : GetComponentInChildren<MeshRenderer>();
+    public Collider LeafCollider => doorLeafCollider;
+    public Renderer LeafRenderer
+    {
+        get
+        {
+            if (doorLeafCollider == null) return GetComponentInChildren<MeshRenderer>();
+            // The collider stays on the original leaf while imported art can live below it.
+            foreach (Renderer renderer in doorLeafCollider.GetComponentsInChildren<Renderer>(true))
+                if (renderer.gameObject != doorLeafCollider.gameObject) return renderer;
+            return doorLeafCollider.GetComponent<Renderer>();
+        }
+    }
     public string InteractionPrompt => State == DoorState.Open ? "E: cerrar"
         : State == DoorState.Opening ? string.Empty : "E: abrir";
 

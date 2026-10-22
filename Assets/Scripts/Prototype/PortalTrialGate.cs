@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Rendering;
 
@@ -28,7 +29,40 @@ public sealed class PortalTrialGate : MonoBehaviour
     private Renderer[] destinationDoorRenderers;
     private bool[] previousRendererVisibility;
     private bool destinationDoorHidden;
+    private sealed class NestedView
+    {
+        public PortalTrialGate Gate;
+        public Camera Camera;
+        public RenderTexture Texture;
+        public Material SurfaceMaterial;
+        public Texture PreviousTexture;
+        public bool TextureSwapped;
+    }
+
+    private struct TextureOverride
+    {
+        public Material Material;
+        public Texture Previous;
+    }
+
+    private static readonly HashSet<PortalTrialGate> ActiveGates = new HashSet<PortalTrialGate>();
+    private readonly List<NestedView> nestedViews = new List<NestedView>();
+    private readonly HashSet<Camera> nestedCamerasRenderingThisGate = new HashSet<Camera>();
+    private readonly List<TextureOverride> terminalOverrides = new List<TextureOverride>();
+    private bool terminalOverrideActive;
     public PortalTrialGate Destination => destination;
+
+    private void OnEnable() => ActiveGates.Add(this);
+
+    private void OnDisable()
+    {
+        ActiveGates.Remove(this);
+        RestoreNestedTextures();
+        RestoreTerminalTextures();
+        if (portalCamera != null) portalCamera.enabled = false;
+        foreach (NestedView view in nestedViews)
+            if (view.Camera != null) view.Camera.enabled = false;
+    }
 
     public void Configure(PortalTrialGate linkedGate, Camera mainViewer, bool hideWhenClosed = false,
         float width = 1.08f, float height = 1.94f, bool hideOwnDoorLeafWhenOpen = false)
@@ -48,7 +82,7 @@ public sealed class PortalTrialGate : MonoBehaviour
         if (suppressOwnDoorLeafWhenOpen && roomSocket != null && roomSocket.Door != null)
         {
             ownDoorLeaf = roomSocket.Door.LeafRenderer;
-            ownDoorCollider = ownDoorLeaf != null ? ownDoorLeaf.GetComponent<Collider>() : null;
+            ownDoorCollider = roomSocket.Door.LeafCollider;
         }
 
         int width = followDoorState ? Mathf.Max(320, viewer.pixelWidth / 2)
@@ -63,10 +97,11 @@ public sealed class PortalTrialGate : MonoBehaviour
         portalCamera = cameraObject.AddComponent<Camera>();
         portalCamera.targetTexture = viewTexture;
         portalCamera.depth = -10f;
-        // La cámara de este portal no debe dibujar la superficie del portal de salida:
-        // de hacerlo, ve su propia textura en vez de la habitación de destino.
-        // Las superficies usan Ignore Raycast (capa 2) en ambas escenas.
-        portalCamera.cullingMask = viewer.cullingMask & ~(1 << 2);
+        // Se dibujan las otras superficies de portal de la habitación contigua.
+        // La superficie de retorno se oculta solo durante esta cámara.
+        // La escena de prueba no usa DoorSocket ni ocultamiento del retorno;
+        // allí se conserva el render simple que ya funcionaba.
+        portalCamera.cullingMask = followDoorState ? viewer.cullingMask : viewer.cullingMask & ~(1 << 2);
 
         surface = GameObject.CreatePrimitive(PrimitiveType.Quad);
         surface.name = "Vista al otro cuarto - " + name;
@@ -87,16 +122,24 @@ public sealed class PortalTrialGate : MonoBehaviour
             RenderPipelineManager.beginCameraRendering += HideDestinationDoor;
             RenderPipelineManager.endCameraRendering += RestoreDestinationDoor;
         }
+        RenderPipelineManager.beginCameraRendering += OverridePortalTextures;
+        RenderPipelineManager.endCameraRendering += RestorePortalTextures;
     }
 
     private void HideDestinationDoor(ScriptableRenderContext context, Camera camera)
     {
-        if (camera != portalCamera || destination == null || destinationDoorHidden) return;
+        if ((camera != portalCamera && !nestedCamerasRenderingThisGate.Contains(camera))
+            || destination == null || destinationDoorHidden) return;
         if (destinationDoorRenderers == null)
         {
             DoorSocket otherSocket = destination.GetComponent<DoorSocket>();
             if (otherSocket == null) return;
-            destinationDoorRenderers = otherSocket.GetComponentsInChildren<Renderer>(true);
+            // El retorno exige ocultar todo el ensamblaje del marco de destino,
+            // pero el suelo de apoyo debe seguir visible en la cámara del portal.
+            List<Renderer> hidden = new List<Renderer>();
+            foreach (Renderer candidate in otherSocket.GetComponentsInChildren<Renderer>(true))
+                if (candidate != null && candidate.name != "PisoUmbral") hidden.Add(candidate);
+            destinationDoorRenderers = hidden.ToArray();
             previousRendererVisibility = new bool[destinationDoorRenderers.Length];
         }
         for (int i = 0; i < destinationDoorRenderers.Length; i++)
@@ -111,7 +154,7 @@ public sealed class PortalTrialGate : MonoBehaviour
 
     private void RestoreDestinationDoor(ScriptableRenderContext context, Camera camera)
     {
-        if (camera != portalCamera) return;
+        if (camera != portalCamera && !nestedCamerasRenderingThisGate.Contains(camera)) return;
         RestoreDestinationDoor();
     }
 
@@ -132,22 +175,177 @@ public sealed class PortalTrialGate : MonoBehaviour
         SetOwnDoorLeafSuppressed(suppressOwnDoorLeafWhenOpen && visible);
         if (surface != null) surface.SetActive(visible);
         portalCamera.enabled = visible;
-        if (!visible) return;
+        if (!visible)
+        {
+            foreach (NestedView view in nestedViews)
+                if (view.Camera != null) view.Camera.enabled = false;
+            return;
+        }
         portalCamera.fieldOfView = viewer.fieldOfView;
         portalCamera.aspect = viewer.aspect;
         portalCamera.nearClipPlane = .03f;
         portalCamera.farClipPlane = viewer.farClipPlane;
         portalCamera.transform.SetPositionAndRotation(MapPoint(viewer.transform.position), MapRotation(viewer.transform.rotation));
+        ApplyExitClipping(portalCamera, destination);
+        UpdateNestedViews();
+    }
 
-        // Recorta la imagen en el plano de salida: no muestra el espacio vacío que rodea a la habitación.
-        Vector3 clipPosition = destination.transform.position - destination.transform.forward * .02f;
-        Vector3 clipNormal = -destination.transform.forward;
-        Matrix4x4 worldToCamera = portalCamera.worldToCameraMatrix;
+    private static void ApplyExitClipping(Camera camera, PortalTrialGate exit)
+    {
+        // Reset evita acumular un recorte oblicuo nuevo sobre el del fotograma anterior.
+        camera.ResetProjectionMatrix();
+        Vector3 clipPosition = exit.transform.position - exit.transform.forward * .02f;
+        Vector3 clipNormal = -exit.transform.forward;
+        Matrix4x4 worldToCamera = camera.worldToCameraMatrix;
         Vector3 cameraPosition = worldToCamera.MultiplyPoint(clipPosition);
         Vector3 cameraNormal = worldToCamera.MultiplyVector(clipNormal).normalized;
         Vector4 clipPlane = new Vector4(cameraNormal.x, cameraNormal.y, cameraNormal.z,
             -Vector3.Dot(cameraPosition, cameraNormal));
-        portalCamera.projectionMatrix = portalCamera.CalculateObliqueMatrix(clipPlane);
+        camera.projectionMatrix = camera.CalculateObliqueMatrix(clipPlane);
+    }
+
+    private void UpdateNestedViews()
+    {
+        // Las conexiones B pueden desaparecer y reaparecer mientras A sigue abierta.
+        // No conservar una cámara/RT por cada antigua instancia del mismo socket.
+        for (int i = nestedViews.Count - 1; i >= 0; i--)
+            if (nestedViews[i].Gate == null || nestedViews[i].Camera == null)
+            {
+                ReleaseNestedView(nestedViews[i]);
+                nestedViews.RemoveAt(i);
+            }
+        foreach (NestedView view in nestedViews)
+            if (view.Camera != null) view.Camera.enabled = false;
+
+        DoorSocket exitSocket = destination != null ? destination.GetComponent<DoorSocket>() : null;
+        RoomModule destinationRoom = exitSocket != null ? exitSocket.Room : null;
+        if (destinationRoom == null) return;
+
+        Plane[] frustum = GeometryUtility.CalculateFrustumPlanes(portalCamera);
+        foreach (DoorSocket socket in destinationRoom.Sockets)
+        {
+            if (socket == null || socket == exitSocket) continue;
+            PortalTrialGate next = socket.GetComponent<PortalTrialGate>();
+            if (next == null || !next.isActiveAndEnabled || next.destination == null
+                || next.surface == null || !next.IsVisiblyOpen()) continue;
+            Renderer screen = next.surface.GetComponent<Renderer>();
+            if (screen == null || !GeometryUtility.TestPlanesAABB(frustum, screen.bounds)) continue;
+
+            NestedView nested = GetOrCreateNestedView(next);
+            Camera camera = nested.Camera;
+            camera.fieldOfView = viewer.fieldOfView;
+            camera.aspect = viewer.aspect;
+            camera.nearClipPlane = .03f;
+            camera.farClipPlane = viewer.farClipPlane;
+            // La segunda perspectiva parte del observador virtual de esta puerta,
+            // no de la cámara principal ni de un LateUpdate de orden indeterminado.
+            camera.transform.SetPositionAndRotation(
+                next.MapPoint(MapPoint(viewer.transform.position)),
+                next.MapRotation(MapRotation(viewer.transform.rotation)));
+            ApplyExitClipping(camera, next.destination);
+            camera.enabled = true;
+        }
+    }
+
+    private bool IsVisiblyOpen()
+    {
+        if (!followDoorState) return true;
+        DoorSocket socket = roomSocket != null ? roomSocket : GetComponent<DoorSocket>();
+        return socket == null || socket.Door == null || socket.Door.State != DoorState.Closed;
+    }
+
+    private NestedView GetOrCreateNestedView(PortalTrialGate next)
+    {
+        foreach (NestedView view in nestedViews)
+            if (view.Gate == next && view.Camera != null) return view;
+
+        var nested = new NestedView { Gate = next };
+        nested.Texture = new RenderTexture(Mathf.Max(256, viewTexture.width / 2),
+            Mathf.Max(144, viewTexture.height / 2), 24, RenderTextureFormat.ARGB32);
+        nested.Texture.name = "Vista portal anidada - " + name + " - " + next.name;
+        nested.Texture.Create();
+        GameObject cameraObject = new GameObject("Camara portal anidada - " + name + " - " + next.name);
+        nested.Camera = cameraObject.AddComponent<Camera>();
+        nested.Camera.enabled = false;
+        nested.Camera.targetTexture = nested.Texture;
+        nested.Camera.depth = -20f;
+        // El último nivel conserva las superficies: durante su render se vuelven
+        // opacas, así un tercer portal nunca revela el cielo exterior.
+        nested.Camera.cullingMask = viewer.cullingMask;
+        next.nestedCamerasRenderingThisGate.Add(nested.Camera);
+        nestedViews.Add(nested);
+        return nested;
+    }
+
+    private void OverridePortalTextures(ScriptableRenderContext context, Camera camera)
+    {
+        if (camera == portalCamera)
+        {
+            foreach (NestedView view in nestedViews)
+            {
+                if (view.Camera == null || !view.Camera.enabled || view.Gate == null
+                    || view.Gate.surface == null) continue;
+                view.SurfaceMaterial = view.Gate.surface.GetComponent<Renderer>().material;
+                view.PreviousTexture = view.SurfaceMaterial.GetTexture("_BaseMap");
+                view.SurfaceMaterial.SetTexture("_BaseMap", view.Texture);
+                view.TextureSwapped = true;
+            }
+            return;
+        }
+
+        foreach (NestedView view in nestedViews)
+        {
+            if (camera != view.Camera) continue;
+            RestoreTerminalTextures();
+            foreach (PortalTrialGate gate in ActiveGates)
+            {
+                if (gate == null || gate.surface == null) continue;
+                Material material = gate.surface.GetComponent<Renderer>().material;
+                terminalOverrides.Add(new TextureOverride
+                {
+                    Material = material,
+                    Previous = material.GetTexture("_BaseMap")
+                });
+                material.SetTexture("_BaseMap", Texture2D.blackTexture);
+            }
+            terminalOverrideActive = true;
+            return;
+        }
+    }
+
+    private void RestorePortalTextures(ScriptableRenderContext context, Camera camera)
+    {
+        if (camera == portalCamera) RestoreNestedTextures();
+        else
+            foreach (NestedView view in nestedViews)
+                if (camera == view.Camera) { RestoreTerminalTextures(); break; }
+    }
+
+    private void RestoreNestedTextures()
+    {
+        foreach (NestedView view in nestedViews)
+        {
+            if (!view.TextureSwapped || view.SurfaceMaterial == null) continue;
+            view.SurfaceMaterial.SetTexture("_BaseMap", view.PreviousTexture);
+            view.TextureSwapped = false;
+        }
+    }
+
+    private void RestoreTerminalTextures()
+    {
+        if (!terminalOverrideActive) return;
+        foreach (TextureOverride item in terminalOverrides)
+            if (item.Material != null) item.Material.SetTexture("_BaseMap", item.Previous);
+        terminalOverrides.Clear();
+        terminalOverrideActive = false;
+    }
+
+    private void ReleaseNestedView(NestedView view)
+    {
+        if (view.Gate != null && view.Camera != null)
+            view.Gate.nestedCamerasRenderingThisGate.Remove(view.Camera);
+        if (view.Camera != null) Destroy(view.Camera.gameObject);
+        if (view.Texture != null) { view.Texture.Release(); Destroy(view.Texture); }
     }
 
     public Vector3 MapPoint(Vector3 worldPoint)
@@ -205,10 +403,18 @@ public sealed class PortalTrialGate : MonoBehaviour
 
     private void OnDestroy()
     {
+        ActiveGates.Remove(this);
+        RestoreNestedTextures();
+        RestoreTerminalTextures();
         SetOwnDoorLeafSuppressed(false);
         RenderPipelineManager.beginCameraRendering -= HideDestinationDoor;
         RenderPipelineManager.endCameraRendering -= RestoreDestinationDoor;
+        RenderPipelineManager.beginCameraRendering -= OverridePortalTextures;
+        RenderPipelineManager.endCameraRendering -= RestorePortalTextures;
         RestoreDestinationDoor();
+        foreach (NestedView view in nestedViews)
+            ReleaseNestedView(view);
+        nestedViews.Clear();
         if (portalCamera != null) Destroy(portalCamera.gameObject);
         if (surface != null)
         {
