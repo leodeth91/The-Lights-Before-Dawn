@@ -15,6 +15,16 @@ public static class ProjectValidation
     [MenuItem("The Lights Before Dawn/Pruebas/Patrulla y navegación")]
     private static void RunAliens() => Run("TLBD.AlienSmoke");
 
+    [MenuItem("The Lights Before Dawn/Pruebas/Cámara en escondites")]
+    private static void RunHideCamera()
+    {
+        if (EditorApplication.isPlayingOrWillChangePlaymode || EditorApplication.isCompiling
+            || SceneManager.GetActiveScene().path != "Assets/Scenes/ModularPrototype.unity") return;
+        // Esta prueba solo altera objetos en Play; respeta los cambios sin guardar de la escena.
+        SessionState.SetBool("TLBD.HideCameraSmoke", true);
+        EditorApplication.EnterPlaymode();
+    }
+
     private static void Run(string key)
     {
         if (EditorApplication.isPlayingOrWillChangePlaymode || EditorApplication.isCompiling

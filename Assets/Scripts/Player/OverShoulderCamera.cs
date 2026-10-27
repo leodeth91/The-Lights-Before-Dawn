@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-/// <summary>Cámara sobre el hombro que sigue al jugador y permite mirar con el mouse. Se acerca al personaje cuando una pared tapa la vista.</summary>
+/// <summary>Cámara sobre el hombro fuera de los escondites y en primera persona dentro de ellos.</summary>
 public sealed class OverShoulderCamera : MonoBehaviour
 {
     [Header("Target")]
@@ -35,6 +35,8 @@ public sealed class OverShoulderCamera : MonoBehaviour
     public float peekForwardOffset = 0.24f;
     [Tooltip("Altura de los ojos como fracción de la altura del collider oculto.")]
     public float peekEyeHeightRatio = 0.82f;
+    [Tooltip("Altura de los ojos sobre el suelo al esconderse bajo una cama.")]
+    [SerializeField, Min(0.1f)] private float underBedEyeHeight = 0.14f;
     public float peekMinimumPitch = -45f;
     public float peekMaximumPitch = 65f;
 
@@ -43,7 +45,8 @@ public sealed class OverShoulderCamera : MonoBehaviour
     private float pitch = 10f;
     private bool cursorLocked;
     private float hidingBlend;
-    private HideSpot peekSpot;
+    private HideSpot firstPersonSpot;
+    private Vector3 firstPersonOutward;
     private bool snapAfterPortal;
     private Transform portalBoundary;
 
@@ -85,20 +88,25 @@ public sealed class OverShoulderCamera : MonoBehaviour
         return Vector3.Lerp(pivot, desired, Mathf.Clamp01(fraction));
     }
 
-    public void SetHidingView(bool hiding, HideSpot spot = null)
+    public bool IsFirstPersonHiding => firstPersonSpot != null;
+
+    public void SetHidingView(bool hiding, HideSpot spot = null, Vector3? entryPosition = null)
     {
         hidingBlend = hiding ? 1f : 0f;
-        peekSpot = hiding && spot != null
-            && (spot.TransitionType == HideTransitionType.BehindCurtain
-                || spot.TransitionType == HideTransitionType.StepOverAndHide)
-            ? spot : null;
-        if (peekSpot != null && peekSpot.EntryPoint != null && peekSpot.HiddenPoint != null)
+        firstPersonSpot = hiding ? spot : null;
+        if (firstPersonSpot != null && firstPersonSpot.HiddenPoint != null)
         {
-            // Al empezar a espiar miramos hacia la habitación, no hacia la pared.
+            // Mirar hacia el lado de entrada evita empezar frente a la pared del mueble.
+            Vector3 entrance = entryPosition ?? (firstPersonSpot.EntryPoint != null
+                ? firstPersonSpot.EntryPoint.position : firstPersonSpot.HiddenPoint.position);
             Vector3 outward = Vector3.ProjectOnPlane(
-                peekSpot.EntryPoint.position - peekSpot.HiddenPoint.position, Vector3.up);
+                entrance - firstPersonSpot.HiddenPoint.position, Vector3.up);
             if (outward.sqrMagnitude > 0.001f)
+            {
+                firstPersonOutward = outward.normalized;
                 yaw = Quaternion.LookRotation(outward, Vector3.up).eulerAngles.y;
+            }
+            else firstPersonOutward = Quaternion.Euler(0f, yaw, 0f) * Vector3.forward;
             pitch = 5f;
         }
     }
@@ -172,8 +180,8 @@ public sealed class OverShoulderCamera : MonoBehaviour
         Vector2 look = ReadLookInput();
         yaw += look.x * mouseSensitivity;
         pitch = Mathf.Clamp(pitch - look.y * mouseSensitivity,
-            peekSpot != null ? peekMinimumPitch : minimumPitch,
-            peekSpot != null ? peekMaximumPitch : maximumPitch);
+            firstPersonSpot != null ? peekMinimumPitch : minimumPitch,
+            firstPersonSpot != null ? peekMaximumPitch : maximumPitch);
     }
 
     private void LateUpdate()
@@ -191,15 +199,20 @@ public sealed class OverShoulderCamera : MonoBehaviour
             hidingBlend);
         Vector3 pivot = target.position + effectiveTargetOffset;
         Quaternion orbit = Quaternion.Euler(pitch, yaw, 0f);
-        if (peekSpot != null)
+        if (firstPersonSpot != null)
         {
-            float eyeHeight = Mathf.Clamp(peekSpot.HiddenControllerHeight * peekEyeHeightRatio,
-                0.6f, 1.02f);
-            Vector3 outward = peekSpot.EntryPoint != null && peekSpot.HiddenPoint != null
-                ? Vector3.ProjectOnPlane(peekSpot.EntryPoint.position - peekSpot.HiddenPoint.position,
-                    Vector3.up).normalized : orbit * Vector3.forward;
+            // Bajo la cama, la cámara debe quedar por debajo del faldón del mueble.
+            // El margen de 14 cm la mantiene sobre el piso y su plano de recorte.
+            float eyeHeight = firstPersonSpot.TransitionType == HideTransitionType.ProneSlide
+                ? Mathf.Max(0.1f, underBedEyeHeight)
+                : Mathf.Clamp(firstPersonSpot.HiddenControllerHeight * peekEyeHeightRatio,
+                    0.24f, 1.02f);
+            // Solo los escondites con cobertura visual permiten adelantar los ojos.
+            // Dentro de un armario o baúl la cámara permanece detrás de su puerta.
+            float forwardOffset = firstPersonSpot.Concealment == HideConcealment.VisualCover
+                ? peekForwardOffset : 0f;
             Vector3 eye = target.position + Vector3.up * eyeHeight
-                + outward * peekForwardOffset;
+                + firstPersonOutward * forwardOffset;
             float peekBlend = 1f - Mathf.Exp(-positionSmoothing * Time.deltaTime);
             transform.position = Vector3.Lerp(transform.position, eye, peekBlend);
             float lookBlend = 1f - Mathf.Exp(-rotationSmoothing * Time.deltaTime);

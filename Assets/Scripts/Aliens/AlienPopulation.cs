@@ -91,6 +91,8 @@ public sealed class AlienPopulation : MonoBehaviour
             Destroy(root);
             return false;
         }
+        // El agente del prefab permanece desactivado al instanciarse: su tipo de NavMesh
+        // se crea para esta sesión y solo puede activarse después de asignarlo aquí.
         agent.enabled = false; agent.agentTypeID = RoomNavigation.AgentType;
         agent.radius = .22f; agent.height = 1.8f; agent.speed = Random.Range(.7f, .9f);
         agent.acceleration = 2; agent.angularSpeed = 110; agent.stoppingDistance = .12f;

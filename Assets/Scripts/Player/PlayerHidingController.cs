@@ -30,6 +30,7 @@ public sealed class PlayerHidingController : MonoBehaviour
     private Vector3 currentEntryPosition;
     private Quaternion currentEntryRotation;
     private readonly List<Collider> ignoredSpotColliders = new List<Collider>();
+    private readonly Dictionary<Renderer, bool> firstPersonVisuals = new Dictionary<Renderer, bool>();
 
     public PlayerHideState State { get; private set; } = PlayerHideState.Outside;
     public bool IsHidden => State == PlayerHideState.Hidden;
@@ -118,7 +119,8 @@ public sealed class PlayerHidingController : MonoBehaviour
 
         transitionRoutine = null;
         SetState(PlayerHideState.Hidden);
-        playerCamera?.SetHidingView(true, currentSpot);
+        SetFirstPersonVisualHidden(true);
+        playerCamera?.SetHidingView(true, currentSpot, currentEntryPosition);
         currentSpot.NotifyHidden();
     }
 
@@ -141,6 +143,7 @@ public sealed class PlayerHidingController : MonoBehaviour
         exitedSpot.Release(this);
         RestoreNormalControllerShape();
         SetCurrentSpotCollisionIgnored(false);
+        SetFirstPersonVisualHidden(false);
         playerCamera?.SetHidingView(false);
         SetPlayerControl(true);
         transitionRoutine = null;
@@ -254,6 +257,7 @@ public sealed class PlayerHidingController : MonoBehaviour
         }
         RestoreNormalControllerShape();
         SetCurrentSpotCollisionIgnored(false);
+        SetFirstPersonVisualHidden(false);
         playerCamera?.SetHidingView(false);
         SetPlayerControl(true);
         if (visualRoot != null)
@@ -301,5 +305,23 @@ public sealed class PlayerHidingController : MonoBehaviour
             }
         }
         ignoredSpotColliders.Clear();
+    }
+
+    private void SetFirstPersonVisualHidden(bool hidden)
+    {
+        if (hidden)
+        {
+            if (visualRoot == null || firstPersonVisuals.Count != 0) return;
+            foreach (Renderer renderer in visualRoot.GetComponentsInChildren<Renderer>(true))
+            {
+                firstPersonVisuals.Add(renderer, renderer.forceRenderingOff);
+                renderer.forceRenderingOff = true;
+            }
+            return;
+        }
+
+        foreach (var pair in firstPersonVisuals)
+            if (pair.Key != null) pair.Key.forceRenderingOff = pair.Value;
+        firstPersonVisuals.Clear();
     }
 }

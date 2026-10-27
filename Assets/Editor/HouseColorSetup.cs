@@ -168,6 +168,8 @@ public static class HouseColorSetup
         if (n == "Piso") return roomId == "child_room" ? "FloorWalnut"
             : roomId == "foyer" || roomId == "stair_hall" || roomId == "kitchen" || roomId == "lower_bathroom" ? "FloorGrey" : "FloorOak";
         if (n == "Techo") return "CeilingBrown";
+        if (n == "MuroConAberturaVentanas" && item.parent != null)
+            return MaterialFor(item.parent, roomId);
         if (n.StartsWith("Pared_") || n == "SeparadorSeguridadEscalera")
         {
             if (roomId == "child_room") return "WallChildBlue";
