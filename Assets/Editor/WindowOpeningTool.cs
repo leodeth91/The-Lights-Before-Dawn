@@ -17,6 +17,47 @@ internal static class WindowOpeningTool
     private const string GlassColliderName = "CristalColision";
     private const string OutsideLightName = "LuzExteriorVentana";
 
+    [MenuItem("The Lights Before Dawn/Arte/Alinear UV de ventana del baño superior")]
+    private static void AlignBathroomWindowWallUvs()
+    {
+        if (EditorApplication.isPlayingOrWillChangePlaymode)
+        {
+            Debug.LogError("Hay que salir de Play antes de editar las mallas de los muros.");
+            return;
+        }
+        RoomModule room = UnityEngine.Object.FindObjectsByType<RoomModule>(FindObjectsSortMode.None)
+            .FirstOrDefault(item => item.RoomId == "upper_bathroom");
+        Transform wall = room?.GetComponentsInChildren<Transform>(true)
+            .FirstOrDefault(item => item.name == "Pared_Sur_0_0" && item.Find(CutWallName) != null);
+        if (wall == null) throw new InvalidOperationException("No se encontró el muro de la ventana del baño superior.");
+        Mesh original = wall.GetComponent<MeshFilter>()?.sharedMesh;
+        MeshFilter cutFilter = wall.Find(CutWallName).GetComponent<MeshFilter>();
+        Mesh prefabMesh = cutFilter.sharedMesh;
+        if (original == null || prefabMesh == null)
+            throw new InvalidOperationException("Falta la malla original o la malla con abertura.");
+        const string sceneMeshPath = MeshPath + "/upper_bathroom_scene_Pared_Sur_0_0.asset";
+        Mesh sceneMesh = AssetDatabase.LoadAssetAtPath<Mesh>(sceneMeshPath);
+        if (sceneMesh == null)
+        {
+            sceneMesh = UnityEngine.Object.Instantiate(prefabMesh);
+            sceneMesh.name = "upper_bathroom_scene_Pared_Sur_0_0";
+            AssetDatabase.CreateAsset(sceneMesh, sceneMeshPath);
+        }
+        Bounds slab = wall.GetComponent<Renderer>().localBounds;
+        ApplyOriginalFaceUvs(sceneMesh, original, slab, slab.size.x < slab.size.z);
+        EditorUtility.SetDirty(sceneMesh);
+        Undo.RecordObject(cutFilter, "Alinear azulejos de ventana del baño");
+        cutFilter.sharedMesh = sceneMesh;
+        PrefabUtility.RecordPrefabInstancePropertyModifications(cutFilter);
+        EditorSceneManager.MarkSceneDirty(wall.gameObject.scene);
+        AssetDatabase.SaveAssets();
+        EditorSceneManager.SaveScene(wall.gameObject.scene);
+        Selection.activeGameObject = cutFilter.gameObject;
+        SceneView.lastActiveSceneView?.LookAt(wall.TransformPoint(slab.center),
+            Quaternion.LookRotation(-wall.forward, wall.up), 2f);
+        Debug.Log("Azulejos del muro del baño alineados con el muro original.");
+    }
+
     [MenuItem("The Lights Before Dawn/Arte/Probar abertura en cuarto infantil")]
     private static void InstallPrototype() => Install(false);
 
@@ -85,8 +126,9 @@ internal static class WindowOpeningTool
         if (allRooms && openings == 12)
         {
             RenderSettings.ambientMode = AmbientMode.Flat;
-            RenderSettings.ambientLight = Color.black;
-            RenderSettings.ambientIntensity = 0f;
+            RenderSettings.ambientLight = new Color(0.28f, 0.32f, 0.4f);
+            RenderSettings.ambientIntensity = 1f;
+            RenderSettings.reflectionIntensity = 0.35f;
             EditorSceneManager.MarkSceneDirty(UnityEngine.SceneManagement.SceneManager.GetActiveScene());
         }
         report.Insert(0, "Aberturas=" + openings + " muros=" + wallsCut + "\n");
@@ -147,6 +189,7 @@ internal static class WindowOpeningTool
             + string.Join(", ", holes.Select(hole => hole.ToString("F3"))));
 
         Mesh generated = BuildPerforatedSlab(slab, holes, depthAlongX, out List<Bounds> solidCells);
+        ApplyOriginalFaceUvs(generated, originalFilter.sharedMesh, slab, depthAlongX);
         string meshAssetPath = MeshPath + "/" + roomName + "_" + wall.name + ".asset";
         generated.name = Path.GetFileNameWithoutExtension(meshAssetPath);
         Mesh saved = AssetDatabase.LoadAssetAtPath<Mesh>(meshAssetPath);
@@ -245,7 +288,7 @@ internal static class WindowOpeningTool
         Light light = lightObject.GetComponent<Light>() ?? lightObject.AddComponent<Light>();
         light.type = LightType.Spot;
         light.color = new Color(0.58f, 0.7f, 0.9f);
-        light.intensity = 0.9f;
+        light.intensity = 0.38f;
         light.range = 5f;
         light.spotAngle = 76f;
         light.innerSpotAngle = 48f;
@@ -333,6 +376,84 @@ internal static class WindowOpeningTool
         }
         t.Add(start); t.Add(start + 1); t.Add(start + 2);
         t.Add(start); t.Add(start + 2); t.Add(start + 3);
+    }
+
+    // Las caras interiores de ProBuilder pueden tener una rotación UV distinta del
+    // material. Copiar su proyección evita que la textura cambie al abrir el muro.
+    private static void ApplyOriginalFaceUvs(Mesh generated, Mesh original, Bounds slab, bool depthAlongX)
+    {
+        if (original == null || generated.vertexCount % 24 != 0)
+            throw new InvalidOperationException("No se puede alinear la UV del muro generado.");
+        float min = depthAlongX ? slab.min.x : slab.min.z;
+        float max = depthAlongX ? slab.max.x : slab.max.z;
+        FaceUvMap minMap = FindFaceUvMap(original, depthAlongX, min);
+        FaceUvMap maxMap = FindFaceUvMap(original, depthAlongX, max);
+        Vector3[] vertices = generated.vertices;
+        Vector2[] uv = generated.uv;
+        int minOffset = depthAlongX ? 8 : 0;
+        int maxOffset = depthAlongX ? 12 : 4;
+        for (int box = 0; box < vertices.Length; box += 24)
+        for (int corner = 0; corner < 4; corner++)
+        {
+            int minIndex = box + minOffset + corner;
+            int maxIndex = box + maxOffset + corner;
+            uv[minIndex] = minMap.Evaluate(SurfacePoint(vertices[minIndex], depthAlongX));
+            uv[maxIndex] = maxMap.Evaluate(SurfacePoint(vertices[maxIndex], depthAlongX));
+        }
+        generated.uv = uv;
+        generated.RecalculateTangents();
+    }
+
+    private static FaceUvMap FindFaceUvMap(Mesh source, bool depthAlongX, float plane)
+    {
+        Vector3[] vertices = source.vertices;
+        Vector2[] uv = source.uv;
+        int[] triangles = source.triangles;
+        float largestArea = 0f;
+        FaceUvMap best = default;
+        for (int i = 0; i < triangles.Length; i += 3)
+        {
+            int a = triangles[i], b = triangles[i + 1], c = triangles[i + 2];
+            if (a >= uv.Length || b >= uv.Length || c >= uv.Length) continue;
+            if (Mathf.Abs((depthAlongX ? vertices[a].x : vertices[a].z) - plane) > .002f
+                || Mathf.Abs((depthAlongX ? vertices[b].x : vertices[b].z) - plane) > .002f
+                || Mathf.Abs((depthAlongX ? vertices[c].x : vertices[c].z) - plane) > .002f)
+                continue;
+            Vector2 p0 = SurfacePoint(vertices[a], depthAlongX);
+            Vector2 p1 = SurfacePoint(vertices[b], depthAlongX);
+            Vector2 p2 = SurfacePoint(vertices[c], depthAlongX);
+            float area = Mathf.Abs((p1.x - p0.x) * (p2.y - p0.y)
+                - (p1.y - p0.y) * (p2.x - p0.x));
+            if (area <= largestArea) continue;
+            largestArea = area;
+            best = new FaceUvMap(p0, p1, p2, uv[a], uv[b], uv[c]);
+        }
+        if (largestArea < .0001f)
+            throw new InvalidOperationException("Falta la cara original del muro para copiar sus UV: " + source.name);
+        return best;
+    }
+
+    private static Vector2 SurfacePoint(Vector3 point, bool depthAlongX) => depthAlongX
+        ? new Vector2(point.z, point.y) : new Vector2(point.x, point.y);
+
+    private readonly struct FaceUvMap
+    {
+        private readonly Vector2 p0, p1, p2, uv0, uv1, uv2;
+
+        public FaceUvMap(Vector2 p0, Vector2 p1, Vector2 p2, Vector2 uv0, Vector2 uv1, Vector2 uv2)
+        {
+            this.p0 = p0; this.p1 = p1; this.p2 = p2;
+            this.uv0 = uv0; this.uv1 = uv1; this.uv2 = uv2;
+        }
+
+        public Vector2 Evaluate(Vector2 point)
+        {
+            Vector2 a = p1 - p0, b = p2 - p0, offset = point - p0;
+            float determinant = a.x * b.y - a.y * b.x;
+            float u = (offset.x * b.y - offset.y * b.x) / determinant;
+            float v = (a.x * offset.y - a.y * offset.x) / determinant;
+            return uv0 + u * (uv1 - uv0) + v * (uv2 - uv0);
+        }
     }
 
     private static Bounds CombinedBounds(Transform reference, IEnumerable<Renderer> renderers)
