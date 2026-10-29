@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using UnityEngine;
 
@@ -12,6 +13,7 @@ public sealed class HingedHideFurniture : MonoBehaviour, IOpenable
 
     private Coroutine movementRoutine;
     public bool IsOpen { get; private set; }
+    public event Action<bool> OpenStateChanged;
 
     public void Configure(Transform[] hingePivots, Vector3[] closedAngles,
         Vector3[] openAngles, float duration = 0.22f)
@@ -23,8 +25,8 @@ public sealed class HingedHideFurniture : MonoBehaviour, IOpenable
         Apply(closedEulerAngles);
     }
 
-    public void Open() { IsOpen = true; MoveTo(openEulerAngles); }
-    public void Close() { IsOpen = false; MoveTo(closedEulerAngles); }
+    public void Open() { IsOpen = true; MoveTo(openEulerAngles); OpenStateChanged?.Invoke(true); }
+    public void Close() { IsOpen = false; MoveTo(closedEulerAngles); OpenStateChanged?.Invoke(false); }
     public bool TryOpen(GameObject actor)
     {
         if (!HasValidConfiguration(openEulerAngles)) return false;

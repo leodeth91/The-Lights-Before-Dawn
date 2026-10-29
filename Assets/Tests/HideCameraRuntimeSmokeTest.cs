@@ -77,9 +77,29 @@ public sealed class HideCameraRuntimeSmokeTest : MonoBehaviour
             character.enabled = true;
             Physics.SyncTransforms();
             hiding.Toggle(spot);
+            Transform chestDoorJoint = null;
+            Quaternion closedChestDoor = Quaternion.identity;
+            if (type == HideTransitionType.ClimbInside)
+            {
+                chestDoorJoint = spot.GetComponentsInChildren<Transform>(true)
+                    .FirstOrDefault(child => child.name == "Joint_1_2_03"
+                        && child.parent != null && child.parent.name == "_rootJoint");
+                if (chestDoorJoint == null)
+                    failures.Add(label + ": falta la articulación de la tapa importada.");
+                else
+                {
+                    closedChestDoor = chestDoorJoint.localRotation;
+                    yield return new WaitForSecondsRealtime(.5f);
+                    if (Quaternion.Angle(closedChestDoor, chestDoorJoint.localRotation) < 5f)
+                        failures.Add(label + ": la tapa importada no se abrió al entrar.");
+                }
+            }
             float deadline = Time.realtimeSinceStartup + 3f;
             while (!hiding.IsHidden && Time.realtimeSinceStartup < deadline) yield return null;
             yield return new WaitForSecondsRealtime(.35f);
+            if (chestDoorJoint != null
+                && Quaternion.Angle(closedChestDoor, chestDoorJoint.localRotation) > 3f)
+                failures.Add(label + ": la tapa importada no se cerró al quedar oculto.");
 
             float hiddenDistance = Vector3.Distance(cameraController.transform.position,
                 hiding.transform.position);
