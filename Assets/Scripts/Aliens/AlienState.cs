@@ -168,7 +168,8 @@ public sealed class AlienSearchState : AlienState
         if (alien.Memory.LastKnownRoom != alien.Occupant.Room)
             yield return alien.TravelToRoom(alien.Memory.LastKnownRoom);
         if (alien.Memory.LastKnownRoom != alien.Occupant.Room) yield break;
-        yield return alien.Motor.Go(alien.Memory.LastKnownPosition, 12f);
+        yield return alien.Motor.GoToReachableGround(alien.Memory.LastKnownPosition,
+            alien.Occupant.Room, 12f);
         float end = Time.time + alien.SearchDuration;
         RoomModule room = alien.Occupant.Room;
         Vector3 localOrigin = room.transform.InverseTransformPoint(alien.Memory.LastKnownPosition);
@@ -207,7 +208,8 @@ public sealed class AlienSearchState : AlienState
             HideSpot spot = point.AssociatedHidingSpot;
             Vector3 destination = point.SearchPosition;
             alien.FocusPoint = destination;
-            yield return alien.Motor.Go(destination, Mathf.Min(8f, end - Time.time));
+            yield return alien.Motor.GoToReachableGround(destination, room,
+                Mathf.Min(8f, end - Time.time), spot != null ? 1f : 2.5f);
             if (!alien.Motor.Arrived) { yield return null; continue; }
             point.MarkVisited();
             if (spot != null)

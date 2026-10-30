@@ -152,7 +152,7 @@ public sealed class StoryProgression : MonoBehaviour
     }
     private void UpdateDoorMaterial()
     {
-        Renderer desired = GuideDoorClosed ? GuideDoor.Door.LeafRenderer : null;
+        Renderer desired = !AnomalyEnabled && GuideDoorClosed ? GuideDoor.Door.LeafRenderer : null;
         if (desired == highlightedDoor) return;
         RestoreDoorMaterial();
         if (desired == null) return;

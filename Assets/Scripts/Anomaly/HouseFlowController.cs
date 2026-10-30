@@ -22,7 +22,7 @@ public sealed class HouseFlowController : MonoBehaviour
     [SerializeField] private bool verboseLogging;
     [Header("Room portals")]
     [SerializeField] private bool useRoomPortals = true;
-    [SerializeField, Min(0f)] private float closedDoorGrace = 1f;
+    [SerializeField, Min(0f)] private float closedDoorGrace = .25f;
     [Header("Door coordination")]
     [SerializeField, Min(1f)] private float requestLifetime = 10f;
     [SerializeField, Min(1f)] private float passageLifetime = 8f;
@@ -641,6 +641,7 @@ public sealed class HouseFlowController : MonoBehaviour
             if (connection.SourceSocket.Door.State == DoorState.Closed
                 && connection.PassageUsers.Count == 0
                 && (useRoomPortals ? Time.time >= connection.RerollAt
+                    && (connection.Pursuers.Count == 0 || YieldsToPlayer(connection))
                     : connection.Pursuers.Count == 0 || YieldsToPlayer(connection)) && ThresholdClear(connection))
             { FinalizeConnection(connection); continue; }
             if (closeWhenClear.Contains(connection) || Time.time >= connection.AutoCloseAt)

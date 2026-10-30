@@ -70,17 +70,19 @@ public sealed class AlienMotor : MonoBehaviour
             if (!room.ContainsPoint(corner, .05f)) return false;
         return true;
     }
-    public bool SetGroundDestination(Vector3 point, RoomModule room)
+    public bool SetGroundDestination(Vector3 point, RoomModule room, float maxDistance = 1.5f)
     {
+        Arrived = false;
         // Busca alrededor del mueble; su superficie superior puede tener NavMesh, pero ser una isla inaccesible.
-        point.y = room.transform.position.y + .05f;
+        // Conserva la planta del objetivo: el hall tiene suelo arriba y abajo.
         Vector3 best = point;
         float bestDistance = float.PositiveInfinity;
-        for (int ring = 0; ring <= 3; ring++)
+        for (int ring = 0; ring <= Mathf.CeilToInt(maxDistance / .5f); ring++)
             for (int direction = 0; direction < (ring == 0 ? 1 : 12); direction++)
             {
                 float angle = direction * Mathf.PI / 6f;
-                Vector3 candidate = point + new Vector3(Mathf.Cos(angle), 0f, Mathf.Sin(angle)) * ring * .5f;
+                float offset = Mathf.Min(ring * .5f, maxDistance);
+                Vector3 candidate = point + new Vector3(Mathf.Cos(angle), 0f, Mathf.Sin(angle)) * offset;
                 if (!TryPoint(candidate, .3f, out Vector3 ground) || Mathf.Abs(ground.y - point.y) > .3f) continue;
                 float distance = (ground - point).sqrMagnitude;
                 if (distance >= bestDistance || !CanReach(ground, room)) continue;
@@ -92,6 +94,16 @@ public sealed class AlienMotor : MonoBehaviour
     public IEnumerator Go(Vector3 point, float timeout = 15f)
     {
         if (!SetDestination(point)) yield break;
+        yield return FollowPath(timeout);
+    }
+    public IEnumerator GoToReachableGround(Vector3 point, RoomModule room, float timeout = 15f,
+        float maxDistance = 2.5f)
+    {
+        if (room == null || !SetGroundDestination(point, room, maxDistance)) yield break;
+        yield return FollowPath(timeout);
+    }
+    private IEnumerator FollowPath(float timeout)
+    {
         float end = Time.time + timeout;
         Vector3 lastPosition = transform.position;
         float stalledSince = Time.time;
