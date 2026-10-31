@@ -21319,15 +21319,35 @@ PrefabInstance:
       objectReference: {fileID: 2100000, guid: fc68616ab2961d5439dd21de01311303, type: 2}
     - target: {fileID: 5882658876212226455, guid: d043770e4be895043809573ea7db7aa7, type: 3}
       propertyPath: m_Range
-      value: 7.6
+      value: 12
       objectReference: {fileID: 0}
     - target: {fileID: 5882658876212226455, guid: d043770e4be895043809573ea7db7aa7, type: 3}
       propertyPath: m_Intensity
-      value: 15
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 5882658876212226455, guid: d043770e4be895043809573ea7db7aa7, type: 3}
+      propertyPath: m_SpotAngle
+      value: 89.48629
+      objectReference: {fileID: 0}
+    - target: {fileID: 5882658876212226455, guid: d043770e4be895043809573ea7db7aa7, type: 3}
+      propertyPath: m_InnerSpotAngle
+      value: 73.746574
       objectReference: {fileID: 0}
     - target: {fileID: 5882658876212226455, guid: d043770e4be895043809573ea7db7aa7, type: 3}
       propertyPath: m_Shadows.m_Type
       value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 5882658876212226455, guid: d043770e4be895043809573ea7db7aa7, type: 3}
+      propertyPath: m_BounceIntensity
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5882658876212226455, guid: d043770e4be895043809573ea7db7aa7, type: 3}
+      propertyPath: m_Shadows.m_Strength
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5882658876212226455, guid: d043770e4be895043809573ea7db7aa7, type: 3}
+      propertyPath: m_Shadows.m_NearPlane
+      value: 0.1
       objectReference: {fileID: 0}
     - target: {fileID: 5990148008939480482, guid: d043770e4be895043809573ea7db7aa7, type: 3}
       propertyPath: m_Mesh
@@ -22682,11 +22702,31 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2273187784866925350, guid: 13e7a7bb28055a84da1238a8e2073270, type: 3}
       propertyPath: m_Range
-      value: 7.6
+      value: 12
       objectReference: {fileID: 0}
     - target: {fileID: 2273187784866925350, guid: 13e7a7bb28055a84da1238a8e2073270, type: 3}
       propertyPath: m_Intensity
-      value: 15
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 2273187784866925350, guid: 13e7a7bb28055a84da1238a8e2073270, type: 3}
+      propertyPath: m_SpotAngle
+      value: 89.48629
+      objectReference: {fileID: 0}
+    - target: {fileID: 2273187784866925350, guid: 13e7a7bb28055a84da1238a8e2073270, type: 3}
+      propertyPath: m_InnerSpotAngle
+      value: 73.746574
+      objectReference: {fileID: 0}
+    - target: {fileID: 2273187784866925350, guid: 13e7a7bb28055a84da1238a8e2073270, type: 3}
+      propertyPath: m_BounceIntensity
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2273187784866925350, guid: 13e7a7bb28055a84da1238a8e2073270, type: 3}
+      propertyPath: m_Shadows.m_Strength
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2273187784866925350, guid: 13e7a7bb28055a84da1238a8e2073270, type: 3}
+      propertyPath: m_Shadows.m_NearPlane
+      value: 0.1
       objectReference: {fileID: 0}
     - target: {fileID: 2296303591527814535, guid: 13e7a7bb28055a84da1238a8e2073270, type: 3}
       propertyPath: m_Mesh
@@ -30215,11 +30255,31 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3835140045212633721, guid: a2d3d1f364fea754283d291cdcbbf6af, type: 3}
       propertyPath: m_Range
-      value: 7.6
+      value: 12
       objectReference: {fileID: 0}
     - target: {fileID: 3835140045212633721, guid: a2d3d1f364fea754283d291cdcbbf6af, type: 3}
       propertyPath: m_Intensity
-      value: 15
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 3835140045212633721, guid: a2d3d1f364fea754283d291cdcbbf6af, type: 3}
+      propertyPath: m_SpotAngle
+      value: 89.48629
+      objectReference: {fileID: 0}
+    - target: {fileID: 3835140045212633721, guid: a2d3d1f364fea754283d291cdcbbf6af, type: 3}
+      propertyPath: m_InnerSpotAngle
+      value: 73.746574
+      objectReference: {fileID: 0}
+    - target: {fileID: 3835140045212633721, guid: a2d3d1f364fea754283d291cdcbbf6af, type: 3}
+      propertyPath: m_BounceIntensity
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3835140045212633721, guid: a2d3d1f364fea754283d291cdcbbf6af, type: 3}
+      propertyPath: m_Shadows.m_Strength
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3835140045212633721, guid: a2d3d1f364fea754283d291cdcbbf6af, type: 3}
+      propertyPath: m_Shadows.m_NearPlane
+      value: 0.1
       objectReference: {fileID: 0}
     - target: {fileID: 4147026884220419722, guid: a2d3d1f364fea754283d291cdcbbf6af, type: 3}
       propertyPath: m_Mesh
@@ -56438,11 +56498,31 @@ PrefabInstance:
       objectReference: {fileID: 799607370}
     - target: {fileID: 1013262297187613674, guid: bc48c65d93ccd6d4d92c111e36c16567, type: 3}
       propertyPath: m_Range
-      value: 7.6
+      value: 12
       objectReference: {fileID: 0}
     - target: {fileID: 1013262297187613674, guid: bc48c65d93ccd6d4d92c111e36c16567, type: 3}
       propertyPath: m_Intensity
-      value: 15
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 1013262297187613674, guid: bc48c65d93ccd6d4d92c111e36c16567, type: 3}
+      propertyPath: m_SpotAngle
+      value: 89.48629
+      objectReference: {fileID: 0}
+    - target: {fileID: 1013262297187613674, guid: bc48c65d93ccd6d4d92c111e36c16567, type: 3}
+      propertyPath: m_InnerSpotAngle
+      value: 73.746574
+      objectReference: {fileID: 0}
+    - target: {fileID: 1013262297187613674, guid: bc48c65d93ccd6d4d92c111e36c16567, type: 3}
+      propertyPath: m_BounceIntensity
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1013262297187613674, guid: bc48c65d93ccd6d4d92c111e36c16567, type: 3}
+      propertyPath: m_Shadows.m_Strength
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1013262297187613674, guid: bc48c65d93ccd6d4d92c111e36c16567, type: 3}
+      propertyPath: m_Shadows.m_NearPlane
+      value: 0.1
       objectReference: {fileID: 0}
     - target: {fileID: 1013904293143864916, guid: bc48c65d93ccd6d4d92c111e36c16567, type: 3}
       propertyPath: m_Mesh
@@ -93809,11 +93889,31 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1023711109645524809, guid: e0f4b28b37b5ab449883e7c0287ba08f, type: 3}
       propertyPath: m_Range
-      value: 7.6
+      value: 12
       objectReference: {fileID: 0}
     - target: {fileID: 1023711109645524809, guid: e0f4b28b37b5ab449883e7c0287ba08f, type: 3}
       propertyPath: m_Intensity
-      value: 15
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 1023711109645524809, guid: e0f4b28b37b5ab449883e7c0287ba08f, type: 3}
+      propertyPath: m_SpotAngle
+      value: 89.48629
+      objectReference: {fileID: 0}
+    - target: {fileID: 1023711109645524809, guid: e0f4b28b37b5ab449883e7c0287ba08f, type: 3}
+      propertyPath: m_InnerSpotAngle
+      value: 73.746574
+      objectReference: {fileID: 0}
+    - target: {fileID: 1023711109645524809, guid: e0f4b28b37b5ab449883e7c0287ba08f, type: 3}
+      propertyPath: m_BounceIntensity
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1023711109645524809, guid: e0f4b28b37b5ab449883e7c0287ba08f, type: 3}
+      propertyPath: m_Shadows.m_Strength
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1023711109645524809, guid: e0f4b28b37b5ab449883e7c0287ba08f, type: 3}
+      propertyPath: m_Shadows.m_NearPlane
+      value: 0.1
       objectReference: {fileID: 0}
     - target: {fileID: 1115838611302307085, guid: e0f4b28b37b5ab449883e7c0287ba08f, type: 3}
       propertyPath: m_Mesh
@@ -94337,11 +94437,31 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6820634090545311354, guid: e0f4b28b37b5ab449883e7c0287ba08f, type: 3}
       propertyPath: m_Range
-      value: 7.6
+      value: 12
       objectReference: {fileID: 0}
     - target: {fileID: 6820634090545311354, guid: e0f4b28b37b5ab449883e7c0287ba08f, type: 3}
       propertyPath: m_Intensity
-      value: 15
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 6820634090545311354, guid: e0f4b28b37b5ab449883e7c0287ba08f, type: 3}
+      propertyPath: m_SpotAngle
+      value: 89.48629
+      objectReference: {fileID: 0}
+    - target: {fileID: 6820634090545311354, guid: e0f4b28b37b5ab449883e7c0287ba08f, type: 3}
+      propertyPath: m_InnerSpotAngle
+      value: 73.746574
+      objectReference: {fileID: 0}
+    - target: {fileID: 6820634090545311354, guid: e0f4b28b37b5ab449883e7c0287ba08f, type: 3}
+      propertyPath: m_BounceIntensity
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6820634090545311354, guid: e0f4b28b37b5ab449883e7c0287ba08f, type: 3}
+      propertyPath: m_Shadows.m_Strength
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6820634090545311354, guid: e0f4b28b37b5ab449883e7c0287ba08f, type: 3}
+      propertyPath: m_Shadows.m_NearPlane
+      value: 0.1
       objectReference: {fileID: 0}
     - target: {fileID: 6861901344132664272, guid: e0f4b28b37b5ab449883e7c0287ba08f, type: 3}
       propertyPath: m_Mesh
@@ -94549,11 +94669,31 @@ PrefabInstance:
       objectReference: {fileID: 2100000, guid: 7328d4dab7c24e24cab909164ef921c8, type: 2}
     - target: {fileID: 8373894593336534119, guid: e0f4b28b37b5ab449883e7c0287ba08f, type: 3}
       propertyPath: m_Range
-      value: 7.6
+      value: 12
       objectReference: {fileID: 0}
     - target: {fileID: 8373894593336534119, guid: e0f4b28b37b5ab449883e7c0287ba08f, type: 3}
       propertyPath: m_Intensity
-      value: 15
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 8373894593336534119, guid: e0f4b28b37b5ab449883e7c0287ba08f, type: 3}
+      propertyPath: m_SpotAngle
+      value: 89.48629
+      objectReference: {fileID: 0}
+    - target: {fileID: 8373894593336534119, guid: e0f4b28b37b5ab449883e7c0287ba08f, type: 3}
+      propertyPath: m_InnerSpotAngle
+      value: 73.746574
+      objectReference: {fileID: 0}
+    - target: {fileID: 8373894593336534119, guid: e0f4b28b37b5ab449883e7c0287ba08f, type: 3}
+      propertyPath: m_BounceIntensity
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8373894593336534119, guid: e0f4b28b37b5ab449883e7c0287ba08f, type: 3}
+      propertyPath: m_Shadows.m_Strength
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8373894593336534119, guid: e0f4b28b37b5ab449883e7c0287ba08f, type: 3}
+      propertyPath: m_Shadows.m_NearPlane
+      value: 0.1
       objectReference: {fileID: 0}
     - target: {fileID: 8409676743039190516, guid: e0f4b28b37b5ab449883e7c0287ba08f, type: 3}
       propertyPath: m_Name
@@ -97545,11 +97685,31 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 224775833377075285, guid: 1b9ee1c4b279fdd4b8f7b873349e237b, type: 3}
       propertyPath: m_Range
-      value: 7.6
+      value: 12
       objectReference: {fileID: 0}
     - target: {fileID: 224775833377075285, guid: 1b9ee1c4b279fdd4b8f7b873349e237b, type: 3}
       propertyPath: m_Intensity
-      value: 15
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 224775833377075285, guid: 1b9ee1c4b279fdd4b8f7b873349e237b, type: 3}
+      propertyPath: m_SpotAngle
+      value: 89.48629
+      objectReference: {fileID: 0}
+    - target: {fileID: 224775833377075285, guid: 1b9ee1c4b279fdd4b8f7b873349e237b, type: 3}
+      propertyPath: m_InnerSpotAngle
+      value: 73.746574
+      objectReference: {fileID: 0}
+    - target: {fileID: 224775833377075285, guid: 1b9ee1c4b279fdd4b8f7b873349e237b, type: 3}
+      propertyPath: m_BounceIntensity
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 224775833377075285, guid: 1b9ee1c4b279fdd4b8f7b873349e237b, type: 3}
+      propertyPath: m_Shadows.m_Strength
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 224775833377075285, guid: 1b9ee1c4b279fdd4b8f7b873349e237b, type: 3}
+      propertyPath: m_Shadows.m_NearPlane
+      value: 0.1
       objectReference: {fileID: 0}
     - target: {fileID: 307867718937739289, guid: 1b9ee1c4b279fdd4b8f7b873349e237b, type: 3}
       propertyPath: m_Mesh
@@ -98845,11 +99005,31 @@ PrefabInstance:
       objectReference: {fileID: 2146512913}
     - target: {fileID: 6257512235415893108, guid: 1b9ee1c4b279fdd4b8f7b873349e237b, type: 3}
       propertyPath: m_Range
-      value: 7.6
+      value: 12
       objectReference: {fileID: 0}
     - target: {fileID: 6257512235415893108, guid: 1b9ee1c4b279fdd4b8f7b873349e237b, type: 3}
       propertyPath: m_Intensity
-      value: 15
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 6257512235415893108, guid: 1b9ee1c4b279fdd4b8f7b873349e237b, type: 3}
+      propertyPath: m_SpotAngle
+      value: 89.48629
+      objectReference: {fileID: 0}
+    - target: {fileID: 6257512235415893108, guid: 1b9ee1c4b279fdd4b8f7b873349e237b, type: 3}
+      propertyPath: m_InnerSpotAngle
+      value: 73.746574
+      objectReference: {fileID: 0}
+    - target: {fileID: 6257512235415893108, guid: 1b9ee1c4b279fdd4b8f7b873349e237b, type: 3}
+      propertyPath: m_BounceIntensity
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6257512235415893108, guid: 1b9ee1c4b279fdd4b8f7b873349e237b, type: 3}
+      propertyPath: m_Shadows.m_Strength
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6257512235415893108, guid: 1b9ee1c4b279fdd4b8f7b873349e237b, type: 3}
+      propertyPath: m_Shadows.m_NearPlane
+      value: 0.1
       objectReference: {fileID: 0}
     - target: {fileID: 6262251778853648505, guid: 1b9ee1c4b279fdd4b8f7b873349e237b, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
@@ -128613,11 +128793,31 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5823854567719825325, guid: f3ca62f0bfcd6a64cb2d371c73899e35, type: 3}
       propertyPath: m_Range
-      value: 7.6
+      value: 12
       objectReference: {fileID: 0}
     - target: {fileID: 5823854567719825325, guid: f3ca62f0bfcd6a64cb2d371c73899e35, type: 3}
       propertyPath: m_Intensity
-      value: 15
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 5823854567719825325, guid: f3ca62f0bfcd6a64cb2d371c73899e35, type: 3}
+      propertyPath: m_SpotAngle
+      value: 89.48629
+      objectReference: {fileID: 0}
+    - target: {fileID: 5823854567719825325, guid: f3ca62f0bfcd6a64cb2d371c73899e35, type: 3}
+      propertyPath: m_InnerSpotAngle
+      value: 73.746574
+      objectReference: {fileID: 0}
+    - target: {fileID: 5823854567719825325, guid: f3ca62f0bfcd6a64cb2d371c73899e35, type: 3}
+      propertyPath: m_BounceIntensity
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5823854567719825325, guid: f3ca62f0bfcd6a64cb2d371c73899e35, type: 3}
+      propertyPath: m_Shadows.m_Strength
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5823854567719825325, guid: f3ca62f0bfcd6a64cb2d371c73899e35, type: 3}
+      propertyPath: m_Shadows.m_NearPlane
+      value: 0.1
       objectReference: {fileID: 0}
     - target: {fileID: 6039826202082385566, guid: f3ca62f0bfcd6a64cb2d371c73899e35, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
@@ -148715,11 +148915,31 @@ PrefabInstance:
       objectReference: {fileID: 1652112801}
     - target: {fileID: 8830455627411152221, guid: 7ac473492d8fbf1408001cc972671de2, type: 3}
       propertyPath: m_Range
-      value: 7.6
+      value: 12
       objectReference: {fileID: 0}
     - target: {fileID: 8830455627411152221, guid: 7ac473492d8fbf1408001cc972671de2, type: 3}
       propertyPath: m_Intensity
-      value: 15
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 8830455627411152221, guid: 7ac473492d8fbf1408001cc972671de2, type: 3}
+      propertyPath: m_SpotAngle
+      value: 89.48629
+      objectReference: {fileID: 0}
+    - target: {fileID: 8830455627411152221, guid: 7ac473492d8fbf1408001cc972671de2, type: 3}
+      propertyPath: m_InnerSpotAngle
+      value: 73.746574
+      objectReference: {fileID: 0}
+    - target: {fileID: 8830455627411152221, guid: 7ac473492d8fbf1408001cc972671de2, type: 3}
+      propertyPath: m_BounceIntensity
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8830455627411152221, guid: 7ac473492d8fbf1408001cc972671de2, type: 3}
+      propertyPath: m_Shadows.m_Strength
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8830455627411152221, guid: 7ac473492d8fbf1408001cc972671de2, type: 3}
+      propertyPath: m_Shadows.m_NearPlane
+      value: 0.1
       objectReference: {fileID: 0}
     - target: {fileID: 9055862354138611663, guid: 7ac473492d8fbf1408001cc972671de2, type: 3}
       propertyPath: m_Mesh
@@ -168341,11 +168561,31 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8112788297381209998, guid: d02e6488fc28ab943838efa0fd3e4494, type: 3}
       propertyPath: m_Range
-      value: 7.6
+      value: 12
       objectReference: {fileID: 0}
     - target: {fileID: 8112788297381209998, guid: d02e6488fc28ab943838efa0fd3e4494, type: 3}
       propertyPath: m_Intensity
-      value: 15
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 8112788297381209998, guid: d02e6488fc28ab943838efa0fd3e4494, type: 3}
+      propertyPath: m_SpotAngle
+      value: 89.48629
+      objectReference: {fileID: 0}
+    - target: {fileID: 8112788297381209998, guid: d02e6488fc28ab943838efa0fd3e4494, type: 3}
+      propertyPath: m_InnerSpotAngle
+      value: 73.746574
+      objectReference: {fileID: 0}
+    - target: {fileID: 8112788297381209998, guid: d02e6488fc28ab943838efa0fd3e4494, type: 3}
+      propertyPath: m_BounceIntensity
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8112788297381209998, guid: d02e6488fc28ab943838efa0fd3e4494, type: 3}
+      propertyPath: m_Shadows.m_Strength
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8112788297381209998, guid: d02e6488fc28ab943838efa0fd3e4494, type: 3}
+      propertyPath: m_Shadows.m_NearPlane
+      value: 0.1
       objectReference: {fileID: 0}
     - target: {fileID: 8184762770425140184, guid: d02e6488fc28ab943838efa0fd3e4494, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
