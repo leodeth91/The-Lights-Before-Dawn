@@ -39750,6 +39750,8 @@ GameObject:
   - component: {fileID: 357664803}
   - component: {fileID: 357664802}
   - component: {fileID: 357664805}
+  - component: {fileID: 357664806}
+  - component: {fileID: 357664807}
   m_Layer: 2
   m_Name: PLAYER_Child_Prototype
   m_TagString: Player
@@ -39889,7 +39891,7 @@ AudioSource:
   m_GameObject: {fileID: 357664795}
   m_Enabled: 1
   serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 0}
+  OutputAudioMixerGroup: {fileID: 7638520478723564098, guid: cd44063a9e57ef9499cef7719ea9c485, type: 2}
   m_audioClip: {fileID: 0}
   m_Resource: {fileID: 0}
   m_PlayOnAwake: 0
@@ -39989,8 +39991,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ec593f48b6f2b814bafaf5e5037d6477, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerFootstepAudio
-  walkingClip: {fileID: 0}
-  runningClip: {fileID: 0}
+  walkingClip: {fileID: 8300000, guid: 3b6fcdce2bc8fb04eb1894555fe3c8e6, type: 3}
+  runningClip: {fileID: 8300000, guid: 81302d4eacba5b149a6cbeeb7332d6ae, type: 3}
   walkingStepDistance: 0.96
   runningStepDistance: 0.82
   teleportResetDistance: 1.25
@@ -40111,6 +40113,48 @@ MonoBehaviour:
   player: {fileID: 357664800}
   animator: {fileID: 2030071112}
   modelRoot: {fileID: 2030071111}
+--- !u!114 &357664806
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 357664795}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 14eb6105972d9a640b9e6516310a1f63, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SFXVariacion
+  clips:
+  - {fileID: 8300000, guid: 3b6fcdce2bc8fb04eb1894555fe3c8e6, type: 3}
+  - {fileID: 8300000, guid: 5851bc65e7b4cbb458d57ac5be9d97f9, type: 3}
+  - {fileID: 8300000, guid: 81302d4eacba5b149a6cbeeb7332d6ae, type: 3}
+  dispararConEspacio: 0
+  minPitch: 0.92
+  maxPitch: 1.08
+  minVolumen: 0.85
+  maxVolumen: 1
+--- !u!114 &357664807
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 357664795}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 14eb6105972d9a640b9e6516310a1f63, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SFXVariacion
+  clips:
+  - {fileID: 8300000, guid: d439a158222c8cf46a634a1e665c5b7c, type: 3}
+  - {fileID: 8300000, guid: 00c968ac714567445b2b519cbd1228f1, type: 3}
+  - {fileID: 8300000, guid: 61ab18a95c6b31f4598bde781d4f2a32, type: 3}
+  dispararConEspacio: 1
+  minPitch: 0.92
+  maxPitch: 1.08
+  minVolumen: 0.85
+  maxVolumen: 1
 --- !u!43 &359070953
 Mesh:
   m_ObjectHideFlags: 0
