@@ -49,6 +49,7 @@ public sealed class ChildPlayerController : MonoBehaviour
     private float crouchedHeight;
     private bool visualShapeCached;
     private Vector3 standingModelScale;
+    private OverShoulderCamera movementCameraController;
 
     public bool IsCrouched => crouched;
     public bool IsSprinting { get; private set; }
@@ -103,6 +104,10 @@ public sealed class ChildPlayerController : MonoBehaviour
         if (cameraTransform == null && Camera.main != null)
         {
             cameraTransform = Camera.main.transform;
+        }
+        if (cameraTransform != null)
+        {
+            movementCameraController = cameraTransform.GetComponent<OverShoulderCamera>();
         }
     }
 
@@ -233,10 +238,24 @@ public sealed class ChildPlayerController : MonoBehaviour
     private Vector3 GetCameraRelativeMovement(Vector2 input)
     {
         Transform movementCamera = cameraTransform != null ? cameraTransform : Camera.main?.transform;
-        Vector3 forward = movementCamera != null ? movementCamera.forward : Vector3.forward;
-        Vector3 right = movementCamera != null ? movementCamera.right : Vector3.right;
-        forward = Vector3.ProjectOnPlane(forward, Vector3.up).normalized;
-        right = Vector3.ProjectOnPlane(right, Vector3.up).normalized;
+        if (movementCameraController == null && movementCamera != null)
+        {
+            movementCameraController = movementCamera.GetComponent<OverShoulderCamera>();
+        }
+
+        Vector3 forward;
+        Vector3 right;
+        if (movementCameraController != null)
+        {
+            movementCameraController.GetPlanarMovementAxes(out forward, out right);
+        }
+        else
+        {
+            forward = movementCamera != null ? movementCamera.forward : Vector3.forward;
+            right = movementCamera != null ? movementCamera.right : Vector3.right;
+            forward = Vector3.ProjectOnPlane(forward, Vector3.up).normalized;
+            right = Vector3.ProjectOnPlane(right, Vector3.up).normalized;
+        }
         return Vector3.ClampMagnitude(forward * input.y + right * input.x, 1f);
     }
 

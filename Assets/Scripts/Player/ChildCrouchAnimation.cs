@@ -46,6 +46,17 @@ public sealed class ChildCrouchAnimation : MonoBehaviour
         currentState = Idle;
     }
 
+    // La apertura puede alinear el controlador con la posición que el diseñador
+    // dejó al modelo; las poses posteriores deben partir de esa nueva base.
+    public void RefreshRestPose()
+    {
+        if (modelRoot == null) return;
+        restModelRotation = modelRoot.localRotation;
+        restModelPosition = modelRoot.localPosition;
+        restModelScale = modelRoot.localScale;
+        previousPosition = transform.position;
+    }
+
     private void LateUpdate()
     {
         if (player == null || animator == null || modelRoot == null) return;

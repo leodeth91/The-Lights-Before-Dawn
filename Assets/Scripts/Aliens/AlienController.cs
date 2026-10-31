@@ -46,6 +46,8 @@ public sealed class AlienController : MonoBehaviour
     private bool sensesEnabled;
     private bool hearingEnabled = true;
     private bool traversingDoor;
+    private RoomModule pendingSurveillanceRoom;
+    private float surveillanceClueExpires;
     private bool soundReactionActive;
     private bool playerCallReactionActive;
     private SoundStimulus activeSound;
@@ -226,6 +228,18 @@ public sealed class AlienController : MonoBehaviour
     private void Update()
     {
         if (Time.timeScale <= 0f) return;
+        if (pendingSurveillanceRoom != null && Memory != null && Memory.KnownHidingSpot != null)
+            pendingSurveillanceRoom = null;
+        if (pendingSurveillanceRoom != null && !traversingDoor && !PlayerVisible
+            && !(CurrentState is AlienAlertState) && !(CurrentState is AlienChaseState)
+            && !(CurrentState is AlienCatchPlayerState)
+            && !(CurrentState is AlienInvestigateKnownHideSpotState))
+        {
+            RoomModule target = pendingSurveillanceRoom;
+            pendingSurveillanceRoom = null;
+            if (Time.time < surveillanceClueExpires)
+                StartBehaviour(SurveillanceInvestigationLoop(target));
+        }
         if (activityDirector == null) BindActivityDirector();
         ResolvePlayer();
         if (enablePlayerDetection && sensesEnabled && Time.time >= nextPerceptionTime) SensePlayer();
@@ -380,6 +394,56 @@ public sealed class AlienController : MonoBehaviour
     {
         if (signal == null || !CanReactToPlayerCall) return;
         StartBehaviour(PlayerCallAssistanceLoop(signal));
+    }
+
+    // La vigilancia comunica una habitación, nunca una posición ni un escondite.
+    public void ReceiveSurveillanceClue(RoomModule room)
+    {
+        if (room == null || !enabled || !gameObject.activeInHierarchy || !sensesEnabled
+            || (Memory != null && Memory.KnownHidingSpot != null)) return;
+        pendingSurveillanceRoom = room;
+        surveillanceClueExpires = Time.time + 30f;
+    }
+
+    private IEnumerator SurveillanceInvestigationLoop(RoomModule target)
+    {
+        HouseFlowController house = HouseFlowController.Instance;
+        if (house == null || Occupant == null) yield break;
+        SetActivityState("Acude a la vigilancia");
+        if (Occupant.Room != target)
+        {
+            float deadline = Time.time + 20f;
+            while (Time.time < deadline && Occupant.Room != target && IsSessionRunning())
+            {
+                RoomModule origin = Occupant.Room;
+                if (origin == null) break;
+                foreach (DoorSocket socket in origin.Sockets)
+                {
+                    if (Occupant.Room == target || Time.time >= deadline) break;
+                    bool compatible = false;
+                    foreach (DoorSocket arrival in target.Sockets)
+                        if (socket.IsAnomalyCompatibleWith(arrival)
+                            || (house.UsesRoomPortals && socket.Kind == DoorSocketKind.HallAccess
+                                && arrival.Kind == DoorSocketKind.Interior))
+                        { compatible = true; break; }
+                    if (!compatible) continue;
+                    RoomConnection current = house.ConnectionFor(socket);
+                    if (current != null && current.SourceRoom != target && current.TargetRoom != target)
+                        continue;
+                    yield return CrossDoor(socket, target);
+                }
+                if (Occupant.Room != target) yield return new WaitForSeconds(.5f);
+            }
+            // Si el destino no liberó ninguna puerta compatible, conserva una ruta normal válida.
+            if (Occupant.Room != target && IsSessionRunning()) yield return TravelToRoom(target);
+        }
+        if (Occupant.Room == target && IsSessionRunning())
+        {
+            Memory.InferPortalCrossing(target, transform.position);
+            yield return Run(search);
+            Memory.ClearSearch();
+        }
+        if (IsSessionRunning()) yield return OrdinaryLoop();
     }
 
     private IEnumerator PlayerCallAssistanceLoop(PlayerSpottedSignal signal)
@@ -603,7 +667,7 @@ public sealed class AlienController : MonoBehaviour
         return null;
     }
 
-    public IEnumerator CrossDoor(DoorSocket socket)
+    public IEnumerator CrossDoor(DoorSocket socket, RoomModule surveillanceDestination = null)
     {
         HouseFlowController house = HouseFlowController.Instance;
         if (house == null || socket == null || Occupant.Room != socket.Room) yield break;
@@ -617,17 +681,23 @@ public sealed class AlienController : MonoBehaviour
                     + socket.transform.right * (attempt == 0 ? 0f : attempt == 1 ? .4f : -.4f);
                 yield return Motor.Go(approach, 4f);
                 if (!Motor.Arrived) continue;
-                house.RequestOpen(socket, gameObject);
+                if (surveillanceDestination != null)
+                    house.RequestSurveillanceOpen(socket, this, surveillanceDestination);
+                else house.RequestOpen(socket, gameObject);
                 float deadline = Time.time + 3.5f;
                 RoomConnection connection = null;
                 while (Time.time < deadline)
                 {
                     connection = house.ConnectionFor(socket);
-                    if (connection != null && connection.SourceSocket.Door.IsOpen) break;
+                    if (connection != null && connection.SourceSocket.Door.IsOpen
+                        && (surveillanceDestination == null || connection.SourceRoom == surveillanceDestination
+                            || connection.TargetRoom == surveillanceDestination)) break;
                     yield return null;
                 }
                 house.CancelDoorRequest(gameObject);
                 if (connection == null || !connection.SourceSocket.Door.IsOpen
+                    || (surveillanceDestination != null && connection.SourceRoom != surveillanceDestination
+                        && connection.TargetRoom != surveillanceDestination)
                     || (connection.IsAnomalous && !house.CanFollow(connection, gameObject))
                     || !house.ReservePassage(connection, gameObject)) continue;
                 Passage = connection;

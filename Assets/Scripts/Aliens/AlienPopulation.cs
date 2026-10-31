@@ -9,10 +9,12 @@ public sealed class AlienPopulation : MonoBehaviour
     [Header("Template")]
     [Tooltip("Prefab que se usa para crear cada alien. Editalo para cambiar su apariencia o sus componentes.")]
     [SerializeField] private AlienController alienPrefab;
+    [SerializeField] private AudioClip surveillanceVibration;
 
     private HouseFlowController house;
     private StoryProgression story;
     private bool thirdAlienSpawned;
+    private AlienController surveillanceAlien;
     private readonly Dictionary<RoomConnection, NavMeshLink> links = new Dictionary<RoomConnection, NavMeshLink>();
     public IReadOnlyDictionary<RoomConnection, NavMeshLink> Links => links;
 
@@ -40,6 +42,9 @@ public sealed class AlienPopulation : MonoBehaviour
         foyer.gameObject.SetActive(true);
         Spawn(foyer, new Vector3(-.75f, .05f, 0), "Alien 1");
         Spawn(foyer, new Vector3(.75f, .05f, 0), "Alien 2");
+        if (surveillanceAlien != null)
+            gameObject.AddComponent<RoomSurveillanceDirector>()
+                .Initialize(house, surveillanceAlien, surveillanceVibration);
         story = StoryProgression.Instance;
         if (story != null)
         {
@@ -102,6 +107,7 @@ public sealed class AlienPopulation : MonoBehaviour
         body.isKinematic = true; body.useGravity = false;
         house.RegisterOccupant(root, room, true);
         agent.enabled = true;
+        if (label == "Alien 1") surveillanceAlien = root.GetComponent<AlienController>();
         return true;
     }
     private void Update()

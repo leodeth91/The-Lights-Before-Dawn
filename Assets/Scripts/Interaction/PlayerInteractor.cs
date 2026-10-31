@@ -57,7 +57,8 @@ public sealed class PlayerInteractor : MonoBehaviour
 
     private void Update()
     {
-        if (GameSessionManager.Instance != null && !GameSessionManager.Instance.IsPlaying)
+        if (OpeningSequenceDirector.IsRunning
+            || (GameSessionManager.Instance != null && !GameSessionManager.Instance.IsPlaying))
         {
             SetFocusedInteractable(null);
             return;

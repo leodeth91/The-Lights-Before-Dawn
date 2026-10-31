@@ -68,6 +68,11 @@ public sealed class GameSessionManager : MonoBehaviour
         }
 
         Instance = this;
+        // La introducción se crea con la sesión para que también funcione al recargar la escena.
+        if (GetComponent<OpeningSequenceDirector>() == null)
+            gameObject.AddComponent<OpeningSequenceDirector>();
+        if (GetComponent<AnomalyPostProcessingController>() == null)
+            gameObject.AddComponent<AnomalyPostProcessingController>();
         if (runtimeInterface != null)
         {
             runtimeInterface.SetActive(true);

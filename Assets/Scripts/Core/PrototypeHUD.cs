@@ -98,6 +98,10 @@ public sealed class PrototypeHUD : MonoBehaviour
 
     private void Update()
     {
+        bool showGameplay = !OpeningSequenceDirector.IsRunning;
+        if (roomText != null) roomText.enabled = showGameplay;
+        if (connectionText != null) connectionText.enabled = showGameplay;
+        if (interactionText != null) interactionText.enabled = showGameplay;
         if (timerText != null && session != null)
         {
             int remainingSeconds = Mathf.CeilToInt(session.RemainingTime);

@@ -49,6 +49,42 @@ public sealed class OverShoulderCamera : MonoBehaviour
     private Vector3 firstPersonOutward;
     private bool snapAfterPortal;
     private Transform portalBoundary;
+    private bool cinematicMode;
+
+    public void SetCinematicMode(bool active)
+    {
+        cinematicMode = active;
+        if (active) SetCursorState(false);
+        else
+        {
+            SetCursorState(lockCursorOnPlay);
+            // El primer fotograma del control normal parte del encuadre final de Cinemachine.
+            snapAfterPortal = false;
+        }
+    }
+
+    public void GetGameplayPose(out Vector3 position, out Quaternion rotation)
+    {
+        Vector3 pivot = target.position + targetOffset;
+        Quaternion orbit = Quaternion.Euler(pitch, yaw, 0f);
+        position = KeepCameraInsidePortal(pivot,
+            pivot + orbit * new Vector3(shoulderOffset, cameraHeight, -distance));
+        Vector3 direction = position - pivot;
+        if (direction.sqrMagnitude > .0001f && Physics.SphereCast(pivot, collisionRadius,
+                direction.normalized, out RaycastHit hit, direction.magnitude, collisionMask,
+                QueryTriggerInteraction.Ignore))
+            position = pivot + direction.normalized * Mathf.Max(.05f, hit.distance - collisionPadding);
+        rotation = Quaternion.LookRotation(pivot + orbit * Vector3.forward * 10f - position, Vector3.up);
+    }
+
+    public void GetPlanarMovementAxes(out Vector3 forward, out Vector3 right)
+    {
+        // La rotación final de la cámara converge desde el hombro hacia el centro
+        // y por eso no representa exactamente el eje de avance que ve el jugador.
+        Quaternion heading = Quaternion.Euler(0f, yaw, 0f);
+        forward = heading * Vector3.forward;
+        right = heading * Vector3.right;
+    }
 
     public void SnapThroughPortal(PortalTrialGate gate)
     {
@@ -162,6 +198,7 @@ public sealed class OverShoulderCamera : MonoBehaviour
 
     private void Update()
     {
+        if (cinematicMode) return;
         if (Keyboard.current != null && Keyboard.current.escapeKey.wasPressedThisFrame)
         {
             SetCursorState(false);
@@ -186,6 +223,7 @@ public sealed class OverShoulderCamera : MonoBehaviour
 
     private void LateUpdate()
     {
+        if (cinematicMode) return;
         if (target == null)
         {
             return;

@@ -125,6 +125,7 @@ public sealed class StoryProgression : MonoBehaviour
     private void Update()
     {
         if (session == null || !session.IsPlaying) { RestoreDoorMaterial(); return; }
+        if (OpeningSequenceDirector.IsRunning) return;
         if (clearEntrancePending && house.TryParkIsolatedRoom(entrance.Room)) clearEntrancePending = false;
         if (Time.time >= messageUntil || currentMessage.Length == 0)
         {
@@ -194,7 +195,7 @@ public sealed class StoryProgression : MonoBehaviour
     }
     private void OnGUI()
     {
-        if (session == null || !session.IsPlaying) return;
+        if (session == null || !session.IsPlaying || OpeningSequenceDirector.IsRunning) return;
         float scale = Screen.height / 720f;
         var style = new GUIStyle(GUI.skin.label) { fontSize = Mathf.RoundToInt(27f * scale), alignment = TextAnchor.MiddleCenter, wordWrap = true };
         if (currentMessage.Length > 0)

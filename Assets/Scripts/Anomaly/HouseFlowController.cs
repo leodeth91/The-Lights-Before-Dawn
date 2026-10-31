@@ -42,6 +42,7 @@ public sealed class HouseFlowController : MonoBehaviour
     {
         public DoorSocket Socket;
         public GameObject Actor;
+        public RoomModule DirectedRoom;
         public float Expires, NextAttempt;
         public bool IsPlayer;
     }
@@ -169,6 +170,17 @@ public sealed class HouseFlowController : MonoBehaviour
             && socketById.TryGetValue(id, out DoorSocket target) ? target : null;
     }
     public bool RequestOpen(DoorSocket socket, GameObject actor)
+        => RequestOpenInternal(socket, actor, null);
+
+    // Solo una orden de vigilancia puede pedir este destino; la conexión sigue pasando por CanPlace.
+    public bool RequestSurveillanceOpen(DoorSocket socket, AlienController alien, RoomModule destination)
+    {
+        if (alien == null || destination == null || StoryProgression.Instance == null
+            || !StoryProgression.Instance.AnomalyEnabled) return false;
+        return RequestOpenInternal(socket, alien.gameObject, destination);
+    }
+
+    private bool RequestOpenInternal(DoorSocket socket, GameObject actor, RoomModule directedRoom)
     {
         if (actor == null) actor = player != null ? player.gameObject : null;
         RoomOccupant occupant = actor != null ? actor.GetComponent<RoomOccupant>() : null;
@@ -176,13 +188,15 @@ public sealed class HouseFlowController : MonoBehaviour
         RoomConnection existing = ConnectionFor(socket);
         if (existing != null && existing.TargetRoom == occupant.Room) socket = existing.TargetSocket;
         if (socket.Room != occupant.Room) return false;
+        if (directedRoom != null && (directedRoom == occupant.Room ||
+            (existing != null && existing.SourceRoom != directedRoom && existing.TargetRoom != directedRoom))) return false;
         if (occupant.UsesNormalDoors && existing != null && existing.IsAnomalous
-            && !CanFollow(existing, actor)) return false;
-        if (TryOpenNow(socket, actor, !occupant.UsesNormalDoors)) { CancelDoorRequest(actor); return true; }
+            && directedRoom == null && !CanFollow(existing, actor)) return false;
+        if (TryOpenNow(socket, actor, !occupant.UsesNormalDoors, directedRoom)) { CancelDoorRequest(actor); return true; }
         DoorRequest request = requests.Find(r => r.Actor == actor);
-        if (request != null && request.Socket == socket) return true;
+        if (request != null && request.Socket == socket && request.DirectedRoom == directedRoom) return true;
         CancelDoorRequest(actor);
-        requests.Add(new DoorRequest { Socket = socket, Actor = actor,
+        requests.Add(new DoorRequest { Socket = socket, Actor = actor, DirectedRoom = directedRoom,
             IsPlayer = !occupant.UsesNormalDoors, Expires = Time.time + requestLifetime,
             NextAttempt = Time.time + .05f });
         return true; // Solicitud aceptada; la puerta puede seguir esperando para abrir.
@@ -231,19 +245,24 @@ public sealed class HouseFlowController : MonoBehaviour
             && request.Actor.GetComponent<RoomOccupant>()?.Room == request.Socket.Room
             && Vector3.Distance(request.Actor.transform.position, request.Socket.Position) <= 4f;
 
-    private bool TryOpenNow(DoorSocket socket, GameObject actor, bool allowAlternative = false)
+    private bool TryOpenNow(DoorSocket socket, GameObject actor, bool allowAlternative = false,
+        RoomModule directedRoom = null)
     {
         RoomOccupant occupant = actor != null ? actor.GetComponent<RoomOccupant>() : null;
         RoomModule actorRoom = occupant != null ? occupant.Room : CurrentRoom;
-        bool normalOnly = occupant != null && occupant.UsesNormalDoors;
+        bool normalOnly = occupant != null && occupant.UsesNormalDoors && directedRoom == null;
         if (socket == null || socket.Door == null || actorRoom == null) return false;
+        if (directedRoom != null && (PlayerNeedsRoom(actorRoom) || PlayerNeedsRoom(directedRoom))) return false;
         RoomConnection existing = ConnectionFor(socket);
+        if (directedRoom != null && existing != null
+            && existing.SourceRoom != directedRoom && existing.TargetRoom != directedRoom) return false;
         if (normalOnly && (existing != null ? YieldsToPlayer(existing)
             : PlayerNeedsRoom(actorRoom) || PlayerNeedsRoom(NormalDestination(socket)?.Room))) return false;
         if (existing != null)
         {
             if (actorRoom != existing.SourceRoom && actorRoom != existing.TargetRoom) return false;
             if (normalOnly && existing.IsAnomalous && !CanFollow(existing, actor)) return false;
+            if (directedRoom != null) existing.Pursuers[actor] = Time.time + pursuitLifetime;
             if (existing.SourceSocket.Door.State == DoorState.Closed
                 || existing.SourceSocket.Door.State == DoorState.Closing)
             {
@@ -273,7 +292,7 @@ public sealed class HouseFlowController : MonoBehaviour
             }
             else { CloseAfterPassage(other, actor); TryClose(other, actor); return false; }
         }
-        return OpenConnection(socket, actor, normalOnly, allowAlternative);
+        return OpenConnection(socket, actor, normalOnly, allowAlternative, directedRoom);
     }
     public bool RequestClose(DoorSocket socket, GameObject actor = null)
     {
@@ -379,7 +398,8 @@ public sealed class HouseFlowController : MonoBehaviour
                 expiredActors.Add(lease.Key);
         foreach (GameObject actor in expiredActors) leases.Remove(actor);
     }
-    private bool OpenConnection(DoorSocket source, GameObject actor, bool normalOnly, bool allowAlternative)
+    private bool OpenConnection(DoorSocket source, GameObject actor, bool normalOnly, bool allowAlternative,
+        RoomModule directedRoom = null)
     {
         StoryProgression story = StoryProgression.Instance;
         bool storyExit = !normalOnly && story != null && story.ShouldLoopExit(source);
@@ -392,7 +412,16 @@ public sealed class HouseFlowController : MonoBehaviour
         RoomConnectionCandidate destination = default;
         // El primer intento de salir vuelve al cuarto del niño; después se sortean destinos de ambas plantas.
         // El destino narrativo también debe superar las comprobaciones de colocación segura.
-        if (storyExit)
+        if (directedRoom != null)
+        {
+            foreach (DoorSocket target in directedRoom.Sockets)
+                if ((source.IsAnomalyCompatibleWith(target)
+                    || (useRoomPortals && source.Kind == DoorSocketKind.HallAccess
+                        && target.Kind == DoorSocketKind.Interior)) && CanPlace(source, target))
+                { destination = new RoomConnectionCandidate(directedRoom, target); break; }
+            if (destination.Room == null) return false;
+        }
+        else if (storyExit)
         {
             foreach (DoorSocket target in story.ChildRoom.Sockets)
                 if (CanPlace(source, target)) { destination = new RoomConnectionCandidate(target.Room, target); break; }
@@ -453,6 +482,7 @@ public sealed class HouseFlowController : MonoBehaviour
         if (!useRoomPortals) destination.Socket.SetPortalAssemblyActive(false);
         source.ConnectTo(destination.Socket); destination.Socket.ConnectTo(source);
         var connection = new RoomConnection(source.Room, source, destination.Room, destination.Socket, isAnomaly);
+        if (directedRoom != null) connection.Pursuers[actor] = Time.time + pursuitLifetime;
         connection.AutoCloseAt = NextAutoClose();
         connection.OpenProtectedUntil = Time.time + 1.2f;
         connections.Add(connection);
@@ -666,7 +696,8 @@ public sealed class HouseFlowController : MonoBehaviour
                 if (!request.IsPlayer && (PlayerNeedsRoom(request.Socket.Room)
                     || PlayerNeedsRoom(NormalDestination(request.Socket)?.Room))) continue;
                 bool waiting = request.IsPlayer || Time.time + requestLifetime - request.Expires >= .65f;
-                if (TryOpenNow(request.Socket, request.Actor, waiting)) { requests.RemoveAt(i--); continue; }
+                if (TryOpenNow(request.Socket, request.Actor, waiting, request.DirectedRoom))
+                { requests.RemoveAt(i--); continue; }
                 // Cierra en paralelo los pasos que bloquean la solicitud, incluso en el destino contiguo.
                 // La memoria de persecución no retiene un paso ya cerrado si hace falta para la huida.
                 if (useRoomPortals) continue;
