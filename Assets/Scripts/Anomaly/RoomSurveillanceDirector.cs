@@ -8,13 +8,14 @@ public sealed class RoomSurveillanceDirector : MonoBehaviour
 {
     private const float ScanSeconds = 4f;
     private const float BetweenRooms = 1.2f;
-    private const float Boost = 1.15f;
+    private const float Boost = 2f;
 
     private sealed class ScanLight
     {
         public Light Light;
         public AudioSource Audio;
         public float BaseIntensity;
+        public Vector3 BaseLocalPosition;
         public Quaternion BaseLocalRotation;
         public bool BaseEnabled;
     }
@@ -71,10 +72,11 @@ public sealed class RoomSurveillanceDirector : MonoBehaviour
         audio.playOnAwake = false;
         audio.spatialBlend = 1f;
         audio.rolloffMode = AudioRolloffMode.Linear;
-        audio.minDistance = .8f;
-        audio.maxDistance = 9f;
+        audio.minDistance = 1.2f;
+        audio.maxDistance = 12f;
         audio.dopplerLevel = 0f;
         return new ScanLight { Light = light, Audio = audio, BaseIntensity = light.intensity,
+            BaseLocalPosition = light.transform.localPosition,
             BaseLocalRotation = light.transform.localRotation, BaseEnabled = light.enabled };
     }
 
@@ -131,20 +133,25 @@ public sealed class RoomSurveillanceDirector : MonoBehaviour
                 foreach (ScanLight light in room.Lights)
                 {
                     light.Light.enabled = true;
-                    light.Audio.volume = .8f / Mathf.Sqrt(room.Lights.Count);
+                    light.Audio.volume = Mathf.Min(1f, 1.2f / Mathf.Sqrt(room.Lights.Count));
                     if (room.Room.gameObject.activeInHierarchy) light.Audio.Play();
                 }
                 while (Time.time - start < ScanSeconds && session.IsPlaying)
                 {
                     float elapsed = Time.time - start;
-                    float strength = Mathf.Sin(Mathf.PI * Mathf.Clamp01(elapsed / ScanSeconds));
+                    float progress = Mathf.Clamp01(elapsed / ScanSeconds);
+                    float strength = Mathf.Sin(Mathf.PI * progress);
+                    float sweep = Mathf.Sin(2f * Mathf.PI * progress) * strength;
                     foreach (ScanLight light in room.Lights)
                     {
                         float increase = Mathf.Max(Boost, Mathf.Min(4f, light.BaseIntensity * .75f));
                         light.Light.intensity = light.BaseIntensity + increase * strength;
-                        float drift = (Mathf.PerlinNoise(elapsed * 2.4f, light.Light.GetInstanceID() * .001f) - .5f) * 8f;
+                        float drift = (Mathf.PerlinNoise(elapsed * 2.4f, light.Light.GetInstanceID() * .001f) - .5f) * 6f;
+                        light.Light.transform.localPosition = light.BaseLocalPosition
+                            + light.BaseLocalRotation * Vector3.right * (.45f * sweep);
                         light.Light.transform.localRotation = light.BaseLocalRotation
-                            * Quaternion.Euler(drift, drift * .65f, 0f);
+                            * Quaternion.Euler(sweep * 10f + drift * .5f * strength,
+                                sweep * 26f + drift * strength, 0f);
                     }
                     if (!checkedOccupancy && elapsed >= ScanSeconds * .5f)
                     {
@@ -167,6 +174,7 @@ public sealed class RoomSurveillanceDirector : MonoBehaviour
         {
             if (light.Light == null) continue;
             light.Light.intensity = light.BaseIntensity;
+            light.Light.transform.localPosition = light.BaseLocalPosition;
             light.Light.transform.localRotation = light.BaseLocalRotation;
             light.Light.enabled = light.BaseEnabled;
             if (light.Audio != null) light.Audio.Stop();

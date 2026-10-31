@@ -8,7 +8,7 @@ public sealed class AnomalyPostProcessingController : MonoBehaviour
 {
     [SerializeField] private string globalNightVolumeName = "POST_GlobalNight";
     [SerializeField] private string anomalyVolumeName = "POST_Anomaly";
-    [SerializeField, Min(0.01f)] private float transitionSeconds = 2.5f;
+    [SerializeField, Min(0.01f)] private float transitionSeconds = 8f;
 
     private StoryProgression story;
     private Volume globalNightVolume;

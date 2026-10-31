@@ -102,9 +102,8 @@ public sealed class OpeningSequenceDirector : MonoBehaviour
         animator = visualRoot.GetComponentInChildren<Animator>(true);
         if (animator != null)
         {
-            // El asset fue ubicado al costado de la cama con un offset respecto
-            // del CharacterController. Conservar su lugar visual y llevar el
-            // controlador hasta él evita que cámara, colisión y cuerpo se separen.
+            // El modelo fue colocado manualmente al costado de la cama. Llevar
+            // el controlador allí conserva esa posición final en el mundo.
             Vector3 authoredModelPosition = animator.transform.position;
             Vector3 controllerPosition = movement.transform.position;
             controllerPosition.x = authoredModelPosition.x;
@@ -113,7 +112,18 @@ public sealed class OpeningSequenceDirector : MonoBehaviour
             bool capsuleWasEnabled = capsule != null && capsule.enabled;
             if (capsuleWasEnabled) capsule.enabled = false;
             movement.transform.position = controllerPosition;
-            animator.transform.position = authoredModelPosition;
+            Transform modelPlacement = animator.transform.parent;
+            if (modelPlacement != null && modelPlacement.parent == visualRoot)
+            {
+                // El offset y el giro de edición sirven para ubicarlo en la cama,
+                // pero en gameplay desvían su cuerpo respecto del movimiento.
+                Vector3 localPosition = modelPlacement.localPosition;
+                localPosition.x = 0f;
+                localPosition.z = 0f;
+                modelPlacement.localPosition = localPosition;
+                modelPlacement.localRotation = Quaternion.identity;
+            }
+            else animator.transform.position = authoredModelPosition;
             if (capsuleWasEnabled) capsule.enabled = true;
             if (childAnimation != null) childAnimation.RefreshRestPose();
         }

@@ -5,6 +5,8 @@ using UnityEngine;
 [DisallowMultipleComponent]
 public sealed class SpatialWorldAudio : MonoBehaviour
 {
+    private const float ClockVolume = .28f;
+
     [SerializeField] private HouseFlowController house;
     [SerializeField] private StoryProgression story;
     [SerializeField] private GameSessionManager session;
@@ -35,9 +37,9 @@ public sealed class SpatialWorldAudio : MonoBehaviour
             foreach (Transform child in room.GetComponentsInChildren<Transform>(true))
             {
                 if (child.name == "LuzExteriorVentana") AddLoop(child, windowAmbience, 0.30f, 0.8f, 5f);
-                else if (child.name == "tv__small") AddLoop(child, televisionStatic, 0.23f, 0.7f, 4f);
+                else if (child.name == "tv__small") AddLoop(child, televisionStatic, 0.23f, 0.7f, 9f);
                 else if (child.name == "small_radio") AddLoop(child, kitchenRadio, 0.60f, 1.5f, 8f);
-                else if (child.name == "grandfather_clock") clockSource = AddLoop(child, clockTicking, 0.48f, 1.2f, 9f);
+                else if (child.name == "grandfather_clock") clockSource = AddLoop(child, clockTicking, ClockVolume, 1.2f, 9f);
             }
         }
         if (phone != null && phoneVibration != null)
@@ -83,7 +85,7 @@ public sealed class SpatialWorldAudio : MonoBehaviour
 
     private void OnObjectiveChanged(StoryObjective objective)
     {
-        if (clockSource != null) clockSource.volume = objective >= StoryObjective.FindPhone ? 0.48f * 1.3f : 0.48f;
+        if (clockSource != null) clockSource.volume = objective >= StoryObjective.FindPhone ? ClockVolume * 1.3f : ClockVolume;
     }
 
     private void OnSessionChanged(GameSessionState state)

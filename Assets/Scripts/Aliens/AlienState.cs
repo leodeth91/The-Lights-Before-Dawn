@@ -142,8 +142,12 @@ public sealed class AlienChaseState : AlienState
                 if (alien.PlayerVisible && playerInSameRoom)
                     groundTarget.y = alien.transform.position.y;
                 bool elevated = alien.PlayerVisible && movementTarget.y - groundTarget.y > .35f;
-                if (!(elevated ? alien.Motor.SetGroundDestination(groundTarget, alien.Occupant.Room)
-                    : alien.Motor.SetDestination(groundTarget, 1.1f))) break;
+                bool hasPath = elevated
+                    ? alien.Motor.SetGroundDestination(groundTarget, alien.Occupant.Room)
+                    : alien.Motor.SetDestination(groundTarget, 1.1f, alien.Occupant.Room);
+                if (!hasPath)
+                    hasPath = alien.Motor.SetGroundDestination(groundTarget, alien.Occupant.Room, 2.5f);
+                if (!hasPath && !alien.PlayerVisible) break;
             }
             if ((alien.transform.position - lastProgress).sqrMagnitude > .01f)
             { lastProgress = alien.transform.position; stalledSince = Time.time; }

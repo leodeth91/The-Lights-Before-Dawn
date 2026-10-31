@@ -53,6 +53,7 @@ public sealed class AlienAmbientAudio : MonoBehaviour
     public AudioClip ResponseClip => responseClip != null ? responseClip : runtimeResponseClip;
     public AudioClip CallClip => callClip != null ? callClip : runtimeCallClip;
     public AudioClip ChaseClip => chaseClip != null ? chaseClip : runtimeChaseClip;
+    public AudioSource VocalSource => vocalSource;
     public bool IsReady => FootstepClip != null && RoamingClip != null
         && QuestionClip != null && ResponseClip != null && CallClip != null && ChaseClip != null
         && footstepSource != null && vocalSource != null
