@@ -13742,6 +13742,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 602837172024408445, guid: a7ac4bc683a8de449b2ce81cd93728dd, type: 3}
+      propertyPath: closingClip
+      value: 
+      objectReference: {fileID: 8300000, guid: 86701f1203473e24d84fae9c5b75e499, type: 3}
+    - target: {fileID: 602837172024408445, guid: a7ac4bc683a8de449b2ce81cd93728dd, type: 3}
+      propertyPath: openingClip
+      value: 
+      objectReference: {fileID: 8300000, guid: 349c25cc730a51244847e7e40614ea91, type: 3}
     - target: {fileID: 984188134736931563, guid: a7ac4bc683a8de449b2ce81cd93728dd, type: 3}
       propertyPath: m_Mesh
       value: 
@@ -14110,6 +14118,10 @@ PrefabInstance:
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
       objectReference: {fileID: 2100000, guid: 43aa6d5b6b3515a40af1e0653b68548a, type: 2}
+    - target: {fileID: 4708842341212623320, guid: a7ac4bc683a8de449b2ce81cd93728dd, type: 3}
+      propertyPath: OutputAudioMixerGroup
+      value: 
+      objectReference: {fileID: 7638520478723564098, guid: cd44063a9e57ef9499cef7719ea9c485, type: 2}
     - target: {fileID: 4843441855798014562, guid: a7ac4bc683a8de449b2ce81cd93728dd, type: 3}
       propertyPath: m_Mesh
       value: 
@@ -14550,6 +14562,10 @@ PrefabInstance:
       propertyPath: m_VersionIndex
       value: 34
       objectReference: {fileID: 0}
+    - target: {fileID: 5720137543403116591, guid: a7ac4bc683a8de449b2ce81cd93728dd, type: 3}
+      propertyPath: OutputAudioMixerGroup
+      value: 
+      objectReference: {fileID: 7638520478723564098, guid: cd44063a9e57ef9499cef7719ea9c485, type: 2}
     - target: {fileID: 5797291680674984155, guid: a7ac4bc683a8de449b2ce81cd93728dd, type: 3}
       propertyPath: m_Mesh
       value: 
@@ -14678,6 +14694,14 @@ PrefabInstance:
       propertyPath: m_VersionIndex
       value: 34
       objectReference: {fileID: 0}
+    - target: {fileID: 7024183313221768514, guid: a7ac4bc683a8de449b2ce81cd93728dd, type: 3}
+      propertyPath: closingClip
+      value: 
+      objectReference: {fileID: 8300000, guid: 86701f1203473e24d84fae9c5b75e499, type: 3}
+    - target: {fileID: 7024183313221768514, guid: a7ac4bc683a8de449b2ce81cd93728dd, type: 3}
+      propertyPath: openingClip
+      value: 
+      objectReference: {fileID: 8300000, guid: 349c25cc730a51244847e7e40614ea91, type: 3}
     - target: {fileID: 7182010659673767065, guid: a7ac4bc683a8de449b2ce81cd93728dd, type: 3}
       propertyPath: m_Mesh
       value: 
@@ -21013,6 +21037,14 @@ PrefabInstance:
       propertyPath: m_Enabled
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2613324699462840616, guid: d043770e4be895043809573ea7db7aa7, type: 3}
+      propertyPath: closingClip
+      value: 
+      objectReference: {fileID: 8300000, guid: 86701f1203473e24d84fae9c5b75e499, type: 3}
+    - target: {fileID: 2613324699462840616, guid: d043770e4be895043809573ea7db7aa7, type: 3}
+      propertyPath: openingClip
+      value: 
+      objectReference: {fileID: 8300000, guid: 349c25cc730a51244847e7e40614ea91, type: 3}
     - target: {fileID: 2687972324563381351, guid: d043770e4be895043809573ea7db7aa7, type: 3}
       propertyPath: m_Mesh
       value: 
@@ -21469,6 +21501,10 @@ PrefabInstance:
       propertyPath: m_VersionIndex
       value: 55
       objectReference: {fileID: 0}
+    - target: {fileID: 7714472362866048445, guid: d043770e4be895043809573ea7db7aa7, type: 3}
+      propertyPath: OutputAudioMixerGroup
+      value: 
+      objectReference: {fileID: 7638520478723564098, guid: cd44063a9e57ef9499cef7719ea9c485, type: 2}
     - target: {fileID: 7878812955447511377, guid: d043770e4be895043809573ea7db7aa7, type: 3}
       propertyPath: m_Mesh
       value: 
@@ -22364,6 +22400,10 @@ PrefabInstance:
       propertyPath: m_Mesh
       value: 
       objectReference: {fileID: 1373107433}
+    - target: {fileID: 932513800778580911, guid: 13e7a7bb28055a84da1238a8e2073270, type: 3}
+      propertyPath: OutputAudioMixerGroup
+      value: 
+      objectReference: {fileID: 7638520478723564098, guid: cd44063a9e57ef9499cef7719ea9c485, type: 2}
     - target: {fileID: 997662340924276637, guid: 13e7a7bb28055a84da1238a8e2073270, type: 3}
       propertyPath: m_Mesh
       value: 
@@ -22536,6 +22576,14 @@ PrefabInstance:
       propertyPath: m_VersionIndex
       value: 205
       objectReference: {fileID: 0}
+    - target: {fileID: 1889889643553688716, guid: 13e7a7bb28055a84da1238a8e2073270, type: 3}
+      propertyPath: closingClip
+      value: 
+      objectReference: {fileID: 8300000, guid: 86701f1203473e24d84fae9c5b75e499, type: 3}
+    - target: {fileID: 1889889643553688716, guid: 13e7a7bb28055a84da1238a8e2073270, type: 3}
+      propertyPath: openingClip
+      value: 
+      objectReference: {fileID: 8300000, guid: 349c25cc730a51244847e7e40614ea91, type: 3}
     - target: {fileID: 1993548806279153629, guid: 13e7a7bb28055a84da1238a8e2073270, type: 3}
       propertyPath: m_Mesh
       value: 
@@ -22632,6 +22680,10 @@ PrefabInstance:
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
       objectReference: {fileID: 2100000, guid: ebe4299ae172d7642ab57c7059f3ad69, type: 2}
+    - target: {fileID: 2655844682919751991, guid: 13e7a7bb28055a84da1238a8e2073270, type: 3}
+      propertyPath: OutputAudioMixerGroup
+      value: 
+      objectReference: {fileID: 7638520478723564098, guid: cd44063a9e57ef9499cef7719ea9c485, type: 2}
     - target: {fileID: 2730874259196596158, guid: 13e7a7bb28055a84da1238a8e2073270, type: 3}
       propertyPath: m_Mesh
       value: 
@@ -22676,6 +22728,10 @@ PrefabInstance:
       propertyPath: m_Mesh
       value: 
       objectReference: {fileID: 175864796}
+    - target: {fileID: 3223021400414360864, guid: 13e7a7bb28055a84da1238a8e2073270, type: 3}
+      propertyPath: OutputAudioMixerGroup
+      value: 
+      objectReference: {fileID: 7638520478723564098, guid: cd44063a9e57ef9499cef7719ea9c485, type: 2}
     - target: {fileID: 3241212151348470669, guid: 13e7a7bb28055a84da1238a8e2073270, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
@@ -22912,10 +22968,26 @@ PrefabInstance:
       propertyPath: m_Mesh
       value: 
       objectReference: {fileID: 192531473}
+    - target: {fileID: 5170011449985209234, guid: 13e7a7bb28055a84da1238a8e2073270, type: 3}
+      propertyPath: closingClip
+      value: 
+      objectReference: {fileID: 8300000, guid: 86701f1203473e24d84fae9c5b75e499, type: 3}
+    - target: {fileID: 5170011449985209234, guid: 13e7a7bb28055a84da1238a8e2073270, type: 3}
+      propertyPath: openingClip
+      value: 
+      objectReference: {fileID: 8300000, guid: 349c25cc730a51244847e7e40614ea91, type: 3}
     - target: {fileID: 5264895562739027674, guid: 13e7a7bb28055a84da1238a8e2073270, type: 3}
       propertyPath: m_Mesh
       value: 
       objectReference: {fileID: 767052840}
+    - target: {fileID: 5291475929969928775, guid: 13e7a7bb28055a84da1238a8e2073270, type: 3}
+      propertyPath: closingClip
+      value: 
+      objectReference: {fileID: 8300000, guid: 86701f1203473e24d84fae9c5b75e499, type: 3}
+    - target: {fileID: 5291475929969928775, guid: 13e7a7bb28055a84da1238a8e2073270, type: 3}
+      propertyPath: openingClip
+      value: 
+      objectReference: {fileID: 8300000, guid: 349c25cc730a51244847e7e40614ea91, type: 3}
     - target: {fileID: 5337444096345788967, guid: 13e7a7bb28055a84da1238a8e2073270, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
@@ -22956,6 +23028,14 @@ PrefabInstance:
       propertyPath: m_VersionIndex
       value: 205
       objectReference: {fileID: 0}
+    - target: {fileID: 5439959695171467786, guid: 13e7a7bb28055a84da1238a8e2073270, type: 3}
+      propertyPath: closingClip
+      value: 
+      objectReference: {fileID: 8300000, guid: 86701f1203473e24d84fae9c5b75e499, type: 3}
+    - target: {fileID: 5439959695171467786, guid: 13e7a7bb28055a84da1238a8e2073270, type: 3}
+      propertyPath: openingClip
+      value: 
+      objectReference: {fileID: 8300000, guid: 349c25cc730a51244847e7e40614ea91, type: 3}
     - target: {fileID: 5468925161983444421, guid: 13e7a7bb28055a84da1238a8e2073270, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
@@ -23044,6 +23124,10 @@ PrefabInstance:
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
       objectReference: {fileID: 2100000, guid: ebe4299ae172d7642ab57c7059f3ad69, type: 2}
+    - target: {fileID: 6572745930207632586, guid: 13e7a7bb28055a84da1238a8e2073270, type: 3}
+      propertyPath: OutputAudioMixerGroup
+      value: 
+      objectReference: {fileID: 7638520478723564098, guid: cd44063a9e57ef9499cef7719ea9c485, type: 2}
     - target: {fileID: 6635141144911769816, guid: 13e7a7bb28055a84da1238a8e2073270, type: 3}
       propertyPath: m_Mesh
       value: 
@@ -30119,6 +30203,14 @@ PrefabInstance:
       propertyPath: m_VersionIndex
       value: 43
       objectReference: {fileID: 0}
+    - target: {fileID: 4428647874995566263, guid: a2d3d1f364fea754283d291cdcbbf6af, type: 3}
+      propertyPath: closingClip
+      value: 
+      objectReference: {fileID: 8300000, guid: 86701f1203473e24d84fae9c5b75e499, type: 3}
+    - target: {fileID: 4428647874995566263, guid: a2d3d1f364fea754283d291cdcbbf6af, type: 3}
+      propertyPath: openingClip
+      value: 
+      objectReference: {fileID: 8300000, guid: 349c25cc730a51244847e7e40614ea91, type: 3}
     - target: {fileID: 4768975171791153975, guid: a2d3d1f364fea754283d291cdcbbf6af, type: 3}
       propertyPath: m_Mesh
       value: 
@@ -30191,6 +30283,10 @@ PrefabInstance:
       propertyPath: m_VersionIndex
       value: 43
       objectReference: {fileID: 0}
+    - target: {fileID: 6913396169121392480, guid: a2d3d1f364fea754283d291cdcbbf6af, type: 3}
+      propertyPath: OutputAudioMixerGroup
+      value: 
+      objectReference: {fileID: 7638520478723564098, guid: cd44063a9e57ef9499cef7719ea9c485, type: 2}
     - target: {fileID: 6995212703706938925, guid: a2d3d1f364fea754283d291cdcbbf6af, type: 3}
       propertyPath: m_Mesh
       value: 
@@ -56282,6 +56378,14 @@ PrefabInstance:
       propertyPath: m_Mesh
       value: 
       objectReference: {fileID: 234340605}
+    - target: {fileID: 251003788949033351, guid: bc48c65d93ccd6d4d92c111e36c16567, type: 3}
+      propertyPath: closingClip
+      value: 
+      objectReference: {fileID: 8300000, guid: 86701f1203473e24d84fae9c5b75e499, type: 3}
+    - target: {fileID: 251003788949033351, guid: bc48c65d93ccd6d4d92c111e36c16567, type: 3}
+      propertyPath: openingClip
+      value: 
+      objectReference: {fileID: 8300000, guid: 349c25cc730a51244847e7e40614ea91, type: 3}
     - target: {fileID: 265505434507974032, guid: bc48c65d93ccd6d4d92c111e36c16567, type: 3}
       propertyPath: m_Mesh
       value: 
@@ -56318,6 +56422,10 @@ PrefabInstance:
       propertyPath: m_Mesh
       value: 
       objectReference: {fileID: 1372529528}
+    - target: {fileID: 892888286319129921, guid: bc48c65d93ccd6d4d92c111e36c16567, type: 3}
+      propertyPath: OutputAudioMixerGroup
+      value: 
+      objectReference: {fileID: 7638520478723564098, guid: cd44063a9e57ef9499cef7719ea9c485, type: 2}
     - target: {fileID: 945447602484639277, guid: bc48c65d93ccd6d4d92c111e36c16567, type: 3}
       propertyPath: m_Mesh
       value: 
@@ -56354,6 +56462,10 @@ PrefabInstance:
       propertyPath: m_VersionIndex
       value: 49
       objectReference: {fileID: 0}
+    - target: {fileID: 1204139379364780936, guid: bc48c65d93ccd6d4d92c111e36c16567, type: 3}
+      propertyPath: OutputAudioMixerGroup
+      value: 
+      objectReference: {fileID: 7638520478723564098, guid: cd44063a9e57ef9499cef7719ea9c485, type: 2}
     - target: {fileID: 1216986497350234399, guid: bc48c65d93ccd6d4d92c111e36c16567, type: 3}
       propertyPath: m_Mesh
       value: 
@@ -56370,6 +56482,14 @@ PrefabInstance:
       propertyPath: m_Mesh
       value: 
       objectReference: {fileID: 2043741424}
+    - target: {fileID: 1344820573151424378, guid: bc48c65d93ccd6d4d92c111e36c16567, type: 3}
+      propertyPath: closingClip
+      value: 
+      objectReference: {fileID: 8300000, guid: 86701f1203473e24d84fae9c5b75e499, type: 3}
+    - target: {fileID: 1344820573151424378, guid: bc48c65d93ccd6d4d92c111e36c16567, type: 3}
+      propertyPath: openingClip
+      value: 
+      objectReference: {fileID: 8300000, guid: 349c25cc730a51244847e7e40614ea91, type: 3}
     - target: {fileID: 1389869659801371012, guid: bc48c65d93ccd6d4d92c111e36c16567, type: 3}
       propertyPath: m_Mesh
       value: 
@@ -56446,6 +56566,14 @@ PrefabInstance:
       propertyPath: m_VersionIndex
       value: 49
       objectReference: {fileID: 0}
+    - target: {fileID: 2272178964857972989, guid: bc48c65d93ccd6d4d92c111e36c16567, type: 3}
+      propertyPath: closingClip
+      value: 
+      objectReference: {fileID: 8300000, guid: 86701f1203473e24d84fae9c5b75e499, type: 3}
+    - target: {fileID: 2272178964857972989, guid: bc48c65d93ccd6d4d92c111e36c16567, type: 3}
+      propertyPath: openingClip
+      value: 
+      objectReference: {fileID: 8300000, guid: 349c25cc730a51244847e7e40614ea91, type: 3}
     - target: {fileID: 2295709397112054694, guid: bc48c65d93ccd6d4d92c111e36c16567, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
@@ -56502,6 +56630,14 @@ PrefabInstance:
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
       objectReference: {fileID: 2100000, guid: ebe4299ae172d7642ab57c7059f3ad69, type: 2}
+    - target: {fileID: 3279113857336245091, guid: bc48c65d93ccd6d4d92c111e36c16567, type: 3}
+      propertyPath: closingClip
+      value: 
+      objectReference: {fileID: 8300000, guid: 86701f1203473e24d84fae9c5b75e499, type: 3}
+    - target: {fileID: 3279113857336245091, guid: bc48c65d93ccd6d4d92c111e36c16567, type: 3}
+      propertyPath: openingClip
+      value: 
+      objectReference: {fileID: 8300000, guid: 349c25cc730a51244847e7e40614ea91, type: 3}
     - target: {fileID: 3375840228798557273, guid: bc48c65d93ccd6d4d92c111e36c16567, type: 3}
       propertyPath: m_Mesh
       value: 
@@ -56662,6 +56798,10 @@ PrefabInstance:
       propertyPath: m_Mesh
       value: 
       objectReference: {fileID: 1201581287}
+    - target: {fileID: 5058950775150932240, guid: bc48c65d93ccd6d4d92c111e36c16567, type: 3}
+      propertyPath: OutputAudioMixerGroup
+      value: 
+      objectReference: {fileID: 7638520478723564098, guid: cd44063a9e57ef9499cef7719ea9c485, type: 2}
     - target: {fileID: 5071587008796750609, guid: bc48c65d93ccd6d4d92c111e36c16567, type: 3}
       propertyPath: m_Mesh
       value: 
@@ -56714,6 +56854,10 @@ PrefabInstance:
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
       objectReference: {fileID: 2100000, guid: ebe4299ae172d7642ab57c7059f3ad69, type: 2}
+    - target: {fileID: 5444747861181816645, guid: bc48c65d93ccd6d4d92c111e36c16567, type: 3}
+      propertyPath: OutputAudioMixerGroup
+      value: 
+      objectReference: {fileID: 7638520478723564098, guid: cd44063a9e57ef9499cef7719ea9c485, type: 2}
     - target: {fileID: 5454766767527337619, guid: bc48c65d93ccd6d4d92c111e36c16567, type: 3}
       propertyPath: m_Mesh
       value: 
@@ -56750,6 +56894,18 @@ PrefabInstance:
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
       objectReference: {fileID: 2100000, guid: ebe4299ae172d7642ab57c7059f3ad69, type: 2}
+    - target: {fileID: 5762433976287691207, guid: bc48c65d93ccd6d4d92c111e36c16567, type: 3}
+      propertyPath: OutputAudioMixerGroup
+      value: 
+      objectReference: {fileID: 7638520478723564098, guid: cd44063a9e57ef9499cef7719ea9c485, type: 2}
+    - target: {fileID: 5882639513967216649, guid: bc48c65d93ccd6d4d92c111e36c16567, type: 3}
+      propertyPath: closingClip
+      value: 
+      objectReference: {fileID: 8300000, guid: 86701f1203473e24d84fae9c5b75e499, type: 3}
+    - target: {fileID: 5882639513967216649, guid: bc48c65d93ccd6d4d92c111e36c16567, type: 3}
+      propertyPath: openingClip
+      value: 
+      objectReference: {fileID: 8300000, guid: 349c25cc730a51244847e7e40614ea91, type: 3}
     - target: {fileID: 6091755048205776235, guid: bc48c65d93ccd6d4d92c111e36c16567, type: 3}
       propertyPath: m_Mesh
       value: 
@@ -56858,6 +57014,14 @@ PrefabInstance:
       propertyPath: m_VersionIndex
       value: 49
       objectReference: {fileID: 0}
+    - target: {fileID: 7046186872976030135, guid: bc48c65d93ccd6d4d92c111e36c16567, type: 3}
+      propertyPath: closingClip
+      value: 
+      objectReference: {fileID: 8300000, guid: 86701f1203473e24d84fae9c5b75e499, type: 3}
+    - target: {fileID: 7046186872976030135, guid: bc48c65d93ccd6d4d92c111e36c16567, type: 3}
+      propertyPath: openingClip
+      value: 
+      objectReference: {fileID: 8300000, guid: 349c25cc730a51244847e7e40614ea91, type: 3}
     - target: {fileID: 7066789433283909145, guid: bc48c65d93ccd6d4d92c111e36c16567, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
@@ -56950,6 +57114,10 @@ PrefabInstance:
       propertyPath: m_Mesh
       value: 
       objectReference: {fileID: 1197188247}
+    - target: {fileID: 8049527403399136654, guid: bc48c65d93ccd6d4d92c111e36c16567, type: 3}
+      propertyPath: OutputAudioMixerGroup
+      value: 
+      objectReference: {fileID: 7638520478723564098, guid: cd44063a9e57ef9499cef7719ea9c485, type: 2}
     - target: {fileID: 8121322990616058747, guid: bc48c65d93ccd6d4d92c111e36c16567, type: 3}
       propertyPath: m_Mesh
       value: 
@@ -63766,6 +63934,14 @@ PrefabInstance:
       propertyPath: m_VersionIndex
       value: 25
       objectReference: {fileID: 0}
+    - target: {fileID: 1095877941672340281, guid: d5be644681104f640b31d0166409f71f, type: 3}
+      propertyPath: closingClip
+      value: 
+      objectReference: {fileID: 8300000, guid: 86701f1203473e24d84fae9c5b75e499, type: 3}
+    - target: {fileID: 1095877941672340281, guid: d5be644681104f640b31d0166409f71f, type: 3}
+      propertyPath: openingClip
+      value: 
+      objectReference: {fileID: 8300000, guid: 349c25cc730a51244847e7e40614ea91, type: 3}
     - target: {fileID: 1177097737773091262, guid: d5be644681104f640b31d0166409f71f, type: 3}
       propertyPath: m_Enabled
       value: 0
@@ -63794,6 +63970,10 @@ PrefabInstance:
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
       objectReference: {fileID: 2100000, guid: ebe4299ae172d7642ab57c7059f3ad69, type: 2}
+    - target: {fileID: 1511002493656523202, guid: d5be644681104f640b31d0166409f71f, type: 3}
+      propertyPath: OutputAudioMixerGroup
+      value: 
+      objectReference: {fileID: 7638520478723564098, guid: cd44063a9e57ef9499cef7719ea9c485, type: 2}
     - target: {fileID: 1523227641762603018, guid: d5be644681104f640b31d0166409f71f, type: 3}
       propertyPath: m_Mesh
       value: 
@@ -63830,6 +64010,14 @@ PrefabInstance:
       propertyPath: m_VersionIndex
       value: 25
       objectReference: {fileID: 0}
+    - target: {fileID: 1853673506297965334, guid: d5be644681104f640b31d0166409f71f, type: 3}
+      propertyPath: closingClip
+      value: 
+      objectReference: {fileID: 8300000, guid: 86701f1203473e24d84fae9c5b75e499, type: 3}
+    - target: {fileID: 1853673506297965334, guid: d5be644681104f640b31d0166409f71f, type: 3}
+      propertyPath: openingClip
+      value: 
+      objectReference: {fileID: 8300000, guid: 349c25cc730a51244847e7e40614ea91, type: 3}
     - target: {fileID: 1858289967454273569, guid: d5be644681104f640b31d0166409f71f, type: 3}
       propertyPath: m_Mesh
       value: 
@@ -63910,6 +64098,10 @@ PrefabInstance:
       propertyPath: m_VersionIndex
       value: 25
       objectReference: {fileID: 0}
+    - target: {fileID: 3150703764740740972, guid: d5be644681104f640b31d0166409f71f, type: 3}
+      propertyPath: OutputAudioMixerGroup
+      value: 
+      objectReference: {fileID: 7638520478723564098, guid: cd44063a9e57ef9499cef7719ea9c485, type: 2}
     - target: {fileID: 3204816769726062798, guid: d5be644681104f640b31d0166409f71f, type: 3}
       propertyPath: m_Mesh
       value: 
@@ -63998,6 +64190,14 @@ PrefabInstance:
       propertyPath: m_VersionIndex
       value: 25
       objectReference: {fileID: 0}
+    - target: {fileID: 4154281251515634016, guid: d5be644681104f640b31d0166409f71f, type: 3}
+      propertyPath: closingClip
+      value: 
+      objectReference: {fileID: 8300000, guid: 86701f1203473e24d84fae9c5b75e499, type: 3}
+    - target: {fileID: 4154281251515634016, guid: d5be644681104f640b31d0166409f71f, type: 3}
+      propertyPath: openingClip
+      value: 
+      objectReference: {fileID: 8300000, guid: 349c25cc730a51244847e7e40614ea91, type: 3}
     - target: {fileID: 4252589740976737325, guid: d5be644681104f640b31d0166409f71f, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
@@ -64106,6 +64306,10 @@ PrefabInstance:
       propertyPath: m_VersionIndex
       value: 25
       objectReference: {fileID: 0}
+    - target: {fileID: 6150082273568732844, guid: d5be644681104f640b31d0166409f71f, type: 3}
+      propertyPath: OutputAudioMixerGroup
+      value: 
+      objectReference: {fileID: 7638520478723564098, guid: cd44063a9e57ef9499cef7719ea9c485, type: 2}
     - target: {fileID: 6294976198031811864, guid: d5be644681104f640b31d0166409f71f, type: 3}
       propertyPath: m_Mesh
       value: 
@@ -64162,6 +64366,10 @@ PrefabInstance:
       propertyPath: m_VersionIndex
       value: 25
       objectReference: {fileID: 0}
+    - target: {fileID: 7038463273214164640, guid: d5be644681104f640b31d0166409f71f, type: 3}
+      propertyPath: OutputAudioMixerGroup
+      value: 
+      objectReference: {fileID: 7638520478723564098, guid: cd44063a9e57ef9499cef7719ea9c485, type: 2}
     - target: {fileID: 7216016778936517631, guid: d5be644681104f640b31d0166409f71f, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
@@ -64306,6 +64514,14 @@ PrefabInstance:
       propertyPath: m_Mesh
       value: 
       objectReference: {fileID: 768884714}
+    - target: {fileID: 8961326081016069073, guid: d5be644681104f640b31d0166409f71f, type: 3}
+      propertyPath: closingClip
+      value: 
+      objectReference: {fileID: 8300000, guid: 86701f1203473e24d84fae9c5b75e499, type: 3}
+    - target: {fileID: 8961326081016069073, guid: d5be644681104f640b31d0166409f71f, type: 3}
+      propertyPath: openingClip
+      value: 
+      objectReference: {fileID: 8300000, guid: 349c25cc730a51244847e7e40614ea91, type: 3}
     - target: {fileID: 9020476701753344062, guid: d5be644681104f640b31d0166409f71f, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
@@ -93829,6 +94045,14 @@ PrefabInstance:
       propertyPath: m_VersionIndex
       value: 49
       objectReference: {fileID: 0}
+    - target: {fileID: 4896198222714690616, guid: e0f4b28b37b5ab449883e7c0287ba08f, type: 3}
+      propertyPath: closingClip
+      value: 
+      objectReference: {fileID: 8300000, guid: 86701f1203473e24d84fae9c5b75e499, type: 3}
+    - target: {fileID: 4896198222714690616, guid: e0f4b28b37b5ab449883e7c0287ba08f, type: 3}
+      propertyPath: openingClip
+      value: 
+      objectReference: {fileID: 8300000, guid: 349c25cc730a51244847e7e40614ea91, type: 3}
     - target: {fileID: 4993685348597639694, guid: e0f4b28b37b5ab449883e7c0287ba08f, type: 3}
       propertyPath: m_Mesh
       value: 
@@ -93849,6 +94073,14 @@ PrefabInstance:
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
       objectReference: {fileID: 2100000, guid: ebe4299ae172d7642ab57c7059f3ad69, type: 2}
+    - target: {fileID: 5712803223063193414, guid: e0f4b28b37b5ab449883e7c0287ba08f, type: 3}
+      propertyPath: closingClip
+      value: 
+      objectReference: {fileID: 8300000, guid: 86701f1203473e24d84fae9c5b75e499, type: 3}
+    - target: {fileID: 5712803223063193414, guid: e0f4b28b37b5ab449883e7c0287ba08f, type: 3}
+      propertyPath: openingClip
+      value: 
+      objectReference: {fileID: 8300000, guid: 349c25cc730a51244847e7e40614ea91, type: 3}
     - target: {fileID: 5760303016637694958, guid: e0f4b28b37b5ab449883e7c0287ba08f, type: 3}
       propertyPath: m_Mesh
       value: 
@@ -94093,6 +94325,10 @@ PrefabInstance:
       propertyPath: m_VersionIndex
       value: 49
       objectReference: {fileID: 0}
+    - target: {fileID: 7375439414462973816, guid: e0f4b28b37b5ab449883e7c0287ba08f, type: 3}
+      propertyPath: OutputAudioMixerGroup
+      value: 
+      objectReference: {fileID: 7638520478723564098, guid: cd44063a9e57ef9499cef7719ea9c485, type: 2}
     - target: {fileID: 7488534252208087753, guid: e0f4b28b37b5ab449883e7c0287ba08f, type: 3}
       propertyPath: m_Mesh
       value: 
@@ -94129,6 +94365,10 @@ PrefabInstance:
       propertyPath: m_VersionIndex
       value: 49
       objectReference: {fileID: 0}
+    - target: {fileID: 7736804152716023188, guid: e0f4b28b37b5ab449883e7c0287ba08f, type: 3}
+      propertyPath: OutputAudioMixerGroup
+      value: 
+      objectReference: {fileID: 7638520478723564098, guid: cd44063a9e57ef9499cef7719ea9c485, type: 2}
     - target: {fileID: 7756097831194145568, guid: e0f4b28b37b5ab449883e7c0287ba08f, type: 3}
       propertyPath: m_Mesh
       value: 
@@ -94201,6 +94441,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Habitacion_SalaComedor
       objectReference: {fileID: 0}
+    - target: {fileID: 8438644603956862866, guid: e0f4b28b37b5ab449883e7c0287ba08f, type: 3}
+      propertyPath: OutputAudioMixerGroup
+      value: 
+      objectReference: {fileID: 7638520478723564098, guid: cd44063a9e57ef9499cef7719ea9c485, type: 2}
     - target: {fileID: 8443038670354167073, guid: e0f4b28b37b5ab449883e7c0287ba08f, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
@@ -94209,6 +94453,14 @@ PrefabInstance:
       propertyPath: m_Enabled
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8521281215983951714, guid: e0f4b28b37b5ab449883e7c0287ba08f, type: 3}
+      propertyPath: closingClip
+      value: 
+      objectReference: {fileID: 8300000, guid: 86701f1203473e24d84fae9c5b75e499, type: 3}
+    - target: {fileID: 8521281215983951714, guid: e0f4b28b37b5ab449883e7c0287ba08f, type: 3}
+      propertyPath: openingClip
+      value: 
+      objectReference: {fileID: 8300000, guid: 349c25cc730a51244847e7e40614ea91, type: 3}
     - target: {fileID: 8563621455163432417, guid: e0f4b28b37b5ab449883e7c0287ba08f, type: 3}
       propertyPath: m_Mesh
       value: 
@@ -97269,6 +97521,10 @@ PrefabInstance:
       propertyPath: m_VersionIndex
       value: 43
       objectReference: {fileID: 0}
+    - target: {fileID: 1611234893022512531, guid: 1b9ee1c4b279fdd4b8f7b873349e237b, type: 3}
+      propertyPath: OutputAudioMixerGroup
+      value: 
+      objectReference: {fileID: 7638520478723564098, guid: cd44063a9e57ef9499cef7719ea9c485, type: 2}
     - target: {fileID: 1718671565414723096, guid: 1b9ee1c4b279fdd4b8f7b873349e237b, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
@@ -97277,6 +97533,14 @@ PrefabInstance:
       propertyPath: m_Mesh
       value: 
       objectReference: {fileID: 163396040}
+    - target: {fileID: 1750363472447077563, guid: 1b9ee1c4b279fdd4b8f7b873349e237b, type: 3}
+      propertyPath: closingClip
+      value: 
+      objectReference: {fileID: 8300000, guid: 86701f1203473e24d84fae9c5b75e499, type: 3}
+    - target: {fileID: 1750363472447077563, guid: 1b9ee1c4b279fdd4b8f7b873349e237b, type: 3}
+      propertyPath: openingClip
+      value: 
+      objectReference: {fileID: 8300000, guid: 349c25cc730a51244847e7e40614ea91, type: 3}
     - target: {fileID: 1848189651034215382, guid: 1b9ee1c4b279fdd4b8f7b873349e237b, type: 3}
       propertyPath: m_Mesh
       value: 
@@ -97613,6 +97877,10 @@ PrefabInstance:
       propertyPath: m_VersionIndex
       value: 43
       objectReference: {fileID: 0}
+    - target: {fileID: 2279446808976857201, guid: 1b9ee1c4b279fdd4b8f7b873349e237b, type: 3}
+      propertyPath: OutputAudioMixerGroup
+      value: 
+      objectReference: {fileID: 7638520478723564098, guid: cd44063a9e57ef9499cef7719ea9c485, type: 2}
     - target: {fileID: 2293422756570871434, guid: 1b9ee1c4b279fdd4b8f7b873349e237b, type: 3}
       propertyPath: m_Mesh
       value: 
@@ -99009,6 +99277,14 @@ PrefabInstance:
       propertyPath: m_Enabled
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8728667052805303499, guid: 1b9ee1c4b279fdd4b8f7b873349e237b, type: 3}
+      propertyPath: closingClip
+      value: 
+      objectReference: {fileID: 8300000, guid: 86701f1203473e24d84fae9c5b75e499, type: 3}
+    - target: {fileID: 8728667052805303499, guid: 1b9ee1c4b279fdd4b8f7b873349e237b, type: 3}
+      propertyPath: openingClip
+      value: 
+      objectReference: {fileID: 8300000, guid: 349c25cc730a51244847e7e40614ea91, type: 3}
     - target: {fileID: 8834512742696507897, guid: 1b9ee1c4b279fdd4b8f7b873349e237b, type: 3}
       propertyPath: m_Mesh
       value: 
@@ -127987,6 +128263,14 @@ PrefabInstance:
       propertyPath: m_VersionIndex
       value: 43
       objectReference: {fileID: 0}
+    - target: {fileID: 2467481796746319594, guid: f3ca62f0bfcd6a64cb2d371c73899e35, type: 3}
+      propertyPath: closingClip
+      value: 
+      objectReference: {fileID: 8300000, guid: 86701f1203473e24d84fae9c5b75e499, type: 3}
+    - target: {fileID: 2467481796746319594, guid: f3ca62f0bfcd6a64cb2d371c73899e35, type: 3}
+      propertyPath: openingClip
+      value: 
+      objectReference: {fileID: 8300000, guid: 349c25cc730a51244847e7e40614ea91, type: 3}
     - target: {fileID: 2505165567253475145, guid: f3ca62f0bfcd6a64cb2d371c73899e35, type: 3}
       propertyPath: m_Mesh
       value: 
@@ -128027,6 +128311,14 @@ PrefabInstance:
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
       objectReference: {fileID: 2100000, guid: ebe4299ae172d7642ab57c7059f3ad69, type: 2}
+    - target: {fileID: 3736363330316485399, guid: f3ca62f0bfcd6a64cb2d371c73899e35, type: 3}
+      propertyPath: OutputAudioMixerGroup
+      value: 
+      objectReference: {fileID: 7638520478723564098, guid: cd44063a9e57ef9499cef7719ea9c485, type: 2}
+    - target: {fileID: 3800735931897064973, guid: f3ca62f0bfcd6a64cb2d371c73899e35, type: 3}
+      propertyPath: OutputAudioMixerGroup
+      value: 
+      objectReference: {fileID: 7638520478723564098, guid: cd44063a9e57ef9499cef7719ea9c485, type: 2}
     - target: {fileID: 3814101824713546943, guid: f3ca62f0bfcd6a64cb2d371c73899e35, type: 3}
       propertyPath: m_Mesh
       value: 
@@ -128143,6 +128435,14 @@ PrefabInstance:
       propertyPath: m_Mesh
       value: 
       objectReference: {fileID: 451047365}
+    - target: {fileID: 5705431608783303960, guid: f3ca62f0bfcd6a64cb2d371c73899e35, type: 3}
+      propertyPath: closingClip
+      value: 
+      objectReference: {fileID: 8300000, guid: 86701f1203473e24d84fae9c5b75e499, type: 3}
+    - target: {fileID: 5705431608783303960, guid: f3ca62f0bfcd6a64cb2d371c73899e35, type: 3}
+      propertyPath: openingClip
+      value: 
+      objectReference: {fileID: 8300000, guid: 349c25cc730a51244847e7e40614ea91, type: 3}
     - target: {fileID: 5766552319230732312, guid: f3ca62f0bfcd6a64cb2d371c73899e35, type: 3}
       propertyPath: m_Enabled
       value: 0
@@ -148088,6 +148388,10 @@ PrefabInstance:
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
       objectReference: {fileID: 2100000, guid: e9a27cecc052cc741895dfb8891c72ed, type: 2}
+    - target: {fileID: 8508284599553438818, guid: 7ac473492d8fbf1408001cc972671de2, type: 3}
+      propertyPath: OutputAudioMixerGroup
+      value: 
+      objectReference: {fileID: 7638520478723564098, guid: cd44063a9e57ef9499cef7719ea9c485, type: 2}
     - target: {fileID: 8618779921455792459, guid: 7ac473492d8fbf1408001cc972671de2, type: 3}
       propertyPath: m_Mesh
       value: 
@@ -148104,6 +148408,14 @@ PrefabInstance:
       propertyPath: m_Intensity
       value: 12
       objectReference: {fileID: 0}
+    - target: {fileID: 8926633248314368960, guid: 7ac473492d8fbf1408001cc972671de2, type: 3}
+      propertyPath: closingClip
+      value: 
+      objectReference: {fileID: 8300000, guid: 86701f1203473e24d84fae9c5b75e499, type: 3}
+    - target: {fileID: 8926633248314368960, guid: 7ac473492d8fbf1408001cc972671de2, type: 3}
+      propertyPath: openingClip
+      value: 
+      objectReference: {fileID: 8300000, guid: 349c25cc730a51244847e7e40614ea91, type: 3}
     - target: {fileID: 9055862354138611663, guid: 7ac473492d8fbf1408001cc972671de2, type: 3}
       propertyPath: m_Mesh
       value: 
@@ -167098,6 +167410,14 @@ PrefabInstance:
       propertyPath: m_Mesh
       value: 
       objectReference: {fileID: 881286726}
+    - target: {fileID: 3670029833349452206, guid: d02e6488fc28ab943838efa0fd3e4494, type: 3}
+      propertyPath: closingClip
+      value: 
+      objectReference: {fileID: 8300000, guid: 86701f1203473e24d84fae9c5b75e499, type: 3}
+    - target: {fileID: 3670029833349452206, guid: d02e6488fc28ab943838efa0fd3e4494, type: 3}
+      propertyPath: openingClip
+      value: 
+      objectReference: {fileID: 8300000, guid: 349c25cc730a51244847e7e40614ea91, type: 3}
     - target: {fileID: 3671830904821820119, guid: d02e6488fc28ab943838efa0fd3e4494, type: 3}
       propertyPath: m_Mesh
       value: 
@@ -167442,6 +167762,10 @@ PrefabInstance:
       propertyPath: m_Mesh
       value: 
       objectReference: {fileID: 212584743}
+    - target: {fileID: 5688620500400267134, guid: d02e6488fc28ab943838efa0fd3e4494, type: 3}
+      propertyPath: OutputAudioMixerGroup
+      value: 
+      objectReference: {fileID: 7638520478723564098, guid: cd44063a9e57ef9499cef7719ea9c485, type: 2}
     - target: {fileID: 5828168447884742848, guid: d02e6488fc28ab943838efa0fd3e4494, type: 3}
       propertyPath: m_Mesh
       value: 
