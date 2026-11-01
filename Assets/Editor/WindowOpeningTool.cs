@@ -7,6 +7,7 @@ using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEngine.Rendering;
+using UnityEngine.Rendering.Universal;
 
 internal static class WindowOpeningTool
 {
@@ -16,6 +17,28 @@ internal static class WindowOpeningTool
     private const string CollisionRootName = "ColisionMuros";
     private const string GlassColliderName = "CristalColision";
     private const string OutsideLightName = "LuzExteriorVentana";
+
+    [MenuItem("The Lights Before Dawn/Arte/Configurar sombras de ventanas en Medium")]
+    private static void ConfigureWindowShadowResolution()
+    {
+        if (EditorApplication.isPlayingOrWillChangePlaymode)
+        {
+            Debug.LogError("Hay que salir de Play antes de configurar las sombras de las ventanas.");
+            return;
+        }
+
+        int configured = 0;
+        foreach (Light light in UnityEngine.Object.FindObjectsByType<Light>(
+                     FindObjectsInactive.Include, FindObjectsSortMode.None))
+        {
+            if (light.name != OutsideLightName || !light.gameObject.scene.IsValid()) continue;
+            SetMediumShadowResolution(light, true);
+            EditorSceneManager.MarkSceneDirty(light.gameObject.scene);
+            configured++;
+        }
+
+        Debug.Log($"Sombras Medium/512 configuradas en {configured} luces de ventana.");
+    }
 
     [MenuItem("The Lights Before Dawn/Arte/Alinear UV de ventana del baño superior")]
     private static void AlignBathroomWindowWallUvs()
@@ -297,6 +320,31 @@ internal static class WindowOpeningTool
         light.shadowBias = 0.02f;
         light.shadowNormalBias = 0.2f;
         light.enabled = true;
+        SetMediumShadowResolution(light, false);
+    }
+
+    private static void SetMediumShadowResolution(Light light, bool recordUndo)
+    {
+        UniversalAdditionalLightData additionalData =
+            light.GetComponent<UniversalAdditionalLightData>();
+        if (additionalData == null)
+        {
+            additionalData = recordUndo
+                ? Undo.AddComponent<UniversalAdditionalLightData>(light.gameObject)
+                : light.gameObject.AddComponent<UniversalAdditionalLightData>();
+        }
+        else if (recordUndo)
+        {
+            Undo.RecordObject(additionalData, "Configurar sombras Medium de ventana");
+        }
+
+        var serializedData = new SerializedObject(additionalData);
+        SerializedProperty resolutionTier = serializedData.FindProperty(
+            "m_AdditionalLightsShadowResolutionTier");
+        if (resolutionTier == null)
+            throw new InvalidOperationException("URP no expuso el nivel de resolución de sombras.");
+        resolutionTier.intValue = UniversalAdditionalLightData.AdditionalLightsShadowResolutionTierMedium;
+        serializedData.ApplyModifiedPropertiesWithoutUndo();
     }
 
     private static Mesh BuildPerforatedSlab(Bounds slab, List<Rect> holes, bool depthAlongX,
