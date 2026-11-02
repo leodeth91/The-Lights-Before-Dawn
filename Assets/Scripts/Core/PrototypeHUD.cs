@@ -12,10 +12,13 @@ public sealed class PrototypeHUD : MonoBehaviour
     [SerializeField] private Text connectionText;
     [SerializeField] private Text timerText;
     [SerializeField] private Text interactionText;
+    [SerializeField] private Text objectiveText;
+    [SerializeField] private GameObject gameplayPanel;
 
     private HouseFlowController house;
     private GameSessionManager session;
     private PlayerInteractor playerInteractor;
+    private StoryProgression story;
 
     public void Configure(GameObject menu, GameObject result, Text resultLabel,
         Text roomLabel, Text connectionLabel, Text timerLabel, Text interactionLabel)
@@ -31,9 +34,17 @@ public sealed class PrototypeHUD : MonoBehaviour
 
     private void Start()
     {
+        Transform controls = transform.Find("GameplayHUD/Controles");
+        if (controls != null) controls.gameObject.SetActive(false);
         house = HouseFlowController.Instance;
         session = GameSessionManager.Instance;
         playerInteractor = FindFirstObjectByType<PlayerInteractor>();
+        story = StoryProgression.Instance;
+        if (story != null)
+        {
+            story.ObjectiveChanged += HandleObjectiveChanged;
+            HandleObjectiveChanged(story.Objective);
+        }
 
         if (house != null)
         {
@@ -47,18 +58,6 @@ public sealed class PrototypeHUD : MonoBehaviour
         {
             session.StateChanged += HandleStateChanged;
             HandleStateChanged(session.State);
-        }
-
-        if (startPanel != null)
-        {
-            // Conserva el texto del menú editado a mano y solo agrega la nueva opción.
-            foreach (Text label in startPanel.GetComponentsInChildren<Text>(true))
-                if (label.text.IndexOf("comenzar", System.StringComparison.OrdinalIgnoreCase) >= 0
-                    && !label.text.Contains("Salir al escritorio"))
-                {
-                    label.text += "\nQ: Salir al escritorio";
-                    break;
-                }
         }
 
         if (playerInteractor != null)
@@ -86,6 +85,7 @@ public sealed class PrototypeHUD : MonoBehaviour
         {
             playerInteractor.PromptChanged -= HandlePromptChanged;
         }
+        if (story != null) story.ObjectiveChanged -= HandleObjectiveChanged;
     }
 
     private void HandlePromptChanged(string prompt)
@@ -100,8 +100,10 @@ public sealed class PrototypeHUD : MonoBehaviour
     {
         bool showGameplay = !OpeningSequenceDirector.IsRunning
             && session != null && session.IsPlaying;
+        if (gameplayPanel != null && gameplayPanel.activeSelf != showGameplay)
+            gameplayPanel.SetActive(showGameplay);
         if (roomText != null) roomText.enabled = showGameplay;
-        if (connectionText != null) connectionText.enabled = showGameplay;
+        if (connectionText != null) connectionText.enabled = false;
         if (interactionText != null) interactionText.enabled = showGameplay;
         if (timerText != null && session != null)
         {
@@ -110,6 +112,19 @@ public sealed class PrototypeHUD : MonoBehaviour
             int seconds = remainingSeconds % 60;
             timerText.text = session.IsPlaying && session.HasSurvivalTimer
                 ? $"Amanecer en: {minutes:00}:{seconds:00}" : string.Empty;
+        }
+    }
+
+    private void HandleObjectiveChanged(StoryObjective objective)
+    {
+        if (objectiveText == null) return;
+        switch (objective)
+        {
+            case StoryObjective.FindParents: objectiveText.text = "Buscar a mamá y papá"; break;
+            case StoryObjective.TryExit: objectiveText.text = "Intentar salir de la casa"; break;
+            case StoryObjective.FindPhone: objectiveText.text = "Encontrar el celular"; break;
+            case StoryObjective.Survive: objectiveText.text = "Sobrevivir hasta el amanecer"; break;
+            case StoryObjective.Escape: objectiveText.text = "Salir de la casa"; break;
         }
     }
 

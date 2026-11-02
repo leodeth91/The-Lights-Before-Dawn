@@ -202,6 +202,9 @@ public sealed class PortalTrialGate : MonoBehaviour
         Vector3 clipNormal = -exit.transform.forward;
         Matrix4x4 worldToCamera = camera.worldToCameraMatrix;
         Vector3 cameraPosition = worldToCamera.MultiplyPoint(clipPosition);
+        // Con la cámara sobre el umbral, un plano oblicuo detrás del near clip
+        // produce una proyección inválida y URP no puede calcular el frustum.
+        if (cameraPosition.z >= -camera.nearClipPlane - .05f) return;
         Vector3 cameraNormal = worldToCamera.MultiplyVector(clipNormal).normalized;
         Vector4 clipPlane = new Vector4(cameraNormal.x, cameraNormal.y, cameraNormal.z,
             -Vector3.Dot(cameraPosition, cameraNormal));

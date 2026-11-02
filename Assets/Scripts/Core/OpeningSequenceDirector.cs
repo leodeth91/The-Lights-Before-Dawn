@@ -40,6 +40,7 @@ public sealed class OpeningSequenceDirector : MonoBehaviour
         new System.Collections.Generic.Dictionary<AudioSource, float>();
     private float eyelids = 1f;
     private Coroutine sequence;
+    private bool openingStarted;
 
     private void Start()
     {
@@ -54,9 +55,13 @@ public sealed class OpeningSequenceDirector : MonoBehaviour
 
     private void OnSessionChanged(GameSessionState state)
     {
-        if (state == GameSessionState.Playing && sequence == null)
+        if (state == GameSessionState.Playing && !openingStarted)
+        {
+            openingStarted = true;
             sequence = StartCoroutine(PlayOpening());
-        else if (state != GameSessionState.Playing && sequence != null)
+        }
+        else if (state != GameSessionState.Playing && state != GameSessionState.Paused
+            && sequence != null)
         {
             StopCoroutine(sequence);
             Finish();

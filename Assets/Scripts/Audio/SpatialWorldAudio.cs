@@ -89,6 +89,8 @@ public sealed class SpatialWorldAudio : MonoBehaviour
 
     private void OnObjectiveChanged(StoryObjective objective)
     {
+        if (objective != StoryObjective.FindPhone && phoneSource != null)
+            phoneSource.Stop();
         if (clockSource != null)
             clockSource.volume = objective == StoryObjective.FindPhone || objective == StoryObjective.Survive
                 ? ClockVolume * 1.3f : ClockVolume;

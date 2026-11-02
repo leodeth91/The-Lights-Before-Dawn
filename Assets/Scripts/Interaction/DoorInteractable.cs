@@ -207,7 +207,7 @@ public sealed class DoorInteractable : MonoBehaviour, IInteractable, IOpenable
     {
         Quaternion start = transform.localRotation;
         Quaternion target = targetOpen ? openRotation : closedRotation;
-        float duration = Mathf.Max(0.01f, openDuration);
+        float duration = Mathf.Max(0.01f, openDuration * (targetOpen ? 1.2f : 1f));
         float elapsed = 0f;
 
         while (elapsed < duration)

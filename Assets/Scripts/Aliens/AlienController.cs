@@ -706,17 +706,13 @@ public sealed class AlienController : MonoBehaviour
                     ? connection.TargetSocket : connection.SourceSocket;
                 if (house.UsesRoomPortals)
                 {
-                    Vector3 threshold = socket.Position - socket.Outward * .24f;
-                    yield return Motor.Go(threshold, 3f);
-                    if (Motor.Arrived)
+                    PortalTrialGate gate = connection.SourceSocket == socket
+                        ? connection.SourceGate : connection.TargetGate;
+                    Vector3 arrival = exit.Position - exit.Outward * .65f;
+                    if (gate != null && Motor.TryPoint(arrival, .8f, out Vector3 ground)
+                        && exit.Room.ContainsPoint(ground, .15f))
                     {
-                        PortalTrialGate gate = connection.SourceSocket == socket
-                            ? connection.SourceGate : connection.TargetGate;
-                        Vector3 arrival = exit.Position - exit.Outward * .65f;
-                        if (gate != null && Motor.TryPoint(arrival, .8f, out Vector3 ground))
-                        {
-                            yield return WalkThroughPortal(house, socket, gate, ground, connection, exit.Room);
-                        }
+                        yield return WalkThroughPortal(house, socket, gate, ground, connection, exit.Room);
                     }
                 }
                 else

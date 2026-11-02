@@ -7,6 +7,7 @@ public enum GameSessionState
 {
     Menu,
     Playing,
+    Paused,
     Victory,
     Defeat,
     Ending
@@ -30,6 +31,7 @@ public sealed class GameSessionManager : MonoBehaviour
 
     public GameSessionState State { get; private set; } = GameSessionState.Menu;
     public bool IsPlaying => State == GameSessionState.Playing;
+    public bool IsPaused => State == GameSessionState.Paused;
     public bool HasSurvivalTimer => survivalDuration > 0f && survivalStarted && !dawnReached;
     public float SurvivalDuration => survivalDuration;
     public float ElapsedPlayTime => elapsedPlayTime;
@@ -79,6 +81,8 @@ public sealed class GameSessionManager : MonoBehaviour
             gameObject.AddComponent<FinalSequenceDirector>();
         if (GetComponent<DawnEnvironmentController>() == null)
             gameObject.AddComponent<DawnEnvironmentController>();
+        if (GetComponent<PauseMenuController>() == null)
+            gameObject.AddComponent<PauseMenuController>();
         if (runtimeInterface != null)
         {
             runtimeInterface.SetActive(true);
@@ -99,12 +103,25 @@ public sealed class GameSessionManager : MonoBehaviour
         }
 
         Time.timeScale = 1f;
+        AudioListener.pause = false;
     }
 
     private void Update()
     {
         Keyboard keyboard = Keyboard.current;
         if (State == GameSessionState.Ending) return;
+        if (State == GameSessionState.Playing && keyboard != null
+            && keyboard.escapeKey.wasPressedThisFrame)
+        {
+            PauseGame();
+            return;
+        }
+        if (State == GameSessionState.Paused)
+        {
+            if (keyboard != null && keyboard.escapeKey.wasPressedThisFrame)
+                ResumeGame();
+            return;
+        }
         if (State == GameSessionState.Menu)
         {
             if (keyboard != null && keyboard.qKey.wasPressedThisFrame)
@@ -148,7 +165,7 @@ public sealed class GameSessionManager : MonoBehaviour
 
     public void QuitToDesktop()
     {
-        if (State != GameSessionState.Menu) return;
+        if (State != GameSessionState.Menu && State != GameSessionState.Paused) return;
         // En una build cierra el juego; dentro de Unity solo detiene Play, sin cerrar el editor.
 #if UNITY_EDITOR
         UnityEditor.EditorApplication.isPlaying = false;
@@ -170,6 +187,36 @@ public sealed class GameSessionManager : MonoBehaviour
         dawnReached = false;
         Time.timeScale = 1f;
         SetState(GameSessionState.Playing);
+    }
+
+    public void PauseGame()
+    {
+        if (State != GameSessionState.Playing) return;
+        SetState(GameSessionState.Paused);
+        SetCameraPaused(true);
+    }
+
+    public void ResumeGame()
+    {
+        if (State != GameSessionState.Paused) return;
+        SetState(GameSessionState.Playing);
+        SetCameraPaused(false);
+    }
+
+    public void ReturnToMainMenu()
+    {
+        if (State != GameSessionState.Paused) return;
+        AudioListener.pause = false;
+        Time.timeScale = 1f;
+        SceneManager.LoadScene("ModularPrototype");
+    }
+
+    private static void SetCameraPaused(bool paused)
+    {
+        OverShoulderCamera camera = Camera.main != null
+            ? Camera.main.GetComponent<OverShoulderCamera>() : null;
+        if (camera == null) camera = FindFirstObjectByType<OverShoulderCamera>();
+        if (camera != null) camera.SetPaused(paused);
     }
 
     public void TriggerDefeat()
@@ -201,8 +248,21 @@ public sealed class GameSessionManager : MonoBehaviour
         }
 
         State = next;
-        if (State == GameSessionState.Victory || State == GameSessionState.Defeat)
+        if (State == GameSessionState.Paused)
         {
+            Time.timeScale = 0f;
+            AudioListener.pause = true;
+            Cursor.lockState = CursorLockMode.None;
+            Cursor.visible = true;
+        }
+        else if (State == GameSessionState.Playing)
+        {
+            AudioListener.pause = false;
+            Time.timeScale = 1f;
+        }
+        else if (State == GameSessionState.Victory || State == GameSessionState.Defeat)
+        {
+            AudioListener.pause = false;
             Time.timeScale = 0f;
             Cursor.lockState = CursorLockMode.None;
             Cursor.visible = true;

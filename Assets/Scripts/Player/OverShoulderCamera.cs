@@ -63,6 +63,11 @@ public sealed class OverShoulderCamera : MonoBehaviour
         }
     }
 
+    public void SetPaused(bool paused)
+    {
+        SetCursorState(!paused && lockCursorOnPlay && !cinematicMode);
+    }
+
     public void GetGameplayPose(out Vector3 position, out Quaternion rotation)
     {
         Vector3 pivot = target.position + targetOffset;
@@ -199,9 +204,11 @@ public sealed class OverShoulderCamera : MonoBehaviour
     private void Update()
     {
         if (cinematicMode) return;
-        if (Keyboard.current != null && Keyboard.current.escapeKey.wasPressedThisFrame)
+        GameSessionManager session = GameSessionManager.Instance;
+        if (session != null && !session.IsPlaying)
         {
-            SetCursorState(false);
+            if (cursorLocked) SetCursorState(false);
+            return;
         }
 
         if (!cursorLocked && Mouse.current != null && Mouse.current.leftButton.wasPressedThisFrame)

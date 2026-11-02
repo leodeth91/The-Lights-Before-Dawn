@@ -145,12 +145,12 @@ public sealed class FinalSequenceDirector : MonoBehaviour
         destinationGate = destinationSocket.GetComponent<PortalTrialGate>();
         if (destinationGate == null)
             destinationGate = destinationSocket.gameObject.AddComponent<PortalTrialGate>();
-        sourceGate.Configure(destinationGate, playerCamera, true, 1.12f, 2f);
+        sourceGate.Configure(destinationGate, playerCamera, true, .86f, 2.08f);
         Scene previousActive = SceneManager.GetActiveScene();
         SceneManager.SetActiveScene(landscapeScene);
         sourceGate.SetSkybox(RenderSettings.skybox);
         SceneManager.SetActiveScene(previousActive);
-        destinationGate.Configure(sourceGate, playerCamera, true, 1.12f, 2f, true);
+        destinationGate.Configure(sourceGate, playerCamera, true, .86f, 2.08f, true);
         return true;
     }
 
@@ -235,7 +235,7 @@ public sealed class FinalSequenceDirector : MonoBehaviour
         yield return LookDirection(eyeTarget, -forward, lookSeconds);
 
         CloseStageDoor();
-        yield return new WaitForSeconds(2.4f);
+        yield return new WaitForSeconds(1.2f);
 
         showMessage = true;
         yield return new WaitForSeconds(textSeconds);
@@ -456,7 +456,7 @@ public sealed class FinalSequenceDirector : MonoBehaviour
         if (stageDoor == null || !stageDoor.IsOpen) return;
         if (destinationGate != null)
             destinationGate.Configure(sourceGate, playerCamera, true, 1.12f, 2f, false);
-        stageDoor.Configure(100f, 2.4f);
+        stageDoor.Configure(100f, 1.2f);
         stageDoor.BeginClose();
     }
 

@@ -52,6 +52,7 @@ public sealed class StoryProgression : MonoBehaviour
     private Material[] originalDoorMaterials;
     public DoorSocket GuideDoor { get; private set; }
     private bool silenceMessageShown;
+    private bool sessionStarted;
     private bool GuideDoorClosed
     {
         get
@@ -94,7 +95,8 @@ public sealed class StoryProgression : MonoBehaviour
     }
     private void OnSessionChanged(GameSessionState state)
     {
-        if (state != GameSessionState.Playing) return;
+        if (state != GameSessionState.Playing || sessionStarted) return;
+        sessionStarted = true;
         messages.Enqueue("Vienen otra vez, debo buscar a mamá y papá");
         messages.Enqueue("Esta vez no me atraparán");
     }
@@ -242,11 +244,6 @@ public sealed class StoryProgression : MonoBehaviour
             GUI.Label(rect, currentMessage, style);
         }
         style.fontSize = Mathf.RoundToInt(19f * scale);
-        string objective = Objective == StoryObjective.FindParents ? "Buscar a mamá y papá"
-            : Objective == StoryObjective.TryExit ? "Intentar salir de la casa"
-            : Objective == StoryObjective.FindPhone ? "Buscar el celular en la oficina"
-            : Objective == StoryObjective.Escape ? "Salir de la casa" : "Sobrevivir hasta el amanecer";
-        GUI.Label(new Rect(Screen.width * .2f, 12f * scale, Screen.width * .6f, 40f * scale), objective, style);
         if (Objective == StoryObjective.FindPhone && house.CurrentRoom == officeRoom && Camera.main != null)
         {
             Vector3 point = Camera.main.WorldToScreenPoint(phone.transform.position + Vector3.up * .18f);

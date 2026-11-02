@@ -2,6 +2,14 @@
 
 **Versión del informe:** 30/10/2026
 
+### Actualización 02/11/2026 — Menú y HUD
+
+- Cruce alien: se retiró la exigencia de completar un tramo NavMesh dentro del umbral; desde el punto de aproximación alcanzado, el alien atraviesa el marco con movimiento manual y vuelve al NavMesh del destino. El video adjunto mostraba al alien repitiendo pasos junto al lado derecho del marco del cuarto infantil. `PURSUIT_AUDIT` pasó en Play con `fallos=0` y agente sobre NavMesh; falta repetir una persecución libre prolongada en ese cuarto.
+- Salto/final/consola: el SFX marcado en `SFXVariacion` ahora espera el contacto con el suelo tras un salto, el cierre de la puerta final dura 1,2 s, y la cámara de portal omite el recorte oblicuo si el plano queda detrás del near clip. `Assembly-CSharp` compiló; `FINAL_AUDIT` pasó en Play con `fallos=0` y no apareció un nuevo error de frustum en las dos auditorías. Falta escucha del aterrizaje y del estruendo, y observar el cierre en una partida normal. Persiste el aviso de `GrassClump_TerrainDetail` al cargar el exterior; no se cambió su shader URP por uno antiguo que alteraría la vegetación.
+- Se corrigió el reinicio del despertar al reanudar desde pausa: `OpeningSequenceDirector` solo inicia una vez por sesión. En Play se comprobaron visualmente los botones oscuros del inicio y que, tras el despertar, el HUD no muestra conexiones ni instrucciones. Unity recompiló `Assembly-CSharp` y `Assembly-CSharp-Editor` sin errores. La automatización no consiguió abrir pausa con Escape, así que siguen pendientes la comprobación manual de Escape y Continuar, incluida la posición del niño al reanudar. La escena abierta tenía cambios sin guardar y no se guardó.
+- `Assembly-CSharp` y `Assembly-CSharp-Editor` compilaron sin errores. En Play se verificaron la reproducción continua del video, los botones Créditos, Volver y Comenzar, y la aparición del HUD al terminar el despertar. Se corrigieron la captura prematura del cursor, el objetivo duplicado y el texto de habitación recortado.
+- El HUD se oculta por estado al comenzar `Ending`; falta recorrer en Play la secuencia final completa, comprobar visualmente los destellos en distintas resoluciones y completar la atribución definitiva de Créditos.
+
 ### Actualización 01/11/2026 — Amanecer y secuencia final
 
 - La primera corrección de las 2734 matas no surtió efecto: la asignación a `treeInstances` volvió a pegarlas al heightmap y la textura dejó la base visible entre 3 y 36 cm sobre el suelo. La corrección posterior usa `SetTreeInstances(..., false)`, desplaza la malla y calcula el primer píxel opaco. La auditoría del 01/11 pasó de 2734 a 0 posibles matas flotantes (base opaca entre -0,349 y -0,016 m respecto al suelo). `Assembly-CSharp-Editor` compiló. Play abrió el menú principal, por lo que falta revisar la zona cercana desde el personaje en una partida normal.
@@ -79,6 +87,11 @@ Este documento reúne las revisiones, preparaciones y pruebas registradas durant
 
 - Se contrastaron las notas de `MEMORY.md`, los scripts de prueba y el historial de Git para redactar este informe.
 - **No se ejecutó una nueva batería de Play para crear este archivo.** Los resultados anteriores se consignan con la fecha en que quedaron registrados.
+
+### 02/11/2026 — Recarga del menú de pausa
+
+- Se separó `PauseMenuController` a su archivo homónimo para que Unity pueda asociar correctamente el `MonoBehaviour`. La compilación interna de Unity terminó con éxito; los dos avisos de script faltante pertenecían a la recarga anterior y hubo **0 avisos posteriores, 0 errores y 0 excepciones**.
+- Se entró en Play y se cargó el menú inicial sin errores nuevos. **No se validaron todavía Escape ni los tres botones**, porque la entrada automatizada no consiguió superar el menú inicial.
 
 ### Antecedente con fecha exacta no documentada — Cruce físico de portales
 
