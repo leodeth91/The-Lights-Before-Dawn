@@ -189866,7 +189866,7 @@ GameObject:
   - component: {fileID: 1639477359}
   - component: {fileID: 1639477360}
   m_Layer: 0
-  m_Name: Rain Sound
+  m_Name: Alien Ambience
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -189898,7 +189898,7 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
-  m_Resource: {fileID: 8300000, guid: 61c403372069ac1479552343b5e9d49d, type: 3}
+  m_Resource: {fileID: 8300000, guid: 2e2bf918e59e7ac47b068a6e0aeff8d4, type: 3}
   m_PlayOnAwake: 1
   m_Volume: 0.2
   m_Pitch: 1
