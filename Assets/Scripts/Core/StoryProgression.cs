@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum StoryObjective { FindParents, TryExit, FindPhone, Survive }
+public enum StoryObjective { FindParents, TryExit, FindPhone, Survive, Escape }
 
 /// <summary>Ordena los objetivos. Los demás sistemas consultan este avance en lugar de guardar copias.</summary>
 public sealed class StoryProgression : MonoBehaviour
@@ -14,7 +14,29 @@ public sealed class StoryProgression : MonoBehaviour
     [SerializeField] private float survivalSeconds = 180f;
     [SerializeField] private Material objectiveDoorMaterial;
     public StoryObjective Objective { get; private set; }
-    public bool AnomalyEnabled => Objective >= StoryObjective.FindPhone;
+    public bool HasDawnArrived => Objective == StoryObjective.Escape;
+    public bool AnomalyEnabled => Objective == StoryObjective.FindPhone || Objective == StoryObjective.Survive;
+    public bool IsFinalExit(DoorSocket socket) => HasDawnArrived && socket == entrance;
+    private bool finalExitOpened;
+    private float previousExitSide;
+
+    public void ReachDawn()
+    {
+        if (Objective != StoryObjective.Survive) return;
+        Advance(StoryObjective.Escape, "Ya amaneció, ahora podré salir");
+    }
+
+    public bool OpenFinalExit(DoorSocket socket, GameObject actor)
+    {
+        if (!IsFinalExit(socket) || player == null || actor != player.gameObject) return false;
+        FinalSequenceDirector director = session.GetComponent<FinalSequenceDirector>();
+        if (director == null) return false;
+        director.PrepareExit(socket);
+        if (!socket.Door.IsOpen) socket.Door.BeginOpen(actor);
+        previousExitSide = Vector3.Dot(player.transform.position - socket.Position, socket.Outward);
+        finalExitOpened = true;
+        return true;
+    }
     public RoomModule ChildRoom => childRoom;
     public event Action<StoryObjective> ObjectiveChanged;
     private HouseFlowController house;
@@ -126,6 +148,21 @@ public sealed class StoryProgression : MonoBehaviour
     {
         if (session == null || !session.IsPlaying) { RestoreDoorMaterial(); return; }
         if (OpeningSequenceDirector.IsRunning) return;
+        if (finalExitOpened && entrance != null && player != null)
+        {
+            float side = Vector3.Dot(player.transform.position - entrance.Position, entrance.Outward);
+            Vector3 offset = player.transform.position - entrance.Position;
+            if (previousExitSide <= 0f && side > 0f
+                && (entrance.Door.IsOpen || entrance.Door.State == DoorState.Opening)
+                && Mathf.Abs(Vector3.Dot(offset, entrance.transform.right)) < .8f
+                && Mathf.Abs(offset.y) < 2.5f)
+            {
+                finalExitOpened = false;
+                session.GetComponent<FinalSequenceDirector>().Begin(player.GetComponent<ChildPlayerController>(), entrance);
+                return;
+            }
+            previousExitSide = side;
+        }
         if (clearEntrancePending && house.TryParkIsolatedRoom(entrance.Room)) clearEntrancePending = false;
         if (Time.time >= messageUntil || currentMessage.Length == 0)
         {
@@ -144,10 +181,10 @@ public sealed class StoryProgression : MonoBehaviour
         GuideDoor = null;
         if (player == null || house.CurrentRoom == null || Objective == StoryObjective.Survive) return;
         RoomModule target = Objective == StoryObjective.FindParents ? parentsRoom
-            : Objective == StoryObjective.TryExit ? entrance.Room : officeRoom;
+            : Objective == StoryObjective.TryExit || Objective == StoryObjective.Escape ? entrance.Room : officeRoom;
         if (house.CurrentRoom == target)
         {
-            if (Objective == StoryObjective.TryExit) GuideDoor = entrance;
+            if (Objective == StoryObjective.TryExit || Objective == StoryObjective.Escape) GuideDoor = entrance;
         }
         else GuideDoor = NextDoor(target);
     }
@@ -207,7 +244,8 @@ public sealed class StoryProgression : MonoBehaviour
         style.fontSize = Mathf.RoundToInt(19f * scale);
         string objective = Objective == StoryObjective.FindParents ? "Buscar a mamá y papá"
             : Objective == StoryObjective.TryExit ? "Intentar salir de la casa"
-            : Objective == StoryObjective.FindPhone ? "Buscar el celular en la oficina" : "Sobrevivir hasta el amanecer";
+            : Objective == StoryObjective.FindPhone ? "Buscar el celular en la oficina"
+            : Objective == StoryObjective.Escape ? "Salir de la casa" : "Sobrevivir hasta el amanecer";
         GUI.Label(new Rect(Screen.width * .2f, 12f * scale, Screen.width * .6f, 40f * scale), objective, style);
         if (Objective == StoryObjective.FindPhone && house.CurrentRoom == officeRoom && Camera.main != null)
         {

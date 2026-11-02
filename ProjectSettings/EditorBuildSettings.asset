@@ -8,6 +8,9 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/ModularPrototype.unity
     guid: 81f2a5ffd128ffd4db2e6c0a2212778a
+  - enabled: 1
+    path: Assets/Scenes/FinalAlienLandscape.unity
+    guid: a39fa1f285ec5cf43ac7c16628ecc730
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   m_UseUCBPForAssetBundles: 0

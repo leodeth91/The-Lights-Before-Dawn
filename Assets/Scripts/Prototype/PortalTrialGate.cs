@@ -16,6 +16,8 @@ public sealed class PortalTrialGate : MonoBehaviour
 
     private static readonly Quaternion HalfTurn = Quaternion.Euler(0f, 180f, 0f);
     private Camera portalCamera;
+    private Material skyboxOverride;
+    public void SetSkybox(Material material) => skyboxOverride = material;
     private RenderTexture viewTexture;
     private GameObject surface;
     private DoorSocket roomSocket;
@@ -95,6 +97,8 @@ public sealed class PortalTrialGate : MonoBehaviour
 
         GameObject cameraObject = new GameObject("Camara portal - " + name);
         portalCamera = cameraObject.AddComponent<Camera>();
+        if (skyboxOverride != null)
+            cameraObject.AddComponent<Skybox>().material = skyboxOverride;
         portalCamera.targetTexture = viewTexture;
         portalCamera.depth = -10f;
         // Se dibujan las otras superficies de portal de la habitación contigua.

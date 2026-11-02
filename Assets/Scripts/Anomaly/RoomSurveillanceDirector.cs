@@ -108,7 +108,11 @@ public sealed class RoomSurveillanceDirector : MonoBehaviour
         return Prepare(light);
     }
 
-    private void OnObjectiveChanged(StoryObjective _) => TryStart();
+    private void OnObjectiveChanged(StoryObjective objective)
+    {
+        if (objective == StoryObjective.Escape) StopScan();
+        else TryStart();
+    }
     private void OnSessionChanged(GameSessionState state)
     {
         if (state == GameSessionState.Playing) TryStart();
@@ -136,7 +140,7 @@ public sealed class RoomSurveillanceDirector : MonoBehaviour
                     light.Audio.volume = Mathf.Min(1f, 1.2f / Mathf.Sqrt(room.Lights.Count));
                     if (room.Room.gameObject.activeInHierarchy) light.Audio.Play();
                 }
-                while (Time.time - start < ScanSeconds && session.IsPlaying)
+                while (Time.time - start < ScanSeconds && session.IsPlaying && story.AnomalyEnabled)
                 {
                     float elapsed = Time.time - start;
                     float progress = Mathf.Clamp01(elapsed / ScanSeconds);
@@ -161,7 +165,7 @@ public sealed class RoomSurveillanceDirector : MonoBehaviour
                     yield return null;
                 }
                 Restore(room);
-                if (!session.IsPlaying) break;
+                if (!session.IsPlaying || !story.AnomalyEnabled) break;
                 yield return new WaitForSeconds(BetweenRooms);
             }
         }

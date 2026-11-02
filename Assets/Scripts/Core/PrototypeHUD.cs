@@ -98,7 +98,8 @@ public sealed class PrototypeHUD : MonoBehaviour
 
     private void Update()
     {
-        bool showGameplay = !OpeningSequenceDirector.IsRunning;
+        bool showGameplay = !OpeningSequenceDirector.IsRunning
+            && session != null && session.IsPlaying;
         if (roomText != null) roomText.enabled = showGameplay;
         if (connectionText != null) connectionText.enabled = showGameplay;
         if (interactionText != null) interactionText.enabled = showGameplay;

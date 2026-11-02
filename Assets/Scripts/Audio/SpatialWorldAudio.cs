@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Collections;
 using UnityEngine;
 
 /// <summary>Conecta los sonidos ambientales a los objetos de las habitaciones modulares.</summary>
@@ -20,9 +21,12 @@ public sealed class SpatialWorldAudio : MonoBehaviour
     [SerializeField] private AudioClip clockTicking;
 
     private readonly List<AudioSource> loops = new List<AudioSource>();
+    private readonly List<AudioSource> anomalyLoops = new List<AudioSource>();
     private AudioSource clockSource;
     private AudioSource phoneSource;
     private bool vibrationPlayed;
+    private bool dawnReached;
+    private Coroutine anomalyFade;
 
     private void Start()
     {
@@ -36,8 +40,8 @@ public sealed class SpatialWorldAudio : MonoBehaviour
             if (room == null) continue;
             foreach (Transform child in room.GetComponentsInChildren<Transform>(true))
             {
-                if (child.name == "LuzExteriorVentana") AddLoop(child, windowAmbience, 0.30f, 0.8f, 5f);
-                else if (child.name == "tv__small") AddLoop(child, televisionStatic, 0.23f, 0.7f, 9f);
+                if (child.name == "LuzExteriorVentana") TrackAnomalyLoop(AddLoop(child, windowAmbience, 0.30f, 0.8f, 5f));
+                else if (child.name == "tv__small") TrackAnomalyLoop(AddLoop(child, televisionStatic, 0.23f, 0.7f, 9f));
                 else if (child.name == "small_radio") AddLoop(child, kitchenRadio, 0.60f, 1.5f, 8f);
                 else if (child.name == "grandfather_clock") clockSource = AddLoop(child, clockTicking, ClockVolume, 1.2f, 9f);
             }
@@ -85,7 +89,47 @@ public sealed class SpatialWorldAudio : MonoBehaviour
 
     private void OnObjectiveChanged(StoryObjective objective)
     {
-        if (clockSource != null) clockSource.volume = objective >= StoryObjective.FindPhone ? ClockVolume * 1.3f : ClockVolume;
+        if (clockSource != null)
+            clockSource.volume = objective == StoryObjective.FindPhone || objective == StoryObjective.Survive
+                ? ClockVolume * 1.3f : ClockVolume;
+        if (objective == StoryObjective.Escape) BeginDawnTransition();
+    }
+
+    private void TrackAnomalyLoop(AudioSource source)
+    {
+        if (source != null) anomalyLoops.Add(source);
+    }
+
+    private void BeginDawnTransition()
+    {
+        if (dawnReached) return;
+        dawnReached = true;
+        foreach (TVInterferenceScreen screen in FindObjectsByType<TVInterferenceScreen>(
+                     FindObjectsInactive.Include, FindObjectsSortMode.None))
+            screen.SetPowered(false);
+        if (anomalyFade != null) StopCoroutine(anomalyFade);
+        anomalyFade = StartCoroutine(FadeAnomalyAudio());
+    }
+
+    private IEnumerator FadeAnomalyAudio()
+    {
+        const float fadeSeconds = 3f;
+        List<float> startingVolumes = new List<float>(anomalyLoops.Count);
+        foreach (AudioSource source in anomalyLoops)
+            startingVolumes.Add(source != null ? source.volume : 0f);
+
+        for (float elapsed = 0f; elapsed < fadeSeconds; elapsed += Time.unscaledDeltaTime)
+        {
+            float amount = Mathf.Clamp01(elapsed / fadeSeconds);
+            for (int i = 0; i < anomalyLoops.Count; i++)
+                if (anomalyLoops[i] != null)
+                    anomalyLoops[i].volume = Mathf.Lerp(startingVolumes[i], 0f, amount);
+            yield return null;
+        }
+
+        foreach (AudioSource source in anomalyLoops)
+            if (source != null) { source.volume = 0f; source.Stop(); }
+        anomalyFade = null;
     }
 
     private void OnSessionChanged(GameSessionState state)
@@ -98,11 +142,13 @@ public sealed class SpatialWorldAudio : MonoBehaviour
     {
         if (session == null || !session.IsPlaying) return;
         foreach (AudioSource source in loops)
-            if (source != null && source.isActiveAndEnabled && !source.isPlaying) source.Play();
+            if (source != null && source.isActiveAndEnabled && !source.isPlaying
+                && !(dawnReached && anomalyLoops.Contains(source))) source.Play();
     }
 
     private void OnDestroy()
     {
+        if (anomalyFade != null) StopCoroutine(anomalyFade);
         if (house != null) house.CurrentRoomChanged -= OnRoomChanged;
         if (story != null) story.ObjectiveChanged -= OnObjectiveChanged;
         if (session != null) session.StateChanged -= OnSessionChanged;

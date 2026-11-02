@@ -2,6 +2,15 @@
 
 **Versión del informe:** 30/10/2026
 
+### Actualización 01/11/2026 — Amanecer y secuencia final
+
+- La primera corrección de las 2734 matas no surtió efecto: la asignación a `treeInstances` volvió a pegarlas al heightmap y la textura dejó la base visible entre 3 y 36 cm sobre el suelo. La corrección posterior usa `SetTreeInstances(..., false)`, desplaza la malla y calcula el primer píxel opaco. La auditoría del 01/11 pasó de 2734 a 0 posibles matas flotantes (base opaca entre -0,349 y -0,016 m respecto al suelo). `Assembly-CSharp-Editor` compiló. Play abrió el menú principal, por lo que falta revisar la zona cercana desde el personaje en una partida normal.
+
+- Compilación de `Assembly-CSharp` y revisión de diferencias aprobadas.
+- Se ejecutó `Pruebas > Auditar secuencia final` en Play. Tras separar el exterior de las habitaciones en runtime y corregir el cruce durante la apertura, terminó con `FINAL_AUDIT PASS: secuencia completa; fallos=0`.
+- El auditor acelera el contador, omite el despertar y comprueba Escape sin Victory, pesos de postprocesado a cero, TV apagada, vigilancia detenida, aliens inactivos, apertura del destino fijo, cruce, bloqueo de controles y retorno al menú. Una nueva ejecución con la cámara corregida comprobó el objetivo de ojos y que la visual del niño no tape la primera persona tras el blend; `Assembly-CSharp-Editor` también compiló. No sustituye una partida completa.
+- Pendientes: escucha de la mezcla, iluminación en todas las habitaciones, revisión visual completa de la toma final y build.
+
 **Proyecto:** prototipo modular de exploración y sigilo 3D
 
 **Escena principal:** `Assets/Scenes/ModularPrototype.unity`

@@ -8,7 +8,8 @@ public enum GameSessionState
     Menu,
     Playing,
     Victory,
-    Defeat
+    Defeat,
+    Ending
 }
 
 [DisallowMultipleComponent]
@@ -25,10 +26,11 @@ public sealed class GameSessionManager : MonoBehaviour
     // El contador de supervivencia empieza con el celular; el tiempo total regula la actividad desde que comienza a jugarse.
     private float elapsedPlayTime;
     private bool survivalStarted;
+    private bool dawnReached;
 
     public GameSessionState State { get; private set; } = GameSessionState.Menu;
     public bool IsPlaying => State == GameSessionState.Playing;
-    public bool HasSurvivalTimer => survivalDuration > 0f && survivalStarted;
+    public bool HasSurvivalTimer => survivalDuration > 0f && survivalStarted && !dawnReached;
     public float SurvivalDuration => survivalDuration;
     public float ElapsedPlayTime => elapsedPlayTime;
     public float RemainingTime => Mathf.Max(0f, survivalDuration - elapsed);
@@ -73,6 +75,10 @@ public sealed class GameSessionManager : MonoBehaviour
             gameObject.AddComponent<OpeningSequenceDirector>();
         if (GetComponent<AnomalyPostProcessingController>() == null)
             gameObject.AddComponent<AnomalyPostProcessingController>();
+        if (GetComponent<FinalSequenceDirector>() == null)
+            gameObject.AddComponent<FinalSequenceDirector>();
+        if (GetComponent<DawnEnvironmentController>() == null)
+            gameObject.AddComponent<DawnEnvironmentController>();
         if (runtimeInterface != null)
         {
             runtimeInterface.SetActive(true);
@@ -98,6 +104,7 @@ public sealed class GameSessionManager : MonoBehaviour
     private void Update()
     {
         Keyboard keyboard = Keyboard.current;
+        if (State == GameSessionState.Ending) return;
         if (State == GameSessionState.Menu)
         {
             if (keyboard != null && keyboard.qKey.wasPressedThisFrame)
@@ -132,7 +139,10 @@ public sealed class GameSessionManager : MonoBehaviour
         }
         else if (HasSurvivalTimer && elapsed >= survivalDuration)
         {
-            SetState(GameSessionState.Victory);
+            dawnReached = true;
+            StoryProgression story = GetComponent<StoryProgression>();
+            if (story != null) story.ReachDawn();
+            else SetState(GameSessionState.Victory);
         }
     }
 
@@ -157,6 +167,7 @@ public sealed class GameSessionManager : MonoBehaviour
         elapsed = 0f;
         elapsedPlayTime = 0f;
         survivalStarted = GetComponent<StoryProgression>() == null;
+        dawnReached = false;
         Time.timeScale = 1f;
         SetState(GameSessionState.Playing);
     }
@@ -175,6 +186,11 @@ public sealed class GameSessionManager : MonoBehaviour
         {
             SetState(GameSessionState.Victory);
         }
+    }
+
+    public void BeginEnding()
+    {
+        if (IsPlaying) SetState(GameSessionState.Ending);
     }
 
     private void SetState(GameSessionState next)

@@ -2,7 +2,7 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.Rendering;
 
-/// <summary>Funde el ambiente nocturno hacia el perfil visual de la anomalía.</summary>
+/// <summary>Funde entre ambiente nocturno, anomalía y amanecer.</summary>
 [DisallowMultipleComponent]
 public sealed class AnomalyPostProcessingController : MonoBehaviour
 {
@@ -43,7 +43,7 @@ public sealed class AnomalyPostProcessingController : MonoBehaviour
 
     private void OnObjectiveChanged(StoryObjective objective)
     {
-        float target = objective >= StoryObjective.FindPhone ? 1f : 0f;
+        float target = objective == StoryObjective.FindPhone || objective == StoryObjective.Survive ? 1f : 0f;
         if (transition != null) StopCoroutine(transition);
         transition = StartCoroutine(BlendTo(target));
     }
@@ -53,7 +53,7 @@ public sealed class AnomalyPostProcessingController : MonoBehaviour
         if (globalNightVolume == null || anomalyVolume == null) yield break;
         float initialAnomaly = anomalyVolume.weight;
         float initialNight = globalNightVolume.weight;
-        float nightTarget = 1f - anomalyTarget;
+        float nightTarget = story != null && story.HasDawnArrived ? 0f : 1f - anomalyTarget;
 
         for (float time = 0f; time < transitionSeconds; time += Time.deltaTime)
         {
@@ -70,6 +70,7 @@ public sealed class AnomalyPostProcessingController : MonoBehaviour
     private void ApplyImmediate(float anomalyWeight)
     {
         if (anomalyVolume != null) anomalyVolume.weight = anomalyWeight;
-        if (globalNightVolume != null) globalNightVolume.weight = 1f - anomalyWeight;
+        if (globalNightVolume != null)
+            globalNightVolume.weight = story != null && story.HasDawnArrived ? 0f : 1f - anomalyWeight;
     }
 }

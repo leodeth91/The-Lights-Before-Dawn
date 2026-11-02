@@ -21,6 +21,14 @@ public sealed class TVInterferenceScreen : MonoBehaviour
     private float nextFrameTime;
     private int frame;
 
+    public void SetPowered(bool powered)
+    {
+        activeOnStart = powered;
+        if (screen == null || interferenceMaterial == null) return;
+        screen.sharedMaterial = powered ? interferenceMaterial : originalMaterial;
+        if (powered) DrawFrame();
+    }
+
     private void Awake()
     {
         foreach (Renderer candidate in GetComponentsInChildren<Renderer>(true))

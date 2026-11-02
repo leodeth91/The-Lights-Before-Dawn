@@ -188,6 +188,16 @@ public sealed class HouseFlowController : MonoBehaviour
         RoomConnection existing = ConnectionFor(socket);
         if (existing != null && existing.TargetRoom == occupant.Room) socket = existing.TargetSocket;
         if (socket.Room != occupant.Room) return false;
+        if (StoryProgression.Instance != null && StoryProgression.Instance.IsFinalExit(socket))
+        {
+            if (existing != null)
+            {
+                if (socket.Door.State != DoorState.Closed || !ThresholdClear(existing)) return false;
+                FinalizeConnection(existing);
+                if (ConnectionFor(socket) != null) return false;
+            }
+            return StoryProgression.Instance.OpenFinalExit(socket, actor);
+        }
         if (directedRoom != null && (directedRoom == occupant.Room ||
             (existing != null && existing.SourceRoom != directedRoom && existing.TargetRoom != directedRoom))) return false;
         if (occupant.UsesNormalDoors && existing != null && existing.IsAnomalous
