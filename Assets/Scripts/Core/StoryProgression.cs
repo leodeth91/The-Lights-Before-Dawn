@@ -32,7 +32,11 @@ public sealed class StoryProgression : MonoBehaviour
         FinalSequenceDirector director = session.GetComponent<FinalSequenceDirector>();
         if (director == null) return false;
         director.PrepareExit(socket);
-        if (!socket.Door.IsOpen) socket.Door.BeginOpen(actor);
+        if (!socket.Door.IsOpen)
+        {
+            socket.Door.BeginOpen(actor);
+            session.GetComponent<FinalLayeredMusicDirector>()?.BringInGuitar();
+        }
         previousExitSide = Vector3.Dot(player.transform.position - socket.Position, socket.Outward);
         finalExitOpened = true;
         return true;

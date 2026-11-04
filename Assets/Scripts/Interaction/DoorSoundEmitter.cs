@@ -13,6 +13,7 @@ public sealed class DoorSoundEmitter : MonoBehaviour
     [SerializeField] private AudioSource source;
 
     private DoorInteractable door;
+    private bool deferNextClosingSound;
     private static AudioClip runtimeOpeningClip;
     private static AudioClip runtimeClosingClip;
 
@@ -25,6 +26,7 @@ public sealed class DoorSoundEmitter : MonoBehaviour
         if (door == null) return;
         door.OpeningStarted += HandleOpening;
         door.ClosingStartedBy += HandleClosing;
+        door.Closed += HandleClosed;
     }
 
     private void Awake() => Bind(GetComponent<DoorInteractable>());
@@ -36,14 +38,26 @@ public sealed class DoorSoundEmitter : MonoBehaviour
         if (door == null) return;
         door.OpeningStarted -= HandleOpening;
         door.ClosingStartedBy -= HandleClosing;
+        door.Closed -= HandleClosed;
         door = null;
     }
 
     private void HandleOpening(DoorInteractable openedDoor, GameObject actor)
         => PlayAndPublish(openedDoor, actor, true);
 
+    public void DeferNextClosingSound() => deferNextClosingSound = true;
+
     private void HandleClosing(DoorInteractable closedDoor, GameObject actor)
-        => PlayAndPublish(closedDoor, actor, false);
+    {
+        if (!deferNextClosingSound) PlayAndPublish(closedDoor, actor, false);
+    }
+
+    private void HandleClosed(DoorInteractable closedDoor)
+    {
+        if (!deferNextClosingSound) return;
+        deferNextClosingSound = false;
+        PlayAndPublish(closedDoor, null, false);
+    }
 
     private void PlayAndPublish(DoorInteractable changedDoor, GameObject actor, bool opening)
     {

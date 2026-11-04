@@ -256,9 +256,14 @@ public sealed class FinalSequenceDirector : MonoBehaviour
         yield return LookAtSky(eyeTarget, lookSeconds);
         yield return LookDirection(eyeTarget, -forward, lookSeconds);
 
+        GetComponent<FinalLayeredMusicDirector>()?.StopFinalMusic();
+        StopAmbienceFade();
+        if (finalAmbience != null) finalAmbience.Stop();
         CloseStageDoor();
-        yield return new WaitForSeconds(1.2f);
+        if (stageDoor != null)
+            while (stageDoor.State == DoorState.Closing) yield return null;
 
+        GetComponent<StoryVoiceDirector>()?.PlayFinalDiscovery();
         showMessage = true;
         yield return new WaitForSeconds(textSeconds);
         showMessage = false;
@@ -547,6 +552,7 @@ public sealed class FinalSequenceDirector : MonoBehaviour
     private void CloseStageDoor()
     {
         if (stageDoor == null || !stageDoor.IsOpen) return;
+        stageDoor.GetComponent<DoorSoundEmitter>()?.DeferNextClosingSound();
         if (destinationGate != null)
             destinationGate.Configure(sourceGate, playerCamera, true, 1.12f, 2f, false);
         stageDoor.Configure(100f, 1.2f);

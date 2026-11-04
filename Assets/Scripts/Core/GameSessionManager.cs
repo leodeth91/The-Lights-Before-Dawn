@@ -85,6 +85,8 @@ public sealed class GameSessionManager : MonoBehaviour
             gameObject.AddComponent<PauseMenuController>();
         if (GetComponent<AdaptiveMusicDirector>() == null)
             gameObject.AddComponent<AdaptiveMusicDirector>();
+        if (GetComponent<FinalLayeredMusicDirector>() == null)
+            gameObject.AddComponent<FinalLayeredMusicDirector>();
         if (GetComponent<StoryVoiceDirector>() == null)
             gameObject.AddComponent<StoryVoiceDirector>();
         if (runtimeInterface != null)

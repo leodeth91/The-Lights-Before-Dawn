@@ -1,0 +1,20 @@
+fileFormatVersion: 2
+guid: 5c9e7a19ed67376439b6e8c43b6bdaa5
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - vienenOtraVez: {fileID: 8300000, guid: ef2e90c07e8b08a47aa209bf8ba726e9, type: 3}
+  - estaVezNoMeAtraparan: {fileID: 8300000, guid: ba255b6983f544c42b60ad5a95ec7693, type: 3}
+  - noEstan: {fileID: 8300000, guid: 5cde4dff39539b84795967046d077972, type: 3}
+  - movermeEnSilencio: {fileID: 8300000, guid: 9a375fef3bf92cc43b35b09ede8fff7b, type: 3}
+  - buscarAyuda: {fileID: 8300000, guid: 38024f0bb23e48b4fb76799df6300b98, type: 3}
+  - noHaySenal: {fileID: 8300000, guid: c8e728a0eeba0474488ee7d267e1a45a, type: 3}
+  - noMeAtraparan: {fileID: 8300000, guid: 8277362c319f96b44a4e1c9b5a11e257, type: 3}
+  - yaAmanecio: {fileID: 8300000, guid: 130e16585a088524b8ab6d08e3933712, type: 3}
+  - dondeEstoy: {fileID: 8300000, guid: e329151c327c56a45adcff896e925c01, type: 3}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

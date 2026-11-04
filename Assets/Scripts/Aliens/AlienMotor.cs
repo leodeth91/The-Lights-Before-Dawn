@@ -8,6 +8,7 @@ public sealed class AlienMotor : MonoBehaviour
 {
     public NavMeshAgent Agent { get; private set; }
     public bool Arrived { get; private set; }
+    public bool Stalled { get; private set; }
     public float ManualMotionSpeed { get; private set; }
     private NavMeshPath path;
     private void Awake() { Agent = GetComponent<NavMeshAgent>(); path = new NavMeshPath(); }
@@ -91,18 +92,19 @@ public sealed class AlienMotor : MonoBehaviour
             }
         return bestDistance < float.PositiveInfinity && SetDestination(best, .15f, room);
     }
-    public IEnumerator Go(Vector3 point, float timeout = 15f)
+    public IEnumerator Go(Vector3 point, float timeout = 15f, float stallTimeout = 2.5f)
     {
+        Stalled = false;
         if (!SetDestination(point)) yield break;
-        yield return FollowPath(timeout);
+        yield return FollowPath(timeout, stallTimeout);
     }
     public IEnumerator GoToReachableGround(Vector3 point, RoomModule room, float timeout = 15f,
         float maxDistance = 2.5f)
     {
         if (room == null || !SetGroundDestination(point, room, maxDistance)) yield break;
-        yield return FollowPath(timeout);
+        yield return FollowPath(timeout, 2.5f);
     }
-    private IEnumerator FollowPath(float timeout)
+    private IEnumerator FollowPath(float timeout, float stallTimeout)
     {
         float end = Time.time + timeout;
         Vector3 lastPosition = transform.position;
@@ -113,7 +115,8 @@ public sealed class AlienMotor : MonoBehaviour
             { Arrived = true; break; }
             if ((transform.position - lastPosition).sqrMagnitude > .01f)
             { lastPosition = transform.position; stalledSince = Time.time; }
-            if (Time.time - stalledSince > 2.5f) break;
+            if (Time.time - stalledSince >= stallTimeout)
+            { Stalled = true; break; }
             yield return null;
         }
         Stop();

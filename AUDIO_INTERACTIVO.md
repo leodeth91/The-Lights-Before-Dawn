@@ -19,11 +19,13 @@ El tema `Assets/Music/Antes del Amanecer_para proyecto.wav` está configurado co
 | --- | --- | ---: | --- |
 | Menú y créditos | Se carga o se vuelve al menú principal | 1,25 s de entrada | `Antes del Amanecer_para proyecto.wav` |
 | Silencio jugable | Se selecciona Comenzar | 1,25 s de salida | Sin clip |
-| Persecución moderada | Primer alien inicia una persecución | Pendiente de decidir | Composición pendiente |
-| Persecución intensa | Aumenta el peligro durante una persecución | Pendiente de decidir | Capa o composición pendiente |
+| Persecución | Al menos un alien entra en `AlienChaseState` | 0,35 s de entrada; 3 s de salida al terminar la última persecución | `El Umbral.wav` |
+| Distancias por capas | 45 s: bajo; 30 s: batería; amanecer: piano y coro; salida: guitarra | Entrada de 0,35 s por capa; corte al mirar la puerta | Cinco WAV sincronizados por `PlayScheduled` |
 | Final | El jugador cruza la salida e inicia la secuencia final | Pendiente de decidir | Composición pendiente |
 
-El video del menú sigue reproduciéndose en loop sin audio propio. Exploración, anomalía y amanecer permanecen deliberadamente sin música. Para acreditar tres estados audibles en un equipo de 4–6 integrantes, conviene presentar persecución moderada, persecución intensa y secuencia final; el menú queda como pieza adicional.
+El video del menú sigue reproduciéndose en loop sin audio propio. Exploración y anomalía permanecen sin música hasta los últimos 45 segundos de supervivencia; desde allí Distancias tiene prioridad sobre cualquier persecución. El menú, la persecución y las capas finales ofrecen tres estados musicales diferenciados para el bloque B.
+
+`FinalLayeredMusicSettings` permite ajustar el volumen de cada instrumento. Las cinco capas de Distancias tienen 5.856.000 muestras (122 s a 48 kHz), por lo que comparten la misma longitud de loop. La alineación musical dentro de cada archivo debe comprobarse al escucharlas juntas en Play.
 
 ## SFX para la tabla del parcial
 
@@ -50,6 +52,6 @@ Dos loops de fondo existentes: `Ambiente de Noche` en la casa y `Ambiente Alien`
 
 ## Programación y comprobaciones pendientes
 
-`AdaptiveMusicDirector` modifica volumen y frecuencia de corte durante las transiciones. Actualmente responde a `GameSessionState`: reproduce el loop en `Menu` y lo desvanece al pasar a `Playing`. Las futuras músicas de persecución deberán reaccionar al estado real de los aliens. `SFXVariacion` elige clips sin repetir el anterior y varía pitch y volumen al aterrizar. Para la evidencia de programación, seleccionar hasta 40 líneas clave y anotar objetivo, condición, parámetro y resultado oído.
+`AdaptiveMusicDirector` modifica volumen y frecuencia de corte durante las transiciones. Responde a `GameSessionState` para el menú y a `AlienController.ChaseStateChanged` para la persecución: cuenta los aliens activos, mantiene el loop mientras quede alguno persiguiendo y hace una salida de 3 s cuando termina el último. `SFXVariacion` elige clips sin repetir el anterior y varía pitch y volumen al aterrizar. Para la evidencia de programación, seleccionar hasta 40 líneas clave y anotar objetivo, condición, parámetro y resultado oído.
 
 Antes de entregar el PDF: incorporar persecución y final, añadir las voces, comprobar todas las rutas en Play, medir que Master no llegue a 0 dB en el segmento elegido, ajustar balance de voz/SFX frente a Música y tomar capturas reales del mixer, emisores y DAW. La compilación por sí sola no acredita esas escuchas.

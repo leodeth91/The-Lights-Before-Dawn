@@ -1,6 +1,7 @@
+using System.Collections;
 using UnityEngine;
 
-/// <summary>Seis espacios para voces grabadas por el equipo, disparadas por eventos del juego.</summary>
+/// <summary>Conecta los eventos narrativos con las grabaciones del equipo.</summary>
 [DisallowMultipleComponent]
 public sealed class StoryVoiceDirector : MonoBehaviour
 {
@@ -11,18 +12,17 @@ public sealed class StoryVoiceDirector : MonoBehaviour
     [SerializeField] private AudioClip sunrise;
     [SerializeField] private AudioClip finalDiscovery;
 
-    private AudioSource source;
+    private DialogueAudioManager dialogue;
+    private Coroutine openingRoutine;
+    private Coroutine pendingLine;
     private GameSessionManager session;
     private StoryProgression story;
     private bool openingPlayed;
 
     private void Awake()
     {
-        source = gameObject.AddComponent<AudioSource>();
-        source.playOnAwake = false;
-        source.spatialBlend = 0f;
-        source.volume = .8f;
-        AudioMixerRouting.Route(source, AudioMixerRouting.Bus.Voice);
+        dialogue = GetComponent<DialogueAudioManager>();
+        if (dialogue == null) dialogue = gameObject.AddComponent<DialogueAudioManager>();
     }
 
     private void Start()
@@ -31,13 +31,14 @@ public sealed class StoryVoiceDirector : MonoBehaviour
         story = StoryProgression.Instance;
         if (session != null) session.StateChanged += OnSessionChanged;
         if (story != null) story.ObjectiveChanged += OnObjectiveChanged;
-        AudioMixerRouting.Route(source, AudioMixerRouting.Bus.Voice);
     }
 
     private void OnDestroy()
     {
         if (session != null) session.StateChanged -= OnSessionChanged;
         if (story != null) story.ObjectiveChanged -= OnObjectiveChanged;
+        if (openingRoutine != null) StopCoroutine(openingRoutine);
+        if (pendingLine != null) StopCoroutine(pendingLine);
     }
 
     private void OnSessionChanged(GameSessionState state)
@@ -45,28 +46,49 @@ public sealed class StoryVoiceDirector : MonoBehaviour
         if (state == GameSessionState.Playing && !openingPlayed)
         {
             openingPlayed = true;
-            Play(opening);
+            openingRoutine = StartCoroutine(PlayOpeningAfterSequence());
         }
-        else if (state == GameSessionState.Ending) Play(finalDiscovery);
+    }
+
+    private IEnumerator PlayOpeningAfterSequence()
+    {
+        // La sesión entra en Playing antes de que la secuencia alcance su primer frame.
+        yield return null;
+        while (OpeningSequenceDirector.IsRunning) yield return null;
+        openingRoutine = null;
+        PlayLines(1, 2);
     }
 
     private void OnObjectiveChanged(StoryObjective objective)
     {
         switch (objective)
         {
-            case StoryObjective.TryExit: Play(parentsMissing); break;
-            case StoryObjective.FindPhone: Play(anomalyBegins); break;
-            case StoryObjective.Survive: Play(phoneFound); break;
-            case StoryObjective.Escape: Play(sunrise); break;
+            case StoryObjective.TryExit: PlayLines(3, 4); break;
+            case StoryObjective.FindPhone: PlayLine(5); break;
+            case StoryObjective.Survive: PlayLines(6, 7); break;
+            case StoryObjective.Escape: PlayLine(8); break;
         }
     }
 
-    private void Play(AudioClip clip)
+    public void PlayFinalDiscovery() => PlayLine(9);
+
+    private void PlayLine(int id)
     {
-        if (clip == null) return;
-        AudioMixerRouting.Route(source, AudioMixerRouting.Bus.Voice);
-        source.Stop();
-        source.clip = clip;
-        source.Play();
+        if (pendingLine != null) StopCoroutine(pendingLine);
+        pendingLine = null;
+        dialogue.PlayDialogue(id);
+    }
+
+    private void PlayLines(int first, int second)
+    {
+        PlayLine(first);
+        pendingLine = StartCoroutine(PlayAfterCurrent(second));
+    }
+
+    private IEnumerator PlayAfterCurrent(int id)
+    {
+        yield return new WaitForSeconds(dialogue.DuracionActual);
+        dialogue.PlayDialogue(id);
+        pendingLine = null;
     }
 }

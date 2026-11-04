@@ -7,6 +7,8 @@ using UnityEngine.Events;
 [RequireComponent(typeof(AlienMemory))]
 public sealed class AlienController : MonoBehaviour
 {
+    public static event System.Action<AlienController, bool> ChaseStateChanged;
+
     [Header("Movement")]
     [SerializeField, Min(.1f)] private float patrolSpeed = .82f;
     [SerializeField, Min(.1f)] private float searchSpeed = 1.05f;
@@ -50,6 +52,7 @@ public sealed class AlienController : MonoBehaviour
     private float surveillanceClueExpires;
     private bool soundReactionActive;
     private bool playerCallReactionActive;
+    private bool chaseActive;
     private SoundStimulus activeSound;
     private SoundStimulus latestRunningSound;
 
@@ -605,6 +608,7 @@ public sealed class AlienController : MonoBehaviour
         onStateChanged.Invoke(StateName);
         if (verboseLogging) Debug.Log(name + " -> " + StateName, this);
         yield return state.Execute(this);
+        if (state is AlienChaseState) SetChaseActive(false);
         if (CurrentState == state) CurrentState = null;
     }
 
@@ -673,14 +677,26 @@ public sealed class AlienController : MonoBehaviour
         if (house == null || socket == null || Occupant.Room != socket.Room) yield break;
         RoomModule origin = Occupant.Room;
         traversingDoor = true;
+        bool recovered = false;
         try
         {
-            for (int attempt = 0; attempt < 3 && Occupant.Room == origin; attempt++)
+            for (int attempt = 0; attempt < 4 && Occupant.Room == origin; attempt++)
             {
                 Vector3 approach = socket.ClearApproachPoint
-                    + socket.transform.right * (attempt == 0 ? 0f : attempt == 1 ? .4f : -.4f);
-                yield return Motor.Go(approach, 4f);
-                if (!Motor.Arrived) continue;
+                    + socket.transform.right * (attempt == 0 ? 0f : attempt == 1 ? .4f : attempt == 2 ? -.4f : .2f);
+                yield return Motor.Go(approach, recovered ? 4f : 12f, recovered ? 2.5f : 7f);
+                if (!Motor.Arrived)
+                {
+                    Motor.Stop();
+                    if (!recovered && Motor.Stalled)
+                    {
+                        recovered = true;
+                        // Retrocede por el NavMesh del cuarto antes de probar otro ángulo del umbral.
+                        Vector3 back = transform.position - socket.Outward * .9f;
+                        yield return Motor.GoToReachableGround(back, origin, 3f, .5f);
+                    }
+                    continue;
+                }
                 if (surveillanceDestination != null)
                     house.RequestSurveillanceOpen(socket, this, surveillanceDestination);
                 else house.RequestOpen(socket, gameObject);
@@ -865,7 +881,18 @@ public sealed class AlienController : MonoBehaviour
     }
 
 
-    public void NotifyChaseStarted() => Voice?.PlayChaseVocalization();
+    public void NotifyChaseStarted()
+    {
+        Voice?.PlayChaseVocalization();
+        SetChaseActive(true);
+    }
+
+    private void SetChaseActive(bool active)
+    {
+        if (chaseActive == active) return;
+        chaseActive = active;
+        ChaseStateChanged?.Invoke(this, active);
+    }
 
     /// <summary>Todos los estados revisan el escondite de la misma manera: comprueban si está ocupado, sin importar por qué llegaron hasta él.</summary>
     public bool TryBeginInspection(IInspectable inspectable)
@@ -886,6 +913,7 @@ public sealed class AlienController : MonoBehaviour
 
     private void CleanupInterruptedActivity()
     {
+        SetChaseActive(false);
         EndSoundReaction();
         playerCallReactionActive = false;
         FinishInspection();

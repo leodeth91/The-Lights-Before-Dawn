@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>Reproduce y mezcla las piezas musicales según el estado de la sesión.</summary>
@@ -10,6 +11,7 @@ public sealed class AdaptiveMusicDirector : MonoBehaviour
     [SerializeField] private AudioClip anomaly;
     [SerializeField] private AudioClip dawn;
     [SerializeField] private AudioClip ending;
+    [SerializeField] private AudioClip chase;
     [Header("Transiciones elegidas para cada evento")]
     [SerializeField, Min(.1f)] private float menuFadeIn = 1.25f;
     [SerializeField, Min(.1f)] private float menuFadeOut = 1.25f;
@@ -17,11 +19,15 @@ public sealed class AdaptiveMusicDirector : MonoBehaviour
     [SerializeField, Min(.1f)] private float anomalyFade = 4f;
     [SerializeField, Min(.1f)] private float dawnFade = 5f;
     [SerializeField, Min(.1f)] private float endingFade = 2f;
+    [SerializeField, Min(.1f)] private float chaseFadeIn = .35f;
+    [SerializeField, Min(.1f)] private float chaseFadeOut = 3f;
+    [SerializeField, Range(0f, 1f)] private float chaseVolume = .42f;
 
     private readonly AudioSource[] layers = new AudioSource[2];
     private readonly AudioLowPassFilter[] filters = new AudioLowPassFilter[2];
     private readonly float[] startVolumes = new float[2];
     private readonly float[] startCutoffs = new float[2];
+    private readonly HashSet<AlienController> activeChasers = new HashSet<AlienController>();
     private GameSessionManager session;
     private StoryProgression story;
     private int activeLayer;
@@ -31,6 +37,7 @@ public sealed class AdaptiveMusicDirector : MonoBehaviour
     private float fadeSeconds = 2f;
     private float transitionElapsed;
     private float nextRoutingCheck;
+    private bool finalMusicLocked;
 
     private void Awake()
     {
@@ -41,6 +48,15 @@ public sealed class AdaptiveMusicDirector : MonoBehaviour
             menuVolume = menuSettings.Volume;
             menuFadeIn = menuSettings.FadeInSeconds;
             menuFadeOut = menuSettings.FadeOutSeconds;
+        }
+
+        ChaseMusicSettings chaseSettings = Resources.Load<ChaseMusicSettings>(ChaseMusicSettings.ResourcePath);
+        if (chaseSettings != null)
+        {
+            if (chase == null) chase = chaseSettings.Clip;
+            chaseVolume = chaseSettings.Volume;
+            chaseFadeIn = chaseSettings.FadeInSeconds;
+            chaseFadeOut = chaseSettings.FadeOutSeconds;
         }
 
         for (int i = 0; i < layers.Length; i++)
@@ -64,6 +80,7 @@ public sealed class AdaptiveMusicDirector : MonoBehaviour
         story = StoryProgression.Instance;
         if (session != null) session.StateChanged += OnSessionChanged;
         if (story != null) story.ObjectiveChanged += OnObjectiveChanged;
+        AlienController.ChaseStateChanged += OnAlienChaseChanged;
         if (session != null) OnSessionChanged(session.State);
     }
 
@@ -71,6 +88,7 @@ public sealed class AdaptiveMusicDirector : MonoBehaviour
     {
         if (session != null) session.StateChanged -= OnSessionChanged;
         if (story != null) story.ObjectiveChanged -= OnObjectiveChanged;
+        AlienController.ChaseStateChanged -= OnAlienChaseChanged;
     }
 
     private void Update()
@@ -97,21 +115,74 @@ public sealed class AdaptiveMusicDirector : MonoBehaviour
 
     private void OnSessionChanged(GameSessionState state)
     {
-        if (state == GameSessionState.Menu) Select(menu, menuVolume, 22000f, menuFadeIn);
-        else if (state == GameSessionState.Ending) Select(ending, .38f, 18000f, endingFade);
+        if (state == GameSessionState.Menu)
+        {
+            finalMusicLocked = false;
+            activeChasers.Clear();
+            Select(menu, menuVolume, 22000f, menuFadeIn);
+        }
+        else if (state == GameSessionState.Ending)
+        {
+            activeChasers.Clear();
+            if (!finalMusicLocked) Select(ending, .38f, 18000f, endingFade);
+        }
         else if (state == GameSessionState.Playing)
-            Select(null, 0f, 22000f, menuFadeOut);
+        {
+            if (finalMusicLocked) return;
+            if (activeChasers.Count > 0) Select(chase, chaseVolume, 22000f, chaseFadeIn);
+            else SelectBaseMusic(menuFadeOut);
+        }
     }
 
     private void OnObjectiveChanged(StoryObjective objective)
     {
+        if (finalMusicLocked) return;
         if (session == null || session.State == GameSessionState.Ending) return;
+        if (activeChasers.Count > 0) return;
+        SelectBaseMusic(objective, -1f);
+    }
+
+    private void OnAlienChaseChanged(AlienController alien, bool active)
+    {
+        if (alien == null) return;
+        int previousCount = activeChasers.Count;
+        if (active) activeChasers.Add(alien);
+        else activeChasers.Remove(alien);
+
+        if (session == null || !session.IsPlaying || finalMusicLocked) return;
+        if (previousCount == 0 && activeChasers.Count > 0)
+            Select(chase, chaseVolume, 22000f, chaseFadeIn);
+        else if (previousCount > 0 && activeChasers.Count == 0)
+            SelectBaseMusic(chaseFadeOut);
+    }
+
+    public void BeginFinalMusic()
+    {
+        if (finalMusicLocked) return;
+        finalMusicLocked = true;
+        activeChasers.Clear();
+        foreach (AudioSource layer in layers)
+        {
+            if (layer == null) continue;
+            layer.Stop();
+            layer.volume = 0f;
+        }
+        targetVolume = 0f;
+    }
+
+    private void SelectBaseMusic(float fadeOverride)
+    {
+        SelectBaseMusic(story != null ? story.Objective : StoryObjective.FindParents, fadeOverride);
+    }
+
+    private void SelectBaseMusic(StoryObjective objective, float fadeOverride)
+    {
         if (objective == StoryObjective.FindPhone || objective == StoryObjective.Survive)
-            Select(anomaly, .32f, 8000f, anomalyFade);
+            Select(anomaly, .32f, 8000f, fadeOverride > 0f ? fadeOverride : anomalyFade);
         else if (objective == StoryObjective.Escape)
-            Select(dawn, .4f, 22000f, dawnFade);
+            Select(dawn, .4f, 22000f, fadeOverride > 0f ? fadeOverride : dawnFade);
         else
-            Select(exploration, .4f, 22000f, explorationFade);
+            Select(exploration, .4f, 22000f, fadeOverride > 0f ? fadeOverride : explorationFade);
     }
 
     private void Select(AudioClip clip, float volume, float cutoff, float seconds)
