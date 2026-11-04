@@ -57,6 +57,8 @@ Este archivo conserva contexto técnico útil entre tareas. No sustituye el cód
 
 ## Criterio de actualización
 
+- El 2026-11-04 `FinalSequenceDirector` comienza `Ambiente Alien.mp3` en loop y a volumen bajo cuando `StoryProgression` pasa a `Escape`, exactamente al terminar la anomalía. Al iniciar la secuencia final reutiliza la misma fuente y eleva su volumen durante 3 s; el fade al negro continúa apagándola. No se editaron escenas ni prefabs. `Assembly-CSharp` compiló con el compilador y las referencias de Unity; falta comprobar auditivamente los niveles y transiciones en una partida completa.
+
 - El 2026-11-03 se integró `Assets/Music/Antes del Amanecer_para proyecto.wav` como música 2D del menú mediante `MenuMusicSettings`, sin guardar ni modificar la escena abierta. `AdaptiveMusicDirector` la reproduce en loop durante menú y créditos, con fade in/out de 1,25 s y salida al grupo `Música` de `GameAudioMixer`. El WAV es estéreo 48 kHz/24 bits y Unity lo importa como Streaming/Vorbis calidad 0,8. Unity recompiló sin errores; falta escuchar en Play el nivel, la unión del loop y ambos fades.
 
 - El 2026-11-03 se detectó que el merge de Lucho forzó `m_Enabled: 1` en 23 luces `LuzHabitacion`/`LuzSuaveVentana` de las instancias de habitación; los prefabs las tienen apagadas. Se retiraron solo esas sobrescrituras de `ModularPrototype`, conservando `LuzExteriorVentana` y la configuración ambiental. Diferencia revisada y `Assembly-CSharp` compiló; falta observar la penumbra en Play tras recargar la escena.

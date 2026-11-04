@@ -10,6 +10,8 @@ public sealed class FinalSequenceDirector : MonoBehaviour
     private const string LandscapeSceneName = "FinalAlienLandscape";
     private const string MenuSceneName = "ModularPrototype";
     private const float WalkDistance = 5.5f;
+    private const float DawnAmbienceVolume = 0.16f;
+    private const float AmbienceRiseSeconds = 3f;
     private static readonly Vector3 StandingEyeOffset = new Vector3(0f, 1.15f, .24f);
 
     [SerializeField, Min(0.1f)] private float walkSeconds = 4f;
@@ -30,6 +32,8 @@ public sealed class FinalSequenceDirector : MonoBehaviour
     private HousePortalTraveller playerPortalTraveller;
     private DoorSocket preparedExit;
     private AudioSource finalAmbience;
+    private StoryProgression story;
+    private Coroutine ambienceFade;
     private bool isReady;
     private bool isLoading;
     private bool isRunning;
@@ -38,6 +42,20 @@ public sealed class FinalSequenceDirector : MonoBehaviour
     private string loadError;
 
     public bool IsReady => isReady;
+
+    private void Start()
+    {
+        story = StoryProgression.Instance;
+        if (story == null) return;
+
+        story.ObjectiveChanged += OnObjectiveChanged;
+        if (story.HasDawnArrived) StartDawnAmbience();
+    }
+
+    private void OnObjectiveChanged(StoryObjective objective)
+    {
+        if (objective == StoryObjective.Escape) StartDawnAmbience();
+    }
 
     /// <summary> carga el escenario exterior al abrir la salida para que ya se vea tras el umbral. </summary>
     public void PrepareExit(DoorSocket exit)
@@ -179,7 +197,7 @@ public sealed class FinalSequenceDirector : MonoBehaviour
         if (landscapeScene.IsValid() && landscapeScene.isLoaded)
             SceneManager.SetActiveScene(landscapeScene);
         session.BeginEnding();
-        StartAlienAmbience();
+        RaiseAlienAmbience();
         CharacterController capsule = player.GetComponent<CharacterController>();
         bool capsuleWasEnabled = capsule != null && capsule.enabled;
         if (capsuleWasEnabled) capsule.enabled = true;
@@ -439,6 +457,7 @@ public sealed class FinalSequenceDirector : MonoBehaviour
 
     private IEnumerator FadeToBlack()
     {
+        StopAmbienceFade();
         fadeAlpha = 0f;
         float ambienceVolume = finalAmbience != null ? finalAmbience.volume : 0f;
         for (float elapsed = 0f; elapsed < fadeSeconds; elapsed += Time.deltaTime)
@@ -452,12 +471,36 @@ public sealed class FinalSequenceDirector : MonoBehaviour
         if (finalAmbience != null) finalAmbience.Stop();
     }
 
-    private void StartAlienAmbience()
+    private void StartDawnAmbience()
     {
+        if (!EnsureAlienAmbience()) return;
+
+        StopAmbienceFade();
+        finalAmbience.volume = Mathf.Min(DawnAmbienceVolume, alienAmbienceVolume);
+        if (!finalAmbience.isPlaying) finalAmbience.Play();
+    }
+
+    private void RaiseAlienAmbience()
+    {
+        if (!EnsureAlienAmbience()) return;
+
+        if (!finalAmbience.isPlaying)
+        {
+            finalAmbience.volume = Mathf.Min(DawnAmbienceVolume, alienAmbienceVolume);
+            finalAmbience.Play();
+        }
+
+        StopAmbienceFade();
+        ambienceFade = StartCoroutine(FadeAmbienceTo(alienAmbienceVolume, AmbienceRiseSeconds));
+    }
+
+    private bool EnsureAlienAmbience()
+    {
+        if (finalAmbience != null) return true;
         if (alienAmbienceClip == null)
         {
             Debug.LogWarning("Falta asignar el clip de ambiente alienígena a la secuencia final.", this);
-            return;
+            return false;
         }
 
         GameObject ambienceObject = new GameObject("FinalAlienAmbience");
@@ -469,8 +512,29 @@ public sealed class FinalSequenceDirector : MonoBehaviour
         finalAmbience.spatialBlend = 0f;
         finalAmbience.dopplerLevel = 0f;
         finalAmbience.loop = true;
-        finalAmbience.volume = alienAmbienceVolume;
-        finalAmbience.Play();
+        finalAmbience.volume = 0f;
+        return true;
+    }
+
+    private IEnumerator FadeAmbienceTo(float targetVolume, float duration)
+    {
+        float initialVolume = finalAmbience != null ? finalAmbience.volume : 0f;
+        for (float elapsed = 0f; elapsed < duration; elapsed += Time.unscaledDeltaTime)
+        {
+            if (finalAmbience == null) yield break;
+            finalAmbience.volume = Mathf.Lerp(initialVolume, targetVolume, elapsed / duration);
+            yield return null;
+        }
+
+        if (finalAmbience != null) finalAmbience.volume = targetVolume;
+        ambienceFade = null;
+    }
+
+    private void StopAmbienceFade()
+    {
+        if (ambienceFade == null) return;
+        StopCoroutine(ambienceFade);
+        ambienceFade = null;
     }
 
     private void OpenStageDoor()
@@ -515,5 +579,6 @@ public sealed class FinalSequenceDirector : MonoBehaviour
     private void OnDestroy()
     {
         SceneManager.sceneLoaded -= OnSceneLoaded;
+        if (story != null) story.ObjectiveChanged -= OnObjectiveChanged;
     }
 }
