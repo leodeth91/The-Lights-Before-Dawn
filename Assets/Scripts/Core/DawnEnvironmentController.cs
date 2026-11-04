@@ -101,8 +101,8 @@ public sealed class DawnEnvironmentController : MonoBehaviour
             house?.ForgetPursuit(alienObject);
             if (alien.Passage != null) house?.ReleasePassage(alien.Passage, alienObject);
 
-            // Stop the running behavior before disabling its NavMeshAgent. This holds the
-            // alien where it is and prevents a suspended door traversal from continuing.
+            // Detiene su acción antes de apagar el NavMeshAgent. Así el alien queda quieto
+            // y no continúa un cruce de puerta que había quedado a medias.
             Vector3 stoppedPosition = alien.transform.position;
             Quaternion stoppedRotation = alien.transform.rotation;
             alien.StopAllCoroutines();

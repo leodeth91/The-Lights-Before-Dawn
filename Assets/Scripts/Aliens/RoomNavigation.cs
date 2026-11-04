@@ -34,6 +34,7 @@ public sealed class RoomNavigation : MonoBehaviour
             var markups = new List<NavMeshBuildMarkup>();
             foreach (DoorInteractable door in GetComponentsInChildren<DoorInteractable>(true))
                 markups.Add(new NavMeshBuildMarkup { root = door.transform, ignoreFromBuild = true });
+
             var sources = new List<NavMeshBuildSource>();
             NavMeshBuilder.CollectSources(transform, ~(1 << 2), NavMeshCollectGeometry.PhysicsColliders, 0, markups, sources);
             RoomModule room = GetComponent<RoomModule>();

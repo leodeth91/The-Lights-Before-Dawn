@@ -9,7 +9,6 @@ using UnityEngine.SceneManagement;
 /// <summary>Audita en Play las rutas reales de cada habitación sin guardar cambios en la escena.</summary>
 public sealed class AlienNavigationAudit : MonoBehaviour
 {
-    [MenuItem("The Lights Before Dawn/Pruebas/Auditar navegación de habitaciones")]
     private static void Run()
     {
         if (EditorApplication.isPlayingOrWillChangePlaymode || EditorApplication.isCompiling

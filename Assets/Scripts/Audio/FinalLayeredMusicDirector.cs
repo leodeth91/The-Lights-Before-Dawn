@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 /// <summary>Reproduce las capas de Distancias con un único reloj musical.</summary>
@@ -6,7 +7,8 @@ public sealed class FinalLayeredMusicDirector : MonoBehaviour
 {
     private const float StartBeforeDawn = 45f;
     private const float DrumsBeforeDawn = 30f;
-    private const float FadeSeconds = .35f;
+    private const float LayerFadeSeconds = .35f;
+    private const float FinalFadeSeconds = .4f;
     private const int Bass = 0, Drums = 1, Piano = 2, Choir = 3, Guitar = 4;
 
     private readonly AudioSource[] layers = new AudioSource[5];
@@ -56,7 +58,7 @@ public sealed class FinalLayeredMusicDirector : MonoBehaviour
             AudioSource source = layers[i];
             if (source == null) continue;
             source.volume = Mathf.MoveTowards(source.volume, audible[i] ? levels[i] : 0f,
-                Time.deltaTime / FadeSeconds);
+                Time.deltaTime / LayerFadeSeconds);
         }
     }
 
@@ -84,11 +86,33 @@ public sealed class FinalLayeredMusicDirector : MonoBehaviour
 
     public void BringInGuitar() => BringIn(Guitar);
 
-    public void StopFinalMusic()
+    public void FadeOutAndStop()
     {
+        if (!started || stopped) return;
         stopped = true;
+        StartCoroutine(FadeOutLayers());
+    }
+
+    private IEnumerator FadeOutLayers()
+    {
+        float[] initialVolumes = new float[layers.Length];
+        for (int i = 0; i < layers.Length; i++)
+            if (layers[i] != null) initialVolumes[i] = layers[i].volume;
+
+        for (float elapsed = 0f; elapsed < FinalFadeSeconds; elapsed += Time.unscaledDeltaTime)
+        {
+            float progress = Mathf.Clamp01(elapsed / FinalFadeSeconds);
+            for (int i = 0; i < layers.Length; i++)
+                if (layers[i] != null) layers[i].volume = Mathf.Lerp(initialVolumes[i], 0f, progress);
+            yield return null;
+        }
+
         foreach (AudioSource source in layers)
-            if (source != null) source.Stop();
+        {
+            if (source == null) continue;
+            source.volume = 0f;
+            source.Stop();
+        }
     }
 
     private void OnDestroy()

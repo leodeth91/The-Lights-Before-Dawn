@@ -28,7 +28,7 @@ public sealed class DoorInteractable : MonoBehaviour, IInteractable, IOpenable
         get
         {
             if (doorLeafCollider == null) return GetComponentInChildren<MeshRenderer>();
-            // The collider stays on the original leaf while imported art can live below it.
+            // El collider queda en la hoja original, aunque el modelo importado esté como hijo.
             foreach (Renderer renderer in doorLeafCollider.GetComponentsInChildren<Renderer>(true))
                 if (renderer.gameObject != doorLeafCollider.gameObject) return renderer;
             return doorLeafCollider.GetComponent<Renderer>();

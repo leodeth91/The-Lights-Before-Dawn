@@ -256,12 +256,13 @@ public sealed class FinalSequenceDirector : MonoBehaviour
         yield return LookAtSky(eyeTarget, lookSeconds);
         yield return LookDirection(eyeTarget, -forward, lookSeconds);
 
-        GetComponent<FinalLayeredMusicDirector>()?.StopFinalMusic();
         StopAmbienceFade();
         if (finalAmbience != null) finalAmbience.Stop();
         CloseStageDoor();
         if (stageDoor != null)
             while (stageDoor.State == DoorState.Closing) yield return null;
+        // El golpe de la puerta y el final de la música ocurren juntos.
+        GetComponent<FinalLayeredMusicDirector>()?.FadeOutAndStop();
 
         GetComponent<StoryVoiceDirector>()?.PlayFinalDiscovery();
         showMessage = true;

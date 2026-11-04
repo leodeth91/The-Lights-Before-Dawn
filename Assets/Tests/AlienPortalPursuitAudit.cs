@@ -11,7 +11,6 @@ public sealed class AlienPortalPursuitAudit : MonoBehaviour
 {
     private const string SessionKey = "TLBD.PortalPursuitAudit";
 
-    [MenuItem("The Lights Before Dawn/Pruebas/Auditar persecución por portal")]
     private static void Run()
     {
         if (EditorApplication.isPlayingOrWillChangePlaymode || EditorApplication.isCompiling

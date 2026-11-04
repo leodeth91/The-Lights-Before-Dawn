@@ -58,8 +58,10 @@ public sealed class AlienPopulation : MonoBehaviour
             || !house.ModuleById.TryGetValue("foyer", out RoomModule foyer)) return;
         foyer.gameObject.SetActive(true);
         // Evita colocarlo sobre un alien que haya regresado al recibidor.
-        Vector3[] positions = { new Vector3(0, .05f, 0), new Vector3(0, .05f, -1f),
-            new Vector3(0, .05f, 1f), new Vector3(-1f, .05f, 0), new Vector3(1f, .05f, 0) };
+        Vector3[] positions = { new Vector3(0, .05f, -1.5f), new Vector3(0, .05f, 1.5f),
+            new Vector3(-2f, .05f, -1.5f), new Vector3(2f, .05f, -1.5f),
+            new Vector3(-2f, .05f, 1.5f), new Vector3(2f, .05f, 1.5f),
+            new Vector3(0, .05f, 0) };
         foreach (Vector3 position in positions)
             if (Spawn(foyer, position, "Alien 3", true))
             {
@@ -72,10 +74,20 @@ public sealed class AlienPopulation : MonoBehaviour
     {
         var filter = new NavMeshQueryFilter { agentTypeID = RoomNavigation.AgentType, areaMask = NavMesh.AllAreas };
         Vector3 requestedPosition = room.transform.TransformPoint(local);
-        if (!NavMesh.SamplePosition(requestedPosition, out NavMeshHit hit, 2f, filter))
+        float sampleRadius = avoidOccupants ? .35f : 2f;
+        if (!NavMesh.SamplePosition(requestedPosition, out NavMeshHit hit, sampleRadius, filter))
         {
             if (!avoidOccupants) Debug.LogError("No walkable spawn for " + label, room);
             return false;
+        }
+        if (avoidOccupants)
+        {
+            // El NavMesh también puede cubrir una mesa. Este alien solo nace a ras del piso y sin muebles alrededor.
+            if (!room.ContainsPoint(hit.position, .25f)
+                || Mathf.Abs(room.transform.InverseTransformPoint(hit.position).y - local.y) > .25f
+                || Physics.CheckCapsule(hit.position + Vector3.up * .4f,
+                    hit.position + Vector3.up * 1.4f, .25f, ~0, QueryTriggerInteraction.Ignore))
+                return false;
         }
         if (avoidOccupants)
             foreach (RoomOccupant otherOccupant in house.Occupants)

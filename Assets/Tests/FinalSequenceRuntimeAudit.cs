@@ -13,7 +13,6 @@ public sealed class FinalSequenceRuntimeAudit : MonoBehaviour
     private const string MainSceneName = "ModularPrototype";
     private int failures;
 
-    [MenuItem("The Lights Before Dawn/Pruebas/Auditar secuencia final")]
     private static void Run()
     {
         if (EditorApplication.isPlayingOrWillChangePlaymode || EditorApplication.isCompiling) return;

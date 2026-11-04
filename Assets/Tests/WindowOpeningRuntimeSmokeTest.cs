@@ -12,7 +12,6 @@ public sealed class WindowOpeningRuntimeSmokeTest : MonoBehaviour
 {
     private const string SessionKey = "TLBD.WindowOpeningSmoke";
 
-    [MenuItem("The Lights Before Dawn/Pruebas/Ventanas, muros y luz")]
     private static void Run()
     {
         if (EditorApplication.isPlayingOrWillChangePlaymode || EditorApplication.isCompiling

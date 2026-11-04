@@ -10,7 +10,6 @@ public static class PortalTrialSceneBuilder
     private const string ChildPath = "Assets/Generated/ModularPrototype/Rooms/Room_child_room.prefab";
     private const string CorridorPath = "Assets/Generated/ModularPrototype/Rooms/Room_upper_corridor.prefab";
 
-    [MenuItem("The Lights Before Dawn/Pruebas/Crear escena de portal niño-pasillo")]
     public static void Build()
     {
         if (AssetDatabase.LoadAssetAtPath<SceneAsset>(ScenePath) != null)
