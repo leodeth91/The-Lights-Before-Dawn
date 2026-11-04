@@ -67,6 +67,7 @@ public sealed class RoomSurveillanceDirector : MonoBehaviour
     private ScanLight Prepare(Light light)
     {
         var audio = light.gameObject.AddComponent<AudioSource>();
+        AudioMixerRouting.Route(audio, AudioMixerRouting.Bus.Ambience);
         audio.clip = vibration;
         audio.loop = true;
         audio.playOnAwake = false;

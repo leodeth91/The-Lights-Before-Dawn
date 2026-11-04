@@ -144,8 +144,8 @@ public sealed class PrototypeHUD : MonoBehaviour
         if (resultText != null && finished)
         {
             resultText.text = state == GameSessionState.Victory
-                ? "Llegó el amanecer, sobreviviste\n\nR: reiniciar"
-                : "nunca nadie lo volvió a ver\n\nR: reiniciar";
+                ? "Llegó el amanecer. Sobreviviste.\n\nR: Reiniciar"
+                : "Nunca nadie lo volvió a ver.\n\nR: Reiniciar";
         }
     }
 
@@ -153,7 +153,7 @@ public sealed class PrototypeHUD : MonoBehaviour
     {
         if (roomText != null)
         {
-            roomText.text = current != null ? "Habitacion: " + current.DisplayName : string.Empty;
+            roomText.text = current != null ? "Habitación: " + current.DisplayName : string.Empty;
         }
         RefreshPlayerConnection();
     }
@@ -172,8 +172,8 @@ public sealed class PrototypeHUD : MonoBehaviour
     {
         if (connectionText == null || house == null) return;
         RoomConnection connection = house.ActiveConnection;
-        if (connection == null) { connectionText.text = "Conexion cerrada"; return; }
+        if (connection == null) { connectionText.text = "Conexión cerrada"; return; }
         RoomModule destination = connection.SourceRoom == house.CurrentRoom ? connection.TargetRoom : connection.SourceRoom;
-        connectionText.text = (connection.IsAnomalous ? "Anomalia: " : "Conexion normal: ") + destination.DisplayName;
+        connectionText.text = (connection.IsAnomalous ? "Anomalía: " : "Conexión normal: ") + destination.DisplayName;
     }
 }

@@ -5,20 +5,56 @@ using UnityEngine.Audio;
 [DisallowMultipleComponent]
 public sealed class AudioMixerRouting : MonoBehaviour
 {
+    public enum Bus { Music, Sfx, Ambience, Voice }
+
     [SerializeField] private AudioMixerGroup sfxGroup;
     [SerializeField] private AudioMixerGroup ambienceGroup;
 
+    private static AudioMixerRouting instance;
+    private AudioMixerGroup musicGroup;
     private AudioMixerGroup voiceGroup;
     private float nextScan;
 
     private void Awake()
     {
+        instance = this;
         if (sfxGroup != null)
         {
-            AudioMixerGroup[] groups = sfxGroup.audioMixer.FindMatchingGroups("Voz");
-            if (groups.Length > 0) voiceGroup = groups[0];
+            musicGroup = FindGroup("Música");
+            voiceGroup = FindGroup("Voz");
         }
         RouteSources();
+    }
+
+    private void OnDestroy()
+    {
+        if (instance == this) instance = null;
+    }
+
+    public static void Route(AudioSource source, Bus bus)
+    {
+        if (source == null) return;
+        if (instance == null) instance = FindFirstObjectByType<AudioMixerRouting>();
+        if (instance == null) return;
+        if (instance.sfxGroup != null)
+        {
+            if (instance.musicGroup == null) instance.musicGroup = instance.FindGroup("Música");
+            if (instance.voiceGroup == null) instance.voiceGroup = instance.FindGroup("Voz");
+        }
+        AudioMixerGroup group = bus switch
+        {
+            Bus.Music => instance.musicGroup,
+            Bus.Ambience => instance.ambienceGroup,
+            Bus.Voice => instance.voiceGroup,
+            _ => instance.sfxGroup
+        };
+        if (group != null) source.outputAudioMixerGroup = group;
+    }
+
+    private AudioMixerGroup FindGroup(string name)
+    {
+        AudioMixerGroup[] groups = sfxGroup.audioMixer.FindMatchingGroups(name);
+        return groups.Length > 0 ? groups[0] : null;
     }
 
     private void Update()
@@ -33,22 +69,21 @@ public sealed class AudioMixerRouting : MonoBehaviour
         foreach (AudioSource source in FindObjectsByType<AudioSource>(FindObjectsInactive.Include,
                      FindObjectsSortMode.None))
         {
-            AlienAmbientAudio alienAudio = source.GetComponent<AlienAmbientAudio>();
-            if (voiceGroup != null && alienAudio != null && source == alienAudio.VocalSource)
-            {
-                source.outputAudioMixerGroup = voiceGroup;
-                continue;
-            }
-            // Conserva el ruteo SFX que ya está serializado en puertas, jugador y aliens.
+            // Conserva el ruteo ya serializado en puertas, jugador y aliens.
             if (source.outputAudioMixerGroup != null) continue;
-            source.outputAudioMixerGroup = IsAmbience(source.transform) ? ambienceGroup : sfxGroup;
+            source.outputAudioMixerGroup = IsAmbience(source) ? ambienceGroup : sfxGroup;
         }
     }
 
-    private static bool IsAmbience(Transform source)
+    private static bool IsAmbience(AudioSource source)
     {
         string name = source.name;
+        string clipName = source.clip != null ? source.clip.name : "";
         return name == "LuzExteriorVentana" || name == "LuzVigilanciaTecho"
-            || name == "tv__small" || name == "small_radio" || name == "grandfather_clock";
+            || name == "tv__small" || name == "small_radio" || name == "grandfather_clock"
+            || name == "Alien Ambience" || name == "FinalAlienAmbience"
+            || clipName == "Ambiente de Noche" || clipName == "Ambiente Alien"
+            || clipName == "Sonido de Luz" || clipName == "UFO Sonido"
+            || clipName == "TV" || clipName == "Reloj Sonando";
     }
 }

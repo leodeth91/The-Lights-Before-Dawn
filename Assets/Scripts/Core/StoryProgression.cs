@@ -23,7 +23,7 @@ public sealed class StoryProgression : MonoBehaviour
     public void ReachDawn()
     {
         if (Objective != StoryObjective.Survive) return;
-        Advance(StoryObjective.Escape, "Ya amaneció, ahora podré salir");
+        Advance(StoryObjective.Escape, "¡Ya amaneció! Ahora podré salir.");
     }
 
     public bool OpenFinalExit(DoorSocket socket, GameObject actor)
@@ -97,8 +97,8 @@ public sealed class StoryProgression : MonoBehaviour
     {
         if (state != GameSessionState.Playing || sessionStarted) return;
         sessionStarted = true;
-        messages.Enqueue("Vienen otra vez, debo buscar a mamá y papá");
-        messages.Enqueue("Esta vez no me atraparán");
+        messages.Enqueue("Vienen otra vez. Debo buscar a mamá y papá.");
+        messages.Enqueue("Esta vez no me atraparán.");
     }
     // El objetivo cambia en un solo lugar. El resto de sistemas consulta este dato para activar el celular, las guías y la anomalía.
     private void Advance(StoryObjective next, params string[] thoughts)
@@ -114,12 +114,12 @@ public sealed class StoryProgression : MonoBehaviour
     private void OnRoomChanged(RoomModule previous, RoomModule current)
     {
         if (session.IsPlaying && Objective == StoryObjective.FindParents && current == parentsRoom)
-            Advance(StoryObjective.TryExit, "No están! Tengo que salir de la casa");
+            Advance(StoryObjective.TryExit, "¡No están! Tengo que salir de la casa.");
         if (!silenceMessageShown && session.IsPlaying && previous == parentsRoom && current != parentsRoom
             && Objective == StoryObjective.TryExit)
         {
             silenceMessageShown = true;
-            messages.Enqueue("Debo moverme en silencio para que no me encuentren");
+            messages.Enqueue("Debo moverme en silencio para que no me encuentren.");
         }
         if (!loopCrossed && Objective == StoryObjective.FindPhone && current == childRoom && previous == entrance.Room)
         {
@@ -138,13 +138,19 @@ public sealed class StoryProgression : MonoBehaviour
     public void CompleteExit()
     {
         if (Objective != StoryObjective.TryExit) return;
-        Advance(StoryObjective.FindPhone, "Que está pasando? Tengo que pedir ayuda, buscaré el teléfono en la oficina");
+        Advance(StoryObjective.FindPhone, "¿Qué está pasando? Tengo que pedir ayuda. Buscaré el teléfono en la oficina.");
     }
     public void ReviewPhone(GameObject actor)
     {
         if (Objective != StoryObjective.FindPhone || actor != player.gameObject || house.CurrentRoom != officeRoom) return;
-        Advance(StoryObjective.Survive, "No hay señal, debo esperar a que amanezca", "NO ME ATRAPARÁN");
+        Advance(StoryObjective.Survive, "No hay señal. Debo esperar a que amanezca.", "¡No me atraparán!");
         session.StartSurvival(survivalSeconds);
+    }
+    public void ShowObservation(string thought)
+    {
+        if (session == null || !session.IsPlaying || string.IsNullOrWhiteSpace(thought)) return;
+        currentMessage = thought;
+        messageUntil = Time.time + Mathf.Max(4f, thought.Length * .07f);
     }
     private void Update()
     {

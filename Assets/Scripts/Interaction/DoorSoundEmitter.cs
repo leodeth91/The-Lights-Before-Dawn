@@ -98,6 +98,7 @@ public sealed class DoorSoundEmitter : MonoBehaviour
     {
         if (source == null) source = GetComponent<AudioSource>();
         if (source == null) source = gameObject.AddComponent<AudioSource>();
+        AudioMixerRouting.Route(source, AudioMixerRouting.Bus.Sfx);
         source.playOnAwake = false;
         source.loop = false;
         source.spatialBlend = 1f;

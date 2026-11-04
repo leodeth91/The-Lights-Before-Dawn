@@ -34,8 +34,8 @@ public sealed class DoorInteractable : MonoBehaviour, IInteractable, IOpenable
             return doorLeafCollider.GetComponent<Renderer>();
         }
     }
-    public string InteractionPrompt => State == DoorState.Open ? "E: cerrar"
-        : State == DoorState.Opening ? string.Empty : "E: abrir";
+    public string InteractionPrompt => State == DoorState.Open ? "E: Cerrar"
+        : State == DoorState.Opening ? string.Empty : "E: Abrir";
 
     public event Action<DoorInteractable, GameObject> OpeningStarted;
     public event Action<DoorInteractable> Opened;

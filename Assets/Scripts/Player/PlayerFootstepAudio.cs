@@ -165,6 +165,8 @@ public sealed class PlayerFootstepAudio : MonoBehaviour
 
         ConfigureSource(internalWalkingSource, 0f, 1f, 4f);
         ConfigureSource(externalRunningSource, 1f, 0.8f, 16f);
+        AudioMixerRouting.Route(internalWalkingSource, AudioMixerRouting.Bus.Sfx);
+        AudioMixerRouting.Route(externalRunningSource, AudioMixerRouting.Bus.Sfx);
     }
 
     private static void ConfigureSource(AudioSource source, float spatialBlend,

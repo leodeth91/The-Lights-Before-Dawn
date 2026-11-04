@@ -22,11 +22,44 @@ public sealed class SpatialWorldAudio : MonoBehaviour
 
     private readonly List<AudioSource> loops = new List<AudioSource>();
     private readonly List<AudioSource> anomalyLoops = new List<AudioSource>();
+    private readonly List<AudioSource> eventLoops = new List<AudioSource>();
     private AudioSource clockSource;
+    private AudioSource radioSource;
     private AudioSource phoneSource;
+    private AudioSource nightSource;
     private bool vibrationPlayed;
     private bool dawnReached;
     private Coroutine anomalyFade;
+
+    private void Awake()
+    {
+        // Las fuentes incorporadas a la escena no deben comenzar por su cuenta.
+        // El celular, la TV y el reloj ya tienen disparadores en este componente.
+        foreach (AudioSource source in FindObjectsByType<AudioSource>(
+                     FindObjectsInactive.Include, FindObjectsSortMode.None))
+        {
+            if (source.gameObject.scene != gameObject.scene || source.clip == null) continue;
+            string clipName = source.clip.name;
+            if (clipName != "Celular Vibrando" && clipName != "TV" && clipName != "Reloj Sonando"
+                && clipName != "Ambiente de Noche" && clipName != "Ambiente Alien"
+                && clipName != "Sonido de Luz" && clipName != "UFO Sonido") continue;
+
+            source.playOnAwake = false;
+            source.Stop();
+            if (clipName == "Celular Vibrando") { source.loop = false; phoneSource = source; }
+            else if (clipName == "Ambiente de Noche")
+            {
+                nightSource = source;
+                loops.Add(source);
+            }
+            else if (clipName == "Ambiente Alien" || clipName == "Sonido de Luz" || clipName == "UFO Sonido")
+            {
+                eventLoops.Add(source);
+                loops.Add(source);
+                TrackAnomalyLoop(source);
+            }
+        }
+    }
 
     private void Start()
     {
@@ -42,15 +75,18 @@ public sealed class SpatialWorldAudio : MonoBehaviour
             {
                 if (child.name == "LuzExteriorVentana") TrackAnomalyLoop(AddLoop(child, windowAmbience, 0.30f, 0.8f, 5f));
                 else if (child.name == "tv__small") TrackAnomalyLoop(AddLoop(child, televisionStatic, 0.23f, 0.7f, 9f));
-                else if (child.name == "small_radio") AddLoop(child, kitchenRadio, 0.60f, 1.5f, 8f);
+                else if (child.name == "small_radio") radioSource = AddLoop(child, kitchenRadio, 0.60f, 1.5f, 8f);
                 else if (child.name == "grandfather_clock") clockSource = AddLoop(child, clockTicking, ClockVolume, 1.2f, 9f);
             }
         }
-        if (phone != null && phoneVibration != null)
+        if (phone != null && (phoneVibration != null || phoneSource != null))
         {
-            phoneSource = phone.gameObject.AddComponent<AudioSource>();
+            if (phoneSource == null) phoneSource = phone.gameObject.AddComponent<AudioSource>();
+            else phoneVibration = phoneSource.clip;
             ConfigureSpatial(phoneSource, 1f, 0.7f, 7f);
+            AudioMixerRouting.Route(phoneSource, AudioMixerRouting.Bus.Sfx);
             phoneSource.playOnAwake = false;
+            phoneSource.loop = false;
         }
         house.CurrentRoomChanged += OnRoomChanged;
         story.ObjectiveChanged += OnObjectiveChanged;
@@ -63,6 +99,7 @@ public sealed class SpatialWorldAudio : MonoBehaviour
         if (clip == null) return null;
         AudioSource source = target.gameObject.AddComponent<AudioSource>();
         ConfigureSpatial(source, volume, minDistance, maxDistance);
+        AudioMixerRouting.Route(source, AudioMixerRouting.Bus.Ambience);
         source.clip = clip;
         source.loop = true;
         source.playOnAwake = false;
@@ -91,10 +128,20 @@ public sealed class SpatialWorldAudio : MonoBehaviour
     {
         if (objective != StoryObjective.FindPhone && phoneSource != null)
             phoneSource.Stop();
+        if (objective != StoryObjective.FindPhone && objective != StoryObjective.Survive)
+        {
+            if (radioSource != null) radioSource.Stop();
+            if (objective != StoryObjective.Escape)
+                foreach (AudioSource source in eventLoops) if (source != null) source.Stop();
+        }
         if (clockSource != null)
             clockSource.volume = objective == StoryObjective.FindPhone || objective == StoryObjective.Survive
                 ? ClockVolume * 1.3f : ClockVolume;
-        if (objective == StoryObjective.Escape) BeginDawnTransition();
+        if (objective == StoryObjective.Escape)
+        {
+            if (nightSource != null) nightSource.Stop();
+            BeginDawnTransition();
+        }
     }
 
     private void TrackAnomalyLoop(AudioSource source)
@@ -138,6 +185,7 @@ public sealed class SpatialWorldAudio : MonoBehaviour
     {
         if (state == GameSessionState.Playing) return;
         foreach (AudioSource source in loops) if (source != null) source.Stop();
+        if (phoneSource != null) phoneSource.Stop();
     }
 
     private void Update()
@@ -145,7 +193,9 @@ public sealed class SpatialWorldAudio : MonoBehaviour
         if (session == null || !session.IsPlaying) return;
         foreach (AudioSource source in loops)
             if (source != null && source.isActiveAndEnabled && !source.isPlaying
-                && !(dawnReached && anomalyLoops.Contains(source))) source.Play();
+                && !(dawnReached && (anomalyLoops.Contains(source) || source == nightSource))
+                && (source != radioSource || story.AnomalyEnabled)
+                && (!eventLoops.Contains(source) || story.AnomalyEnabled)) source.Play();
     }
 
     private void OnDestroy()

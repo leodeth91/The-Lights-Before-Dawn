@@ -160,6 +160,8 @@ public sealed class AlienAmbientAudio : MonoBehaviour
 
         ConfigureSource(footstepSource, 0.9f, 14f);
         ConfigureSource(vocalSource, 1.2f, 18f);
+        AudioMixerRouting.Route(footstepSource, AudioMixerRouting.Bus.Sfx);
+        AudioMixerRouting.Route(vocalSource, AudioMixerRouting.Bus.Sfx);
     }
 
     private static void ConfigureSource(AudioSource source, float minimumDistance,

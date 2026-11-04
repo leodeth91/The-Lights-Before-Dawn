@@ -21,10 +21,12 @@ public class SFXVariacion : MonoBehaviour
     private AudioSource fuente;
     private ChildPlayerController player;
     private bool jumpInProgress;
+    private int previousClip = -1;
 
     private void Awake()
     {
         fuente = GetComponent<AudioSource>();
+        AudioMixerRouting.Route(fuente, AudioMixerRouting.Bus.Sfx);
         player = GetComponent<ChildPlayerController>();
     }
 
@@ -43,7 +45,11 @@ public class SFXVariacion : MonoBehaviour
     {
         if (clips == null || clips.Length == 0 || fuente == null) return;
 
-        AudioClip clipElegido = clips[Random.Range(0, clips.Length)];
+        int clipIndex = Random.Range(0, clips.Length);
+        if (clips.Length > 1 && clipIndex == previousClip)
+            clipIndex = (clipIndex + Random.Range(1, clips.Length)) % clips.Length;
+        previousClip = clipIndex;
+        AudioClip clipElegido = clips[clipIndex];
         fuente.pitch = Random.Range(minPitch, maxPitch);
         float vol = Random.Range(minVolumen, maxVolumen);
 

@@ -14,7 +14,10 @@ public sealed class RoomModule : MonoBehaviour
     [SerializeField] private List<DoorSocket> sockets = new List<DoorSocket>();
 
     public string RoomId => roomId;
-    public string DisplayName => displayName;
+    public string DisplayName => displayName == "Bano planta baja" ? "Baño planta baja"
+        : displayName == "Bano planta alta" ? "Baño planta alta"
+        : displayName == "Habitacion 2 / corredor" ? "Habitación 2 / corredor"
+        : displayName;
     public HouseFloor Floor => floor;
     public bool IsAnchorRoom => anchorRoom;
     public Vector3 LocalVolumeCenter => localVolumeCenter;
