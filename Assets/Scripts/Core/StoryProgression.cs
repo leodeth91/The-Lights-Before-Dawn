@@ -42,7 +42,18 @@ public sealed class StoryProgression : MonoBehaviour
     private HouseFlowController house;
     private GameSessionManager session;
     private PlayerInteractor player;
-    private readonly Queue<string> messages = new Queue<string>();
+    private struct DialogueMessage
+    {
+        public string text;
+        public int audioID;
+
+        public DialogueMessage(string text, int audioID)
+        {
+            this.text = text;
+            this.audioID = audioID;
+        }
+    }
+    private readonly Queue<DialogueMessage> messages = new Queue<DialogueMessage>();
     private string currentMessage = "";
     private float messageUntil, nextGuide;
     private bool clearEntrancePending;
@@ -53,6 +64,7 @@ public sealed class StoryProgression : MonoBehaviour
     public DoorSocket GuideDoor { get; private set; }
     private bool silenceMessageShown;
     private bool sessionStarted;
+    [SerializeField] private DialogueAudioManager dialogueAudio;
     private bool GuideDoorClosed
     {
         get
@@ -96,20 +108,68 @@ public sealed class StoryProgression : MonoBehaviour
     private void OnSessionChanged(GameSessionState state)
     {
         if (state != GameSessionState.Playing || sessionStarted) return;
+
         sessionStarted = true;
-        messages.Enqueue("Vienen otra vez, debo buscar a mamá y papá");
-        messages.Enqueue("Esta vez no me atraparán");
+
+        messages.Enqueue(new DialogueMessage(
+            "Vienen otra vez, debo buscar a mamá y a papá", 1));
+
+        messages.Enqueue(new DialogueMessage(
+            "Esta vez no me atraparán", 2));
     }
     // El objetivo cambia en un solo lugar. El resto de sistemas consulta este dato para activar el celular, las guías y la anomalía.
     private void Advance(StoryObjective next, params string[] thoughts)
     {
         Objective = next;
         RestoreDoorMaterial();
-        // Un pensamiento nuevo reemplaza los anteriores para no comunicar un objetivo ya completado.
-        messages.Clear(); currentMessage = "";
-        foreach (string thought in thoughts) messages.Enqueue(thought);
+
+        messages.Clear();
+        currentMessage = "";
+
+        if (dialogueAudio != null)
+            dialogueAudio.StopDialogue();
+
+        foreach (string thought in thoughts)
+        {
+            int audioID = ObtenerIDAudio(thought);
+            messages.Enqueue(new DialogueMessage(thought, audioID));
+        }
+
         nextGuide = 0f;
         ObjectiveChanged?.Invoke(next);
+    }
+
+    private int ObtenerIDAudio(string thought)
+    {
+        switch (thought)
+        {
+            case "Vienen otra vez, debo buscar a mamá y a papá":
+                return 1;
+
+            case "Esta vez no me atraparán":
+                return 2;
+
+            case "No están! Tengo que salir de la casa":
+                return 3;
+
+            case "Debo moverme en silencio para que no me encuentren":
+                return 4;
+
+            case "Que está pasando? Tengo que pedir ayuda, buscaré el teléfono en la oficina":
+                return 5;
+
+            case "No hay señal, debo esperar a que amanezca":
+                return 6;
+
+            case "NO ME ATRAPARÁN":
+                return 7;
+
+            case "Ya amaneció, ahora podré salir":
+                return 8;
+
+            default:
+                return 0;
+        }
     }
     private void OnRoomChanged(RoomModule previous, RoomModule current)
     {
@@ -119,7 +179,9 @@ public sealed class StoryProgression : MonoBehaviour
             && Objective == StoryObjective.TryExit)
         {
             silenceMessageShown = true;
-            messages.Enqueue("Debo moverme en silencio para que no me encuentren");
+
+            messages.Enqueue(new DialogueMessage(
+                "Debo moverme en silencio para que no me encuentren", 4));
         }
         if (!loopCrossed && Objective == StoryObjective.FindPhone && current == childRoom && previous == entrance.Room)
         {
@@ -166,11 +228,42 @@ public sealed class StoryProgression : MonoBehaviour
             previousExitSide = side;
         }
         if (clearEntrancePending && house.TryParkIsolatedRoom(entrance.Room)) clearEntrancePending = false;
-        if (Time.time >= messageUntil || currentMessage.Length == 0)
+
+        if (currentMessage.Length == 0 || Time.time >= messageUntil)
         {
-            currentMessage = messages.Count > 0 ? messages.Dequeue() : "";
-            messageUntil = Time.time + Mathf.Max(4f, currentMessage.Length * .07f);
+            if (messages.Count > 0)
+            {
+                DialogueMessage nextMessage = messages.Dequeue();
+
+                currentMessage = nextMessage.text;
+
+                if (dialogueAudio != null && nextMessage.audioID > 0)
+                {
+                    dialogueAudio.PlayDialogue(nextMessage.audioID);
+
+                    float duration = dialogueAudio.DuracionActual;
+
+                    messageUntil = Time.time + (
+                        duration > 0f
+                            ? duration
+                            : Mathf.Max(4f, currentMessage.Length * .07f)
+                    );
+                }
+                else
+                {
+                    if (dialogueAudio != null)
+                        dialogueAudio.StopDialogue();
+
+                    messageUntil = Time.time + Mathf.Max(4f, currentMessage.Length * .07f);
+                }
+            }
+            else
+            {
+                currentMessage = "";
+            }
         }
+
+
         if (Time.time >= nextGuide)
         {
             nextGuide = Time.time + .5f;
