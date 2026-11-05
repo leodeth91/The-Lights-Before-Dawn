@@ -65,6 +65,11 @@ AudioMixerController:
   m_MasterGroup: {fileID: 24300002}
   m_Snapshots:
   - {fileID: 24500006}
+  - {fileID: 24500007}
+  - {fileID: 24500008}
+  - {fileID: 24500009}
+  - {fileID: 24500010}
+  - {fileID: 24500011}
   m_StartSnapshot: {fileID: 24500006}
   m_SuspendThreshold: -80
   m_EnableSuspend: 1
@@ -79,7 +84,7 @@ AudioMixerController:
     - ae2f1c0185aa7bf44a369d6c5d37e065
     name: View
   m_CurrentViewIndex: 0
-  m_TargetSnapshot: {fileID: 24500006}
+  m_TargetSnapshot: {fileID: 24500011}
 --- !u!243 &24300002
 AudioMixerGroupController:
   m_ObjectHideFlags: 0
@@ -123,7 +128,7 @@ AudioMixerSnapshotController:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Snapshot
+  m_Name: Menu
   m_AudioMixer: {fileID: 24100000}
   m_SnapshotID: 4ca4a96a3dbb87443ac3258f4e4f15dc
   m_FloatValues:
@@ -136,6 +141,116 @@ AudioMixerSnapshotController:
     240ec9ecd505e004a843aa8abdf82479: -3
     c8743f8d02937504996b75f3fda5548f: 0.5
     54dcde7e3e6160f4bb89d1a2f79f1263: -6
+    ab48519e07146034caa810e0103872a0: 5000
+    1feac1ffa000878419f44f39c609c62a: 0.05
+  m_TransitionOverrides: {}
+--- !u!245 &24500007
+AudioMixerSnapshotController:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Exploracion
+  m_AudioMixer: {fileID: 24100000}
+  m_SnapshotID: 32e780a5366341acbdff62d6d15c3f93
+  m_FloatValues:
+    c699bec19bfea2a429d2252846525dbc: 0
+    aea188d14b2b2ab47825b4b9d07602b3: 0
+    68a3473858770a84481316c3cb6c375c: -6
+    4816821c17dd22e42a8feccebab637c4: -25
+    f151133c82099d641a49a2c60e0755b5: -8
+    ff39e7ac253f0bb4f8cb222d3d63fa1b: 4
+    240ec9ecd505e004a843aa8abdf82479: -3
+    c8743f8d02937504996b75f3fda5548f: 0.5
+    54dcde7e3e6160f4bb89d1a2f79f1263: -6
+    ab48519e07146034caa810e0103872a0: 5000
+    1feac1ffa000878419f44f39c609c62a: 0.05
+  m_TransitionOverrides: {}
+--- !u!245 &24500008
+AudioMixerSnapshotController:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Anomalia
+  m_AudioMixer: {fileID: 24100000}
+  m_SnapshotID: 0f9f333271214ad39de51a440b1f0ef4
+  m_FloatValues:
+    c699bec19bfea2a429d2252846525dbc: 0
+    aea188d14b2b2ab47825b4b9d07602b3: 0
+    68a3473858770a84481316c3cb6c375c: -6
+    4816821c17dd22e42a8feccebab637c4: -25
+    f151133c82099d641a49a2c60e0755b5: -12
+    ff39e7ac253f0bb4f8cb222d3d63fa1b: 4
+    240ec9ecd505e004a843aa8abdf82479: -3
+    c8743f8d02937504996b75f3fda5548f: 0.5
+    54dcde7e3e6160f4bb89d1a2f79f1263: -6
+    ab48519e07146034caa810e0103872a0: 5000
+    1feac1ffa000878419f44f39c609c62a: 0.05
+  m_TransitionOverrides: {}
+--- !u!245 &24500009
+AudioMixerSnapshotController:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Persecucion
+  m_AudioMixer: {fileID: 24100000}
+  m_SnapshotID: b1de9da8dd6e4fd78d0305c27a6238d9
+  m_FloatValues:
+    c699bec19bfea2a429d2252846525dbc: 0
+    aea188d14b2b2ab47825b4b9d07602b3: 0
+    68a3473858770a84481316c3cb6c375c: -6
+    4816821c17dd22e42a8feccebab637c4: -25
+    f151133c82099d641a49a2c60e0755b5: -6
+    ff39e7ac253f0bb4f8cb222d3d63fa1b: 4
+    240ec9ecd505e004a843aa8abdf82479: -3
+    c8743f8d02937504996b75f3fda5548f: 0.5
+    54dcde7e3e6160f4bb89d1a2f79f1263: -6
+    ab48519e07146034caa810e0103872a0: 5000
+    1feac1ffa000878419f44f39c609c62a: 0.05
+  m_TransitionOverrides: {}
+--- !u!245 &24500010
+AudioMixerSnapshotController:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Distancias
+  m_AudioMixer: {fileID: 24100000}
+  m_SnapshotID: 17cf9d5d31944343bd07973bd4712c25
+  m_FloatValues:
+    c699bec19bfea2a429d2252846525dbc: 0
+    aea188d14b2b2ab47825b4b9d07602b3: 0
+    68a3473858770a84481316c3cb6c375c: -6
+    4816821c17dd22e42a8feccebab637c4: -25
+    f151133c82099d641a49a2c60e0755b5: -9
+    ff39e7ac253f0bb4f8cb222d3d63fa1b: 4
+    240ec9ecd505e004a843aa8abdf82479: -3
+    c8743f8d02937504996b75f3fda5548f: 0.5
+    54dcde7e3e6160f4bb89d1a2f79f1263: -6
+    ab48519e07146034caa810e0103872a0: 5000
+    1feac1ffa000878419f44f39c609c62a: 0.05
+  m_TransitionOverrides: {}
+--- !u!245 &24500011
+AudioMixerSnapshotController:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Amanecer
+  m_AudioMixer: {fileID: 24100000}
+  m_SnapshotID: f579f41c6c904ac78ef11746604f32f4
+  m_FloatValues:
+    c699bec19bfea2a429d2252846525dbc: 0
+    aea188d14b2b2ab47825b4b9d07602b3: 0
+    68a3473858770a84481316c3cb6c375c: -6
+    4816821c17dd22e42a8feccebab637c4: -25
+    f151133c82099d641a49a2c60e0755b5: -6
+    ff39e7ac253f0bb4f8cb222d3d63fa1b: 4
+    240ec9ecd505e004a843aa8abdf82479: -3
+    c8743f8d02937504996b75f3fda5548f: 0.5
+    54dcde7e3e6160f4bb89d1a2f79f1263: -3.0822568
     ab48519e07146034caa810e0103872a0: 5000
     1feac1ffa000878419f44f39c609c62a: 0.05
   m_TransitionOverrides: {}

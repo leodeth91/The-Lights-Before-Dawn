@@ -1,0 +1,290 @@
+THE LIGHTS BEFORE DAWN
+
+DISEÑO Y DESARROLLO GENERAL
+Leandro Eclesia
+
+AUDIO INTERACTIVO
+Sonido ambiental y 3D: Luciano Della Vedova
+Voces: Diego Antonio Tillan
+SFX: Victoria Galdona
+Música: Leandro Eclesia
+Mezcla y masterización: Valentina Gonzalez
+
+ASSETS EXTERNOS
+
+Modelos y utilería: Poly Haven
+Book Encyclopedia Set 01; Classic Laptop; Decorative Book Set 01; Electric Stove; Vintage Microwave.
+Fuente: https://polyhaven.com/
+
+Animaciones del personaje: Adobe Mixamo
+Fuente: https://www.mixamo.com/
+
+MODELOS 3D CON ATRIBUCIÓN EN SU ARCHIVO GLB
+Las siguientes atribuciones se extrajeron de los modelos incluidos y referenciados por las escenas del juego.
+
+Amalthée et la chèvre de Jupiter — pattarrian (https://sketchfab.com/pattarrian)
+Fuente: https://sketchfab.com/3d-models/amalthee-et-la-chevre-de-jupiter-4572cef11c2e45c587a07c8005e36117 | Licencia: CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+
+Amanita muscaria mushroom — JevinJones (https://sketchfab.com/JevinJ)
+Fuente: https://sketchfab.com/3d-models/amanita-muscaria-mushroom-fc4ad155dc954025886425388f714135 | Licencia: CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+
+Antique Book Set — FrodoUndead (https://sketchfab.com/FrodoUndead)
+Fuente: https://sketchfab.com/3d-models/antique-book-set-a7e1164cca004a65ab53ce0e8553586c | Licencia: CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+
+Antique Picture Frame — kristinwakeland (https://sketchfab.com/kristinwakeland)
+Fuente: https://sketchfab.com/3d-models/antique-picture-frame-0b25ee4c9e464a5193439504b2901b7e | Licencia: CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+
+Attic Black-Figure Amphora — Bonn Center for Digital Humanities (https://sketchfab.com/bcdh)
+Fuente: https://sketchfab.com/3d-models/attic-black-figure-amphora-fe1464d043224b509e49835363251082 | Licencia: CC-BY-NC-ND-4.0 (http://creativecommons.org/licenses/by-nc-nd/4.0/)
+
+Attic Red-figured bell-krater — Bonn Center for Digital Humanities (https://sketchfab.com/bcdh)
+Fuente: https://sketchfab.com/3d-models/attic-red-figured-bell-krater-25dd847c9fbf4805a5af8f9bffcf78c3 | Licencia: CC-BY-NC-ND-4.0 (http://creativecommons.org/licenses/by-nc-nd/4.0/)
+
+Bathroom — Vladyslav Holhanov (https://sketchfab.com/vladicom08)
+Fuente: https://sketchfab.com/3d-models/bathroom-f1b05ddf1b634481903e353d41b6a654 | Licencia: CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+
+Books Magazines — SPACESCAN (https://sketchfab.com/spacescan)
+Fuente: https://sketchfab.com/3d-models/books-magazines-081bbc6af697476da7f057ad89697f62 | Licencia: CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+
+Ceiling Light — Heliona (https://sketchfab.com/Heliona)
+Fuente: https://sketchfab.com/3d-models/ceiling-light-3e65cebe43b144ca802101d482b9c193 | Licencia: CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+
+Chest_ Box_ Wooden_26_MB — Mehdi Shahsavan (https://sketchfab.com/ahmagh2e)
+Fuente: https://sketchfab.com/3d-models/chest--box--wooden-26-mb-0a863f5790a44303b2d78d7d8b8b3646 | Licencia: CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+
+Childhood books — riemaeker (https://sketchfab.com/riemaeker)
+Fuente: https://sketchfab.com/3d-models/childhood-books-99d6bc041c9d4f56ab414b771e14474c | Licencia: CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+
+cuadro — IspI (https://sketchfab.com/IspI)
+Fuente: https://sketchfab.com/3d-models/cuadro-e37b056416224b6bb80126859524dc1e | Licencia: CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+
+Cuadro Barroco 1 — ferchomv19 (https://sketchfab.com/ferchomv19)
+Fuente: https://sketchfab.com/3d-models/cuadro-barroco-1-30eb87ff09014d6c805974968ab93c13 | Licencia: CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+
+Cupboard — Cyril43 (https://sketchfab.com/Cyril43)
+Fuente: https://sketchfab.com/3d-models/cupboard-5f43962ea7a7495db35e656b78512436 | Licencia: CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+
+Cupboard — Nelesh_surve (https://sketchfab.com/Nelesh_surve)
+Fuente: https://sketchfab.com/3d-models/cupboard-2349ad91f46449079d909598db140528 | Licencia: CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+
+Fancy front door — 1-3D.com (https://sketchfab.com/1-3D.com)
+Fuente: https://sketchfab.com/3d-models/fancy-front-door-cee85d5e50e942beb9076e5114cb369f | Licencia: CC-BY-SA-4.0 (http://creativecommons.org/licenses/by-sa/4.0/)
+
+Fancy Picture Frame — Jamie McFarlane (https://sketchfab.com/jamiemcfarlane)
+Fuente: https://sketchfab.com/3d-models/fancy-picture-frame-b54984abe2394345a81621719bf8bf1a | Licencia: CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+
+Free Wall outlets and switches pack — denniswoo1993 (https://sketchfab.com/denniswoo1993)
+Fuente: https://sketchfab.com/3d-models/free-wall-outlets-and-switches-pack-2bb10b5967624d659c83e5ee1701fe56 | Licencia: CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+
+FULL MOON 4BULB CEILING LIGHT-WN #001756(WN) — brzb1992 (https://sketchfab.com/brzb1992)
+Fuente: https://sketchfab.com/3d-models/full-moon-4bulb-ceiling-light-wn-001756wn-35571a941422436380cfba352b60815f | Licencia: CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+
+GA Free_251_Weathered 18th Century Galleon — Galaxy Abundant™ (https://sketchfab.com/galaxyabundant)
+Fuente: https://sketchfab.com/3d-models/ga-free-251-weathered-18th-century-galleon-b097e67c207540628828ebb55afce914 | Licencia: CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+
+Giant Round Spacestation by Jungle Jim — Jungle Jim (https://sketchfab.com/jungle_jim)
+Fuente: https://sketchfab.com/3d-models/giant-round-spacestation-by-jungle-jim-9ab0fb8c18cd484a97abdce2e6aab0ba | Licencia: CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+
+Grandfather Clock — Carl-HeinzLangley (https://sketchfab.com/Carl-HeinzLangley)
+Fuente: https://sketchfab.com/3d-models/grandfather-clock-c03d8b43ea2a455eb9f101eef1f0d95f | Licencia: CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+
+Hi Fi — Slava Zemlyanik (https://sketchfab.com/reijin)
+Fuente: https://sketchfab.com/3d-models/hi-fi-59a43fd6df0840f9b891d6dd832bf970 | Licencia: SKETCHFAB Standard (https://sketchfab.com/licenses)
+
+Jack Daniels - whiskey [alcohol] - by smakologg — smakologg (https://sketchfab.com/smakologg)
+Fuente: https://sketchfab.com/3d-models/jack-daniels-whiskey-alcohol-by-smakologg-c6767ab4ce0b4a5897f3f74b58175654 | Licencia: CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+
+Japanese Ornament — Geraldo Pratama Wahyu Teddy (https://sketchfab.com/juyo)
+Fuente: https://sketchfab.com/3d-models/japanese-ornament-fc2c7bee06ec42178c97f712f1142cf3 | Licencia: CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+
+Japanese Tea Table — Geraldo Pratama Wahyu Teddy (https://sketchfab.com/juyo)
+Fuente: https://sketchfab.com/3d-models/japanese-tea-table-c59fbfc80a7f4cc7b691934359eb4b9e | Licencia: CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+
+Kanagawa Oki Nami Ura (神奈川沖浪裏) — dimoni (https://sketchfab.com/dimoni)
+Fuente: https://sketchfab.com/3d-models/kanagawa-oki-nami-ura-a7dcccf83b66497ea205d729cc409e9d | Licencia: CC-BY-NC-SA-4.0 (http://creativecommons.org/licenses/by-nc-sa/4.0/)
+
+Kid-character-fully-rigged — Guilherme Navarro (https://sketchfab.com/guinavarro.al)
+Fuente: https://sketchfab.com/3d-models/kid-character-fully-rigged-984867aa0e8b4aad84063874dd5179cc | Licencia: CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+
+kitchen accessories V1 — duxci (https://sketchfab.com/duxci)
+Fuente: https://sketchfab.com/3d-models/kitchen-accessories-v1-689b08fcb6bd4e7d861e553e448c6fea | Licencia: CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+
+Kitchen Counter — euanford12321 (https://sketchfab.com/euanford12321)
+Fuente: https://sketchfab.com/3d-models/kitchen-counter-e46deaab889548948a31e4264de61e5a | Licencia: CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+
+Kitchen Dresser — rjducats (https://sketchfab.com/rjducats)
+Fuente: https://sketchfab.com/3d-models/kitchen-dresser-cec9f1f712ae4d6193c5df4d85c0c011 | Licencia: CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+
+Kitchen Table — Gabriel Quintana (https://sketchfab.com/gabrielquintana)
+Fuente: https://sketchfab.com/3d-models/kitchen-table-bbdffb459bdf4db3a04360c1e590af0a | Licencia: CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+
+Large Dining Room Table — jimbogies (https://sketchfab.com/jimbogies)
+Fuente: https://sketchfab.com/3d-models/large-dining-room-table-ba5eab8958d84da38b7adb2c4db7103c | Licencia: CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+
+laundry basket — chanmagomed (https://sketchfab.com/chanmagomed)
+Fuente: https://sketchfab.com/3d-models/laundry-basket-2049ca95ca424b66a8e1948660c68b7e | Licencia: CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+
+Living room sofa / Furniture — maxsbond.work (https://sketchfab.com/maxsbond.work)
+Fuente: https://sketchfab.com/3d-models/living-room-sofa-furniture-086be698bca14d7791d9032884909954 | Licencia: CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+
+Low poly books — spicybamer (https://sketchfab.com/spicybamer)
+Fuente: https://sketchfab.com/3d-models/low-poly-books-89c9071f045a4bc8ac4e662368086508 | Licencia: CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+
+Low Poly Owl Family home decoration — Denys Almaral (https://sketchfab.com/denysalmaral)
+Fuente: https://sketchfab.com/3d-models/low-poly-owl-family-home-decoration-26c65552f07a4c818f49dad43be59f9a | Licencia: SKETCHFAB Standard (https://sketchfab.com/licenses)
+
+Lush Alien landscape skybox — Jungle Jim (https://sketchfab.com/jungle_jim)
+Fuente: https://sketchfab.com/3d-models/lush-alien-landscape-skybox-7c2260faca5d473d9ccbe44319c73551 | Licencia: CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+
+Magnifying glass, Victorian, wooden handle — Rylae Shylna (https://sketchfab.com/risteralline)
+Fuente: https://sketchfab.com/3d-models/magnifying-glass-victorian-wooden-handle-aa27d07ebf114ecbaebff69e3ba888ad | Licencia: CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+
+MesitaC — EmpDevTeam (https://sketchfab.com/EmpDevTeam)
+Fuente: https://sketchfab.com/3d-models/mesitac-92ec6096d66e43558e0c568d8e05f3dd | Licencia: CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+
+Modern Ceiling Light Fixture — goakley (https://sketchfab.com/goakley)
+Fuente: https://sketchfab.com/3d-models/modern-ceiling-light-fixture-edafa17f987a43f5adbff33652fe7a9c | Licencia: CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+
+Monstera Deliciosa Potted Mid-Century plant — Giora (https://sketchfab.com/ChubbyPanda)
+Fuente: https://sketchfab.com/3d-models/monstera-deliciosa-potted-mid-century-plant-1ab9bf841df04c07b1819be596327629 | Licencia: CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+
+Mushroom — Evan (https://sketchfab.com/Evanz)
+Fuente: https://sketchfab.com/3d-models/mushroom-ade09b61de8b4a7d9e850b710d3eb151 | Licencia: CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+
+Neoclassical Oak & Marble Console Table — Galaxy Abundant (https://sketchfab.com/galaxyabundant)
+Fuente: https://sketchfab.com/3d-models/neoclassical-oak-marble-console-table-a921f8560183451bb5feab1aadfd2c8f | Licencia: CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+
+Oak Forest (Tree Pack) — Sereib (https://sketchfab.com/Sereib)
+Fuente: https://sketchfab.com/3d-models/oak-forest-tree-pack-89bc56b885bb4227a2ff9115d306abd6 | Licencia: CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+
+Old Bed — donnichols (https://sketchfab.com/donnichols)
+Fuente: https://sketchfab.com/3d-models/old-bed-210be84bcb5449f5a9f66a923c8ae307 | Licencia: CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+
+Old Bed — Memorie (https://sketchfab.com/Memorie)
+Fuente: https://sketchfab.com/3d-models/old-bed-0966660311b8474784a38eb1c22a8650 | Licencia: CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+
+Old Computer — Shrimp Goombason (https://sketchfab.com/sbsiydfw)
+Fuente: https://sketchfab.com/3d-models/old-computer-2ab893e970fb4c5dad59000026b0fb15 | Licencia: CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+
+Old Kitchen Shelf — GameDev Nick (https://sketchfab.com/GameDevNick)
+Fuente: https://sketchfab.com/3d-models/old-kitchen-shelf-5da9ec510dfe453b8504e5fd206b062c | Licencia: CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+
+Old Persian Carpet_14_MB — Mehdi Shahsavan (https://sketchfab.com/ahmagh2e)
+Fuente: https://sketchfab.com/3d-models/old-persian-carpet-14-mb-08fee343183d4287a9ac8269ec4e97c5 | Licencia: CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+
+Old Wooden Chair — MaX3Dd (https://sketchfab.com/MaX3Dd)
+Fuente: https://sketchfab.com/3d-models/old-wooden-chair-f7648b43d29944799e31970ea977d38b | Licencia: CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+
+Orange Moss Boulder Photoscan — EvanLegrand (https://sketchfab.com/evan4129)
+Fuente: https://sketchfab.com/3d-models/orange-moss-boulder-photoscan-bf8c1853b87249219833ba9621f7b120 | Licencia: CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+
+Panel (or Cloth) | NCMA Explore — LEVR Studios (https://sketchfab.com/levrstudios)
+Fuente: https://sketchfab.com/3d-models/panel-or-cloth-ncma-explore-49666071713f41ebb70fa5ad80ff34ad | Licencia: CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+
+Pendente Mantra 30467 — Homak (https://sketchfab.com/edudias)
+Fuente: https://sketchfab.com/3d-models/pendente-mantra-30467-930a3ee08ca948c2abc70764de6bb8cc | Licencia: CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+
+Pendente Mantra 30515 — Homak (https://sketchfab.com/edudias)
+Fuente: https://sketchfab.com/3d-models/pendente-mantra-30515-1f44ae10c15642fb99946633b6ccc26f | Licencia: CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+
+Picture Frame — Miss.Demonica (https://sketchfab.com/Miss.Demonica)
+Fuente: https://sketchfab.com/3d-models/picture-frame-08c7e68166e245fc8d1f3bfe0a70a005 | Licencia: CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+
+Plant Interior decoration — Blizzy (https://sketchfab.com/jeffbas)
+Fuente: https://sketchfab.com/3d-models/plant-interior-decoration-ac118868a3ea42158a8c83ca9350d097 | Licencia: CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+
+Plat majolique, Hercule et son 7e travail — Alienor.org, Conseil des musées (https://sketchfab.com/alienor.org)
+Fuente: https://sketchfab.com/3d-models/plat-majolique-hercule-et-son-7e-travail-cf0e0ef0826d45eb9b3134e97ac2a18c | Licencia: CC-BY-NC-ND-4.0 (http://creativecommons.org/licenses/by-nc-nd/4.0/)
+
+Portobello Mushroom Scan — KSQMS (https://sketchfab.com/KSQMS)
+Fuente: https://sketchfab.com/3d-models/portobello-mushroom-scan-eae862afbdd54c00866d741c54d8f286 | Licencia: CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+
+Pot kitchen - 2MB — adventurer (https://sketchfab.com/ahmagh2e)
+Fuente: https://sketchfab.com/3d-models/pot-kitchen-2mb-560482076d874ebe91b2908633c02862 | Licencia: CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+
+Puerta de madera — Ceju (https://sketchfab.com/ceju)
+Fuente: https://sketchfab.com/3d-models/puerta-de-madera-2a4625509a70450b9a3d7386c7b76ae7 | Licencia: CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+
+Ratatouille - Kitchen Light — Alexander James Gate (https://sketchfab.com/Alexjgate)
+Fuente: https://sketchfab.com/3d-models/ratatouille-kitchen-light-07c9dd415d044381a366198241cb0471 | Licencia: CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+
+Realistic Mushroom - 01 — SanForge Studio (https://sketchfab.com/SanForge)
+Fuente: https://sketchfab.com/3d-models/realistic-mushroom-01-aededce1ec0f48f8b0f50cc1762a3f86 | Licencia: CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+
+Realistic towel set — assetfactory (https://sketchfab.com/assetfactory)
+Fuente: https://sketchfab.com/3d-models/realistic-towel-set-1cee246535f046caa52d622ad39cf165 | Licencia: SKETCHFAB Standard (https://sketchfab.com/licenses)
+
+Record table — nicolas_solo (https://sketchfab.com/nicolas_solo)
+Fuente: https://sketchfab.com/3d-models/record-table-cd3cd7861ed845409385089d79a1c133 | Licencia: CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+
+Refrigerator (low-poly) — Vladimir_kizx (https://sketchfab.com/kizx3d)
+Fuente: https://sketchfab.com/3d-models/refrigerator-low-poly-1b0d689a926244e9a72b50e25c7e2a45 | Licencia: CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+
+Sideboard — Depro777 (https://sketchfab.com/depro777ru)
+Fuente: https://sketchfab.com/3d-models/sideboard-a5ff12aaa3264b3789ec7bba857ef9a6 | Licencia: CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+
+Simple Modern Coat Rack — AlyStation (https://sketchfab.com/alyxyuu)
+Fuente: https://sketchfab.com/3d-models/simple-modern-coat-rack-e1c5361df6fd4e0eb28e753a13758e76 | Licencia: CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+
+Simple Outdoor Brooms Type A — Mad_Lobster_Workshop (https://sketchfab.com/Mad_Lobster_Workshop)
+Fuente: https://sketchfab.com/3d-models/simple-outdoor-brooms-type-a-0b049255562349ad8072afb9c33acfea | Licencia: CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+
+Small Radio — AlienKat (https://sketchfab.com/alienkatgames)
+Fuente: https://sketchfab.com/3d-models/small-radio-93f8fdf1365542ee9313fb7db62f78c4 | Licencia: CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+
+Statue of Cthulhu — yanbelmont (https://sketchfab.com/yanbelmont)
+Fuente: https://sketchfab.com/3d-models/statue-of-cthulhu-f936c896d628415597b762d4e3944ffc | Licencia: CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+
+Toilet — HippoStance (https://sketchfab.com/hippostance)
+Fuente: https://sketchfab.com/3d-models/toilet-132a8ee2af3a40d39d270fbed3d3666c | Licencia: CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+
+toilet paper dispenser — tobei (https://sketchfab.com/tobei)
+Fuente: https://sketchfab.com/3d-models/toilet-paper-dispenser-96e96772a7564df0b417244bd2be33f3 | Licencia: CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+
+Trash Can — Yury Misiyuk (https://sketchfab.com/Tim0)
+Fuente: https://sketchfab.com/3d-models/trash-can-0ad3407cd8104ba58f71885c0e58ca9a | Licencia: CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+
+Tree exotic. Jeffrey Pine — Valery.Li (https://sketchfab.com/Valery.Li)
+Fuente: https://sketchfab.com/3d-models/tree-exotic-jeffrey-pine-e5de4ce7179e4387961077d6b302494d | Licencia: CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+
+Tv  Small — Cyber_Monkey (https://sketchfab.com/Cyber_Monkey)
+Fuente: https://sketchfab.com/3d-models/tv-small-d28392d2dfc747a39bad7266387359c9 | Licencia: CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+
+TV Remote Old — lil_bentley (https://sketchfab.com/lil_bentley)
+Fuente: https://sketchfab.com/3d-models/tv-remote-old-57248de73dcc44938b1d00d2b5edb14f | Licencia: CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+
+TV set — sannidhibhat34 (https://sketchfab.com/sannidhibhat34)
+Fuente: https://sketchfab.com/3d-models/tv-set-3e5752922ced466bb25b55da6cd37d2a | Licencia: CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+
+Vintage Books — feivelyn (https://sketchfab.com/feivelyn)
+Fuente: https://sketchfab.com/3d-models/vintage-books-7a9bedf1e85c4f85b1b384dbdadadee9 | Licencia: CC-BY-NC-4.0 (http://creativecommons.org/licenses/by-nc/4.0/)
+
+Vintage French Provincial Oak Dresser — Galaxy Abundant (https://sketchfab.com/galaxyabundant)
+Fuente: https://sketchfab.com/3d-models/vintage-french-provincial-oak-dresser-e9190e2f26e1496b90d3443be6d2eb83 | Licencia: CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+
+Vintage Sofa — Jeremski (https://sketchfab.com/Jeremie03)
+Fuente: https://sketchfab.com/3d-models/vintage-sofa-0ddbd945ebf5410da5fe7ae436784b18 | Licencia: CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+
+Wall Clock — Mehdi Shahsavan (https://sketchfab.com/ahmagh2e)
+Fuente: https://sketchfab.com/3d-models/wall-clock-6d7473893d47458495f810f0d2a89945 | Licencia: CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+
+Wall picture — grafgrial (https://sketchfab.com/grafgrial)
+Fuente: https://sketchfab.com/3d-models/wall-picture-6ceabfb0ad844c66b70a6ded2bf3d436 | Licencia: CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+
+Wash Basin Stand — Ren Viro Store (https://sketchfab.com/renviros)
+Fuente: https://sketchfab.com/3d-models/wash-basin-stand-b02727808f1f46468e071edfd291060e | Licencia: CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+
+Washing Machine — bucketo (https://sketchfab.com/bucketo)
+Fuente: https://sketchfab.com/3d-models/washing-machine-75879a749a554ec4803082bdcc1af670 | Licencia: CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+
+Whiskey Glass — Rylae Shylna (https://sketchfab.com/risteralline)
+Fuente: https://sketchfab.com/3d-models/whiskey-glass-f7d6d910e48942299995fa2644532d92 | Licencia: CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+
+Window, окно — VladEv1L (https://sketchfab.com/VladEv1L)
+Fuente: https://sketchfab.com/3d-models/window-43df993635f1405f9a2085431bde946d | Licencia: CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+
+Сompact Cassette — gurtovshchik (https://sketchfab.com/gurtovshchik)
+Fuente: https://sketchfab.com/3d-models/ompact-cassette-34a7fbdef6f34559a0ce200f0daceb28 | Licencia: CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+
+Скамья для прихожей Н Элегия. — dima051983 (https://sketchfab.com/dima051983)
+Fuente: https://sketchfab.com/3d-models/9953d438118f4bce9d793dbcb7c509c6 | Licencia: CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)

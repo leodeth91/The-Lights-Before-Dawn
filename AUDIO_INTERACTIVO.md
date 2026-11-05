@@ -13,17 +13,18 @@ Las AudioSource directas de `ModularPrototype` y `FinalAlienLandscape` tienen Ou
 
 ## Bloque B — Música adaptativa
 
-El tema `Assets/Music/Antes del Amanecer_para proyecto.wav` está configurado como música 2D, en loop y dirigido al grupo Música. Entra al abrir el menú, continúa durante los créditos y sale al comenzar la partida. El clip se resuelve mediante `MenuMusicSettings`, por lo que no depende de guardar cambios pendientes de la escena.
+El mixer contiene seis snapshots. Solo cambia el nivel del grupo Música; Master, SFX, Ambiente y Voz conservan sus valores. Los clips se reproducen en fuentes 2D ruteadas a Música. `AdaptiveMusicDirector` resuelve el tema del menú y de persecución desde `Resources`. Los campos de exploración y anomalía siguen vacíos: al iniciar la partida el tema de intro debe bajar con un fade out de 1,25 s y detenerse.
 
-| Estado | Evento | Fade | Clip |
-| --- | --- | ---: | --- |
-| Menú y créditos | Se carga o se vuelve al menú principal | 1,25 s de entrada | `Antes del Amanecer_para proyecto.wav` |
-| Silencio jugable | Se selecciona Comenzar | 1,25 s de salida | Sin clip |
-| Persecución | Al menos un alien entra en `AlienChaseState` | 0,35 s de entrada; 3 s de salida al terminar la última persecución | `El Umbral.wav` (volumen configurado: 0,81) |
-| Distancias por capas | 45 s: bajo; 30 s: batería; amanecer: piano y coro; salida: guitarra | Entrada de 0,35 s por capa; salida de 0,4 s al cerrarse la puerta | Cinco WAV sincronizados por `PlayScheduled` |
-| Cierre de Distancias | Se cierra la puerta en la secuencia final | 0,4 s de salida junto al golpe | Se detienen las cinco capas |
+| Snapshot | Evento del juego | Música en mixer | Transición | Clip o capas |
+| --- | --- | ---: | ---: | --- |
+| Menu | Inicio o retorno al menú | −8 dB | 1,25 s | `Antes del Amanecer_para proyecto.wav` |
+| Exploracion | Comenzar partida | −8 dB | 1,25 s desde el menú | Sin clip; fade out de la intro |
+| Anomalia | Objetivo `FindPhone` o `Survive` | −12 dB | 4 s; 3 s al salir de persecución | Sin clip asignado todavía |
+| Persecucion | Primer alien entra en `AlienChaseState` | −6 dB | 0,35 s de entrada; 3 s de retorno | `El Umbral.wav`, volumen 0,81 desde `ChaseMusicSettings` |
+| Distancias | Restan 45 s de supervivencia | −9 dB | 1,25 s | Cinco capas sincronizadas: bajo, batería, piano, coro y guitarra |
+| Amanecer | Objetivo `Escape` | −6 dB | 5 s | Capas de Distancias; piano y coro entran al amanecer |
 
-El video del menú sigue reproduciéndose en loop sin audio propio. Exploración y anomalía permanecen sin música hasta los últimos 45 segundos de supervivencia; desde allí Distancias tiene prioridad sobre cualquier persecución. El menú, la persecución y las capas finales ofrecen tres estados musicales diferenciados para el bloque B.
+El video del menú sigue en loop sin audio propio. `Distancias` desplaza al director de música anterior cuando quedan 45 s: bajo primero, batería a los 30 s, piano y coro al amanecer, guitarra en la salida. Cada capa entra en 0,35 s y todas salen en 0,4 s al cerrarse la puerta. Para B, demostrar los tres estados musicales que sí tienen audio: intro, persecución y Distancias; no presentar Exploracion o Anomalia como música audible. Los niveles del mixer son ajustes iniciales: aún falta escucharlos y medir picos en una partida completa.
 
 `FinalLayeredMusicSettings` permite ajustar el volumen de cada instrumento. Las cinco capas de Distancias tienen 5.856.000 muestras (122 s a 48 kHz), por lo que comparten la misma longitud de loop. La alineación musical dentro de cada archivo debe comprobarse al escucharlas juntas en Play.
 
@@ -56,6 +57,6 @@ Hay nueve WAV en `Assets/Resources/AudioVoiceLines`. `StoryVoiceDirector` respon
 
 ## Bloque F — Programación y comprobaciones pendientes
 
-`AdaptiveMusicDirector` modifica volumen y frecuencia de corte durante las transiciones. Responde a `GameSessionState` para el menú y a `AlienController.ChaseStateChanged` para la persecución: cuenta los aliens activos, mantiene el loop mientras quede alguno persiguiendo y hace una salida de 3 s cuando termina el último. `SFXVariacion` elige clips sin repetir el anterior y varía pitch y volumen al aterrizar. Para la evidencia de programación, seleccionar hasta 40 líneas clave y anotar objetivo, condición, parámetro y resultado oído.
+`AdaptiveMusicDirector` modifica dos parámetros en tiempo real: volumen de la fuente y frecuencia de corte del filtro. Responde a `GameSessionState`, `StoryProgression.ObjectiveChanged` y `AlienController.ChaseStateChanged`; cuenta los aliens activos, mantiene `El Umbral` mientras quede alguno persiguiendo y hace una salida de 3 s cuando termina el último. También solicita las transiciones de snapshot con tiempos explícitos. Esto permite fundamentar F con lógica adicional a la sola selección de snapshots de B. `SFXVariacion` sigue variando otros SFX, pero no hace falta atribuirlo al bloque propio. Para el PDF, seleccionar hasta 40 líneas clave de `AdaptiveMusicDirector`, anotar objetivo, condición, los dos parámetros y el resultado realmente oído.
 
 Antes de entregar el PDF: comprobar persecución, capas finales, nueve voces y todas las rutas de audio en Play; medir que Master no llegue a 0 dB en el segmento elegido; ajustar el balance de voz/SFX frente a Música; tomar capturas reales del mixer, emisores, variación de SFX, capas y DAW. No atribuir procesos de DAW ni autoría humana sin la evidencia del equipo. La compilación por sí sola no acredita esas escuchas.

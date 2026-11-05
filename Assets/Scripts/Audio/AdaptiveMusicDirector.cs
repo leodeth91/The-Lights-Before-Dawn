@@ -49,7 +49,6 @@ public sealed class AdaptiveMusicDirector : MonoBehaviour
             menuFadeIn = menuSettings.FadeInSeconds;
             menuFadeOut = menuSettings.FadeOutSeconds;
         }
-
         ChaseMusicSettings chaseSettings = Resources.Load<ChaseMusicSettings>(ChaseMusicSettings.ResourcePath);
         if (chaseSettings != null)
         {
@@ -119,24 +118,29 @@ public sealed class AdaptiveMusicDirector : MonoBehaviour
         {
             finalMusicLocked = false;
             activeChasers.Clear();
-            Select(menu, menuVolume, 22000f, menuFadeIn);
+            Select(menu, menuVolume, 22000f, menuFadeIn, "Menu");
         }
         else if (state == GameSessionState.Ending)
         {
             activeChasers.Clear();
-            if (!finalMusicLocked) Select(ending, .38f, 18000f, endingFade);
+            if (!finalMusicLocked) Select(ending, .38f, 18000f, endingFade, "Amanecer");
         }
         else if (state == GameSessionState.Playing)
         {
             if (finalMusicLocked) return;
-            if (activeChasers.Count > 0) Select(chase, chaseVolume, 22000f, chaseFadeIn);
+            if (activeChasers.Count > 0) Select(chase, chaseVolume, 22000f, chaseFadeIn, "Persecucion");
             else SelectBaseMusic(menuFadeOut);
         }
     }
 
     private void OnObjectiveChanged(StoryObjective objective)
     {
-        if (finalMusicLocked) return;
+        if (finalMusicLocked)
+        {
+            if (objective == StoryObjective.Escape)
+                AudioMixerRouting.TransitionMusicSnapshot("Amanecer", dawnFade);
+            return;
+        }
         if (session == null || session.State == GameSessionState.Ending) return;
         if (activeChasers.Count > 0) return;
         SelectBaseMusic(objective, -1f);
@@ -151,7 +155,7 @@ public sealed class AdaptiveMusicDirector : MonoBehaviour
 
         if (session == null || !session.IsPlaying || finalMusicLocked) return;
         if (previousCount == 0 && activeChasers.Count > 0)
-            Select(chase, chaseVolume, 22000f, chaseFadeIn);
+            Select(chase, chaseVolume, 22000f, chaseFadeIn, "Persecucion");
         else if (previousCount > 0 && activeChasers.Count == 0)
             SelectBaseMusic(chaseFadeOut);
     }
@@ -161,6 +165,7 @@ public sealed class AdaptiveMusicDirector : MonoBehaviour
         if (finalMusicLocked) return;
         finalMusicLocked = true;
         activeChasers.Clear();
+        AudioMixerRouting.TransitionMusicSnapshot("Distancias", 1.25f);
         foreach (AudioSource layer in layers)
         {
             if (layer == null) continue;
@@ -178,16 +183,17 @@ public sealed class AdaptiveMusicDirector : MonoBehaviour
     private void SelectBaseMusic(StoryObjective objective, float fadeOverride)
     {
         if (objective == StoryObjective.FindPhone || objective == StoryObjective.Survive)
-            Select(anomaly, .32f, 8000f, fadeOverride > 0f ? fadeOverride : anomalyFade);
+            Select(anomaly, .32f, 8000f, fadeOverride > 0f ? fadeOverride : anomalyFade, "Anomalia");
         else if (objective == StoryObjective.Escape)
-            Select(dawn, .4f, 22000f, fadeOverride > 0f ? fadeOverride : dawnFade);
+            Select(dawn, .4f, 22000f, fadeOverride > 0f ? fadeOverride : dawnFade, "Amanecer");
         else
-            Select(exploration, .4f, 22000f, fadeOverride > 0f ? fadeOverride : explorationFade);
+            Select(exploration, .4f, 22000f, fadeOverride > 0f ? fadeOverride : explorationFade, "Exploracion");
     }
 
-    private void Select(AudioClip clip, float volume, float cutoff, float seconds)
+    private void Select(AudioClip clip, float volume, float cutoff, float seconds, string snapshotName)
     {
         fadeSeconds = Mathf.Max(.1f, seconds);
+        AudioMixerRouting.TransitionMusicSnapshot(snapshotName, fadeSeconds);
         transitionElapsed = 0f;
         for (int i = 0; i < layers.Length; i++)
         {

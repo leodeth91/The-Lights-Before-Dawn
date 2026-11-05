@@ -51,6 +51,16 @@ public sealed class AudioMixerRouting : MonoBehaviour
         if (group != null) source.outputAudioMixerGroup = group;
     }
 
+    public static bool TransitionMusicSnapshot(string snapshotName, float seconds)
+    {
+        if (instance == null) instance = FindFirstObjectByType<AudioMixerRouting>();
+        if (instance == null || instance.sfxGroup == null) return false;
+        AudioMixerSnapshot snapshot = instance.sfxGroup.audioMixer.FindSnapshot(snapshotName);
+        if (snapshot == null) return false;
+        snapshot.TransitionTo(Mathf.Max(0f, seconds));
+        return true;
+    }
+
     private AudioMixerGroup FindGroup(string name)
     {
         AudioMixerGroup[] groups = sfxGroup.audioMixer.FindMatchingGroups(name);
