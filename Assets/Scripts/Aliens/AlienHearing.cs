@@ -57,13 +57,16 @@ public sealed class AlienHearing : MonoBehaviour
 
         if (signal.Kind == AlienCommunicationKind.Question)
         {
-            if (responsibility == null
-                || !responsibility.IsResponsibleFor(signal.Stimulus.Id)) return;
-            voice?.PlayResponseVocalization();
-            SoundSignalSystem.EmitCommunication(AlienCommunicationKind.Response,
-                signal.Stimulus, controller, controller.Occupant.Room,
-                controller.transform.position);
-            responsibility.Acknowledge(signal.Stimulus.Id);
+            if (responsibility != null && responsibility.IsResponsibleFor(signal.Stimulus.Id))
+            {
+                voice?.PlayResponseVocalization();
+                SoundSignalSystem.EmitCommunication(AlienCommunicationKind.Response,
+                    signal.Stimulus, controller, controller.Occupant.Room,
+                    controller.transform.position);
+                responsibility.Acknowledge(signal.Stimulus.Id);
+            }
+            else if (SoundSignalSystem.TryClaimNegativeResponse(signal.Stimulus))
+                voice?.PlayNegativeResponseVocalization();
             return;
         }
 

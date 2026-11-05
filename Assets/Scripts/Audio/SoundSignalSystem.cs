@@ -119,6 +119,8 @@ public static class SoundSignalSystem
     private static int nextSoundId = 1;
     private static readonly Dictionary<int, AlienController> leadInvestigators
         = new Dictionary<int, AlienController>();
+    private static readonly HashSet<int> negativeResponses = new HashSet<int>();
+    private static readonly HashSet<int> affirmativeResponses = new HashSet<int>();
 
     // Observer: emitir un ruido avisa a los oyentes registrados. Caminar no emite este aviso; correr y las puertas sí.
     public static event Action<SoundStimulus> SuspiciousSoundEmitted;
@@ -130,6 +132,8 @@ public static class SoundSignalSystem
     {
         nextSoundId = 1;
         leadInvestigators.Clear();
+        negativeResponses.Clear();
+        affirmativeResponses.Clear();
         SuspiciousSoundEmitted = null;
         CommunicationEmitted = null;
         PlayerSpotted = null;
@@ -163,6 +167,18 @@ public static class SoundSignalSystem
     {
         if (stimulus != null && leadInvestigators.TryGetValue(stimulus.Id, out AlienController current)
             && current == alien) leadInvestigators.Remove(stimulus.Id);
+        if (stimulus != null) negativeResponses.Remove(stimulus.Id);
+        if (stimulus != null) affirmativeResponses.Remove(stimulus.Id);
+    }
+
+    public static bool TryClaimNegativeResponse(SoundStimulus stimulus)
+    {
+        if (stimulus == null || negativeResponses.Contains(stimulus.Id)
+            || affirmativeResponses.Contains(stimulus.Id)) return false;
+        GameObject producer = stimulus.Producer;
+        if (producer != null && producer.TryGetComponent(out SoundResponsibility responsibility)
+            && responsibility.IsResponsibleFor(stimulus.Id)) return false;
+        return negativeResponses.Add(stimulus.Id);
     }
 
     public static void EmitCommunication(AlienCommunicationKind kind,
@@ -170,6 +186,7 @@ public static class SoundSignalSystem
         Vector3 worldSearchPosition)
     {
         if (stimulus == null || sender == null) return;
+        if (kind == AlienCommunicationKind.Response) affirmativeResponses.Add(stimulus.Id);
         CommunicationEmitted?.Invoke(new AlienCommunicationSignal(kind, stimulus,
             sender, searchRoom, worldSearchPosition));
     }

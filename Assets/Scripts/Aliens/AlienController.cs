@@ -33,7 +33,6 @@ public sealed class AlienController : MonoBehaviour
     [SerializeField, Min(.5f)] private float soundSearchRadius = 2.2f;
     [Header("Events and debug")]
     [SerializeField] private UnityEvent<string> onStateChanged = new UnityEvent<string>();
-    [SerializeField] private UnityEvent onAlertStarted = new UnityEvent();
     [SerializeField] private bool verboseLogging;
 
     private readonly Dictionary<AlienInterest, float> cooldowns = new Dictionary<AlienInterest, float>();
@@ -111,7 +110,6 @@ public sealed class AlienController : MonoBehaviour
     public float AlertDuration => Random.Range(alertDurationMin,
         Mathf.Max(alertDurationMin, alertDurationMax));
     public UnityEvent<string> OnStateChanged => onStateChanged;
-    public UnityEvent OnAlertStarted => onAlertStarted;
     public bool CanReactToSound => enabled && gameObject.activeInHierarchy && sensesEnabled
         && hearingEnabled
         && !traversingDoor && !soundReactionActive && !PlayerVisible
@@ -140,11 +138,6 @@ public sealed class AlienController : MonoBehaviour
         && !(CurrentState is AlienInvestigateKnownHideSpotState)
         && !(CurrentState is AlienTraverseState);
     public AlienController LastPlayerCallSender { get; private set; }
-    public bool AllowsRoamingVocalization => sensesEnabled && !soundReactionActive
-        && !playerCallReactionActive
-        && !PlayerVisible && !(CurrentState is AlienAlertState)
-        && !(CurrentState is AlienChaseState) && !(CurrentState is AlienCatchPlayerState);
-
     private void Awake()
     {
         Motor = GetComponent<AlienMotor>();
@@ -877,7 +870,6 @@ public sealed class AlienController : MonoBehaviour
         Vector3 lastSeen = Memory != null && Memory.HasLastKnownPosition
             ? Memory.LastKnownPosition : transform.position;
         SoundSignalSystem.EmitPlayerSpotted(this, room, lastSeen);
-        onAlertStarted.Invoke();
     }
 
 

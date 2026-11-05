@@ -1,6 +1,54 @@
 # Informe de testing — The Lights Before Dawn
 
-**Versión del informe:** 30/10/2026
+**Versión del informe:** 05/11/2026
+
+### Auditoría de entrega — 05/11/2026 (sin nueva prueba en Play)
+
+- Base inspeccionada: `a4fce2f` con cambios locales en esta documentación, `MEMORY.md`, `ModularPrototype.unity` y `MAT_AlienSkin.mat`. `Alien.prefab` no figura modificado en Git. La diferencia de la escena agrega campos serializados de música de persecución; no se guardó ni se revirtió durante esta auditoría.
+- Al observar el editor, Unity estaba fuera de Play y la jerarquía mostraba `ModularPrototype` sin asterisco. Esto describe la ventana en ese momento; no certifica que la escena de disco esté probada ni que no haya cambios posteriores en memoria.
+- En el código actual, Alien 3 se intenta crear en el recibidor al entrar en `Survive`; si no encuentra un punto despejado sobre NavMesh registra un error. Aún falta observar su aparición y movimiento en Play. `GameSessionManager` ofrece pausa con Escape y `PauseMenuController` presenta Continuar, menú y salida; esos controles siguen pendientes de una prueba manual actual.
+- La secuencia final y sus capas musicales tienen rutas de código y clips asignados, pero la auditoría acelerada histórica y la inspección estática no acreditan una partida completa ni su mezcla audible. Prioridad de prueba: inicio → padres → salida anómala → teléfono → supervivencia con tres aliens → amanecer → puerta final → menú.
+
+### Prueba breve en Play — 05/11/2026
+
+- Base: commit `a4fce2f` más los cambios locales indicados arriba; editor Unity 6000.3.5f2, escena `ModularPrototype`. Se inició Play desde el menú y se pulsó Comenzar. Se observó el despertar terminado, el HUD con objetivo «Buscar a mamá y papá» y dos aliens con la visual anterior. Durante esta observación Console mostró 0 mensajes, 0 advertencias y 0 errores.
+- Se enfocó Game View y se envió Escape mediante automatización; no apareció el panel de pausa en las capturas. La entrada automatizada ya había sido problemática en pruebas previas, por lo que **no se concluye si la pausa funciona o falla con teclado físico**. Continuar y los otros botones no se probaron.
+- Se detuvo Play sin guardar escena ni prefab. No hubo recorrido de habitaciones, persecución, aparición de Alien 3, secuencia final ni escucha/medición de audio en esta prueba. Las observaciones no tienen archivo de captura adjunto y no deben presentarse como evidencia visual final del parcial.
+
+### Auditorías focalizadas en Play — 05/11/2026
+
+- Se habilitaron en `Assets/Tests` las entradas de menú de persecución por portal y secuencia final. Unity importó y ejecutó ambas desde `The Lights Before Dawn > Pruebas` sin guardar escenas ni prefabs. Base: `a4fce2f` con los cambios locales de esta revisión.
+- `PURSUIT_AUDIT: fallos=0, memoria=upper_corridor, cuarto_alien=upper_corridor, navmesh=True`. Console mostró un registro, 0 advertencias y 0 errores al terminar. Confirma ese cruce y su memoria de destino; no valida una persecución libre prolongada.
+- `FINAL_AUDIT PASS: secuencia completa; fallos=0`. La auditoría actual agregó y aprobó: «Alien 3 apareció al comenzar Survive» y «Los tres aliens comenzaron sobre NavMesh». También comprobó amanecer, preparación de exterior/portales, cruce, control bloqueado, cámara y retorno al menú. Console terminó con 23 registros, una advertencia del shader `GrassClump_TerrainDetail` y 0 errores. Este test acelera el contador, evita el despertar y no comprueba movimiento prolongado de Alien 3, recorrido normal, imagen final completa ni mezcla audible.
+- Tras salir automáticamente de Play, `ModularPrototype` seguía sin asterisco visible. Se preservaron el cambio de escena en Git y el material modificado previamente; no se guardaron ni revirtieron.
+
+### Vocalizaciones alienígenas — 05/11/2026
+
+- Se conectaron cuatro WAV nuevos al prefab funcional con la fuente vocal 3D existente y salida al grupo Voz. El usuario informó que pregunta, sí, no y llamado funcionan en juego. Unity recompiló tras importar los clips y Console mostró 0 errores; la auditoría automatizada se ejecutó después de retirar los sonidos procedurales, con resultado detallado abajo.
+- `chaseClip` del prefab Alien referencia ahora `Audio3D/SFX/llamado_aliens.wav` en lugar del procedural `Greybox_AlienChase`. Se activa al entrar en `AlienChaseState`; `Llamado.wav` corresponde al aviso al compañero al empezar la alerta. Unity abrió el menú en Play con Console 0/0/0 y se salió sin guardar; falta provocar una nueva persecución, escuchar la sustitución y revisar el balance y los picos del mixer.
+- Se retiraron del alien la vocalización periódica `Greybox_AlienRoaming`, los generadores de respaldo de sus voces y el paso procedural. El campo de pasos queda opcional y vacío: no debe sonar hasta asignar un clip grabado. Unity compiló sin errores; `Auditar voces alienígenas` en Play registró `failures=0, question=1, yes=2, no=1, call=1, chase=1`, con un registro y 0 advertencias/errores. El contador `yes=2` suma ambas respuestas porque comparten el tipo `Response`; la afirmativa se comprobó antes de emitir la negativa. La auditoría valida referencias, ruteo 3D y disparos, pero falta escuchar una patrulla y una persecución libre.
+- Se encontró otro clip antiguo en el prefab: `onAlertStarted` llamaba `AudioSource.Play()` sobre `SFX_AlienGrito.wav`, además del llamado grabado por código. Se retiraron esa llamada, el clip precargado y el componente `SFXVariacion` del alien con sus tres `SFX_AlienIdle`; también se quitó una tercera fuente sin referencias del prefab. Se repitió la auditoría en Play con comprobaciones de dos fuentes y ausencia de `SFXVariacion`: `failures=0`, un registro, 0 advertencias y 0 errores. Unity quedó fuera de Play y no se guardó la escena.
+
+### Segundo Parcial de Motores — evidencia necesaria
+
+La consigna recibida exige un vertical slice integrado, video de hasta 5 minutos, build Windows o WebGL accesible, repositorio GitHub, GDD actualizado e informe de testing. `GDD_PARCIAL2_BORRADOR.md` ordena el diseño y los sistemas, pero no acredita su funcionamiento. Para cerrar este informe en la versión de entrega, registrar:
+
+| Caso | Procedimiento mínimo | Evidencia y resultado que faltan |
+| --- | --- | --- |
+| Ruta completa | Iniciar desde el menú y jugar padres → salida anómala → teléfono → supervivencia → salida final → retorno al menú | Fecha, commit/build, tiempo, video continuo, Console y resultado de cada objetivo |
+| Puertas y persecución | Persecución libre junto a puertas, cerrar/cruzar un portal, observar a Alien 1/2/3 y sus rutas | Video de cruce, ausencia de cielo/duplicados/caída, posición y navegación de Alien 3 |
+| Pausa | Escape, Continuar, volver al menú y salida al escritorio en una build o prueba controlada | Estado del niño/cámara/audio/temporizador al pausar y reanudar; resultado de cada botón |
+| Cierre y audiovisuales | Recorrer Escape y la toma final sin auditoría acelerada; escuchar música, ambientes, SFX y voces | Capturas/video de Cinemachine, puerta, paisaje, partículas si las hay, mezcla y picos del Master |
+| Build y acceso | Ejecutar la build fuera de Unity y comprobar enlaces de entrega | Plataforma, versión, pasos de inicio, bugs conocidos y accesibilidad de itch.io/Drive/GitHub |
+
+El apartado de **feedback obtenido** requiere observaciones reales de jugadores o docentes, con fecha y procedencia; no consta una sesión nueva en esta revisión. El formato exacto del informe/GDD no se especifica en el texto de la consigna compartida: ajustar estos borradores a cualquier plantilla que indique la cátedra.
+
+### Relevo para la entrega — 05/11/2026
+
+- `Assets/Aliens/Alien.prefab` volvió a la visual anterior con `ZombieIdle.fbx`. En una entrada breve a Play se vieron dos aliens con ese aspecto; se detuvo Play después. No se verificaron persecución, navegación prolongada ni una partida completa tras esta reversión. La copia con textura mostró detalles desubicados por incompatibilidad UV y no debe reemplazar el prefab funcional para la entrega sin una prueba nueva.
+- La captura previa de Unity mostraba `ModularPrototype*`. En la revisión actual el editor mostró `ModularPrototype` sin asterisco, pero Git conserva una diferencia de escena. No guardar ni revertir sin revisar el estado visible y la diferencia; los ensayos de textura pueden haber dejado recursos adicionales que no usa el prefab.
+- Priorizar una pasada completa de inicio a menú final, una persecución entre puertas con los tres aliens y una escucha de menú, persecución, Distancias, ambiente y voces. Registrar versión, fecha, capturas, Console y resultado observado. Los resultados históricos de este documento no certifican la versión actual.
+- Para el parcial de Motores, este informe sirve como base técnica. Ya se recibió la consigna del Segundo Parcial, pero faltan capturas actuales, una partida completa, build probada y enlaces accesibles. El texto recibido no especifica plantilla ni extensión del GDD o del informe; no dar la documentación por completa sin comprobar ese formato con la cátedra.
 
 ### Actualización 02/11/2026 — Menú y HUD
 
@@ -110,7 +158,8 @@ Desde **The Lights Before Dawn → Pruebas** se pueden ejecutar las siguientes c
 | Patrulla y navegación | `Assets/Tests/AlienRuntimeSmokeTest.cs` | 27/10: 14 incidencias con el prefab corregido; requiere nueva ejecución |
 | Historia y puertas | `Assets/Tests/StoryRuntimeSmokeTest.cs` | Pendiente de repetir; el registro previo menciona fallos del sofá/NavMesh y supuestos antiguos de cierre |
 | Auditar navegación de habitaciones | `Assets/Tests/AlienNavigationAudit.cs` | 29/10: 11 habitaciones, 102 rutas candidatas, 0 fallos |
-| Auditar persecución por portal | `Assets/Tests/AlienPortalPursuitAudit.cs` | 29/10: memoria, cierre, cruce y NavMesh, 0 fallos |
+| Auditar persecución por portal | `Assets/Tests/AlienPortalPursuitAudit.cs` | 05/11: memoria, cierre, cruce y NavMesh, `fallos=0` |
+| Auditar secuencia final | `Assets/Tests/FinalSequenceRuntimeAudit.cs` | 05/11: final acelerado, Alien 3 y tres agentes sobre NavMesh, `fallos=0`; una advertencia de shader |
 
 ## Incidencias abiertas y pruebas necesarias antes del PDF
 

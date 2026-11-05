@@ -45,7 +45,7 @@ public sealed class AlienRuntimeSmokeTest : MonoBehaviour
         Check(aliens.All(a => a.Occupant.Room.RoomId == "foyer"), "Aliens must start in foyer");
         Check(aliens.All(a => a.Motor.Agent.isOnNavMesh), "Alien spawn outside NavMesh");
         Check(aliens.All(a => a.GetComponent<AlienAmbientAudio>()?.IsReady == true),
-            "Alien procedural footsteps or vocal sources are not ready");
+            "Alien recorded vocal clips or 3D audio sources are not ready");
         Check(aliens.All(a => a.GetComponent<AlienHearing>() != null
             && a.GetComponent<SoundResponsibility>() != null),
             "Alien hearing or sound responsibility is missing from the prefab");

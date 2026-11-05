@@ -274825,12 +274825,16 @@ MonoBehaviour:
   anomaly: {fileID: 0}
   dawn: {fileID: 0}
   ending: {fileID: 0}
+  chase: {fileID: 0}
   menuFadeIn: 1.25
   menuFadeOut: 1.25
   explorationFade: 2
   anomalyFade: 4
   dawnFade: 5
   endingFade: 2
+  chaseFadeIn: 0.35
+  chaseFadeOut: 3
+  chaseVolume: 0.42
 --- !u!114 &7000000000555555552
 MonoBehaviour:
   m_ObjectHideFlags: 0

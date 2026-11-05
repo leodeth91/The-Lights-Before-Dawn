@@ -13,6 +13,7 @@ public sealed class FinalSequenceRuntimeAudit : MonoBehaviour
     private const string MainSceneName = "ModularPrototype";
     private int failures;
 
+    [MenuItem("The Lights Before Dawn/Pruebas/Auditar secuencia final")]
     private static void Run()
     {
         if (EditorApplication.isPlayingOrWillChangePlaymode || EditorApplication.isCompiling) return;
@@ -77,6 +78,12 @@ public sealed class FinalSequenceRuntimeAudit : MonoBehaviour
         session.StartSurvival(.3f);
         Check(story.Objective == StoryObjective.Survive && session.HasSurvivalTimer,
             "La misión de supervivencia y su temporizador iniciaron.");
+        AlienController[] spawnedAliens = FindObjectsByType<AlienController>(FindObjectsSortMode.None);
+        Check(spawnedAliens.Length == 3, "Alien 3 apareció al comenzar Survive.");
+        Check(System.Array.TrueForAll(spawnedAliens,
+                alien => alien.Motor != null && alien.Motor.Agent != null
+                    && alien.Motor.Agent.enabled && alien.Motor.Agent.isOnNavMesh),
+            "Los tres aliens comenzaron sobre NavMesh.");
 
         float dawnDeadline = Time.realtimeSinceStartup + 4f;
         while (story.Objective != StoryObjective.Escape && Time.realtimeSinceStartup < dawnDeadline)
